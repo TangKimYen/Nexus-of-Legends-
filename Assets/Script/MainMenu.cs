@@ -5,14 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void PlayGame()
-    {
-
-    }
-    public void Tutorial()
-    {
-
-    }
+    public void PlayGame() { }
+    public void Tutorial() { }
     public void ViewCredit() { }
     public void Storyline() { }
     public void QuitGame() { }
