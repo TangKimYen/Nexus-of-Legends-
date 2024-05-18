@@ -192,18 +192,21 @@ MonoBehaviour:
     a peaceful world through the name Nexus of Legends, the great connection of hero
     generations from ancient times to the future.
 
+    
 
-    On top of a mystical hill
-    stands an ancient castle, where the Demon Lord''s dungeon has been sealed since
-    ancient times. Legend tells of the journey of the Nexus of Legends - the legendary
-    team of mythic heroes, brave warriors from different lineages, who sacrificed
-    everything to seal this ultimate power.
+    On top of a mystical
+    hill stands an ancient castle, where the Demon Lord''s dungeon has been sealed
+    since ancient times. Legend tells of the journey of the Nexus of Legends - the
+    legendary team of mythic heroes, brave warriors from different lineages, who
+    sacrificed everything to seal this ultimate power.
 
+    
 
-    But as time passed, the seal began
-    to weaken. Nightmares started to arise as monsters from the dungeon began to
-    spill out into the world. To protect peace, the young heroes continued to inherit
-    the legacy of the team, rising up against the resurgence of the Demon Lord."'
+    But as time passed,
+    the seal began to weaken. Nightmares started to arise as monsters from the dungeon
+    began to spill out into the world. To protect peace, the young heroes continued
+    to inherit the legacy of the team, rising up against the resurgence of the Demon
+    Lord."'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 263f39e743f2a3f4584d074591386470, type: 2}
   m_sharedMaterial: {fileID: -2103291714593547283, guid: 263f39e743f2a3f4584d074591386470, type: 2}
@@ -472,8 +475,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1757767895}
-  - {fileID: 2012486587}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1551678901}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -637,6 +639,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2012486587}
   - {fileID: 273976106}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -860,7 +863,8 @@ Transform:
   m_LocalPosition: {x: -0.35, y: 3.78, z: 0}
   m_LocalScale: {x: 3, y: 2.2, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 636066967}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1757767894
@@ -897,8 +901,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -17, y: 227}
-  m_SizeDelta: {x: 520, y: 60}
+  m_AnchoredPosition: {x: -4.3, y: 101}
+  m_SizeDelta: {x: 170, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1757767896
 MonoBehaviour:
@@ -947,8 +951,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 16
+  m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1029,12 +1033,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1428363329}
-  m_Father: {fileID: 636066967}
+  m_Father: {fileID: 1216117744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 495, y: -245}
-  m_SizeDelta: {x: 65, y: 40}
+  m_AnchoredPosition: {x: 495, y: -247}
+  m_SizeDelta: {x: 55, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2012486588
 MonoBehaviour:
@@ -1211,4 +1215,3 @@ SceneRoots:
   - {fileID: 1551678901}
   - {fileID: 1216117744}
   - {fileID: 554728629}
-  - {fileID: 636066967}
