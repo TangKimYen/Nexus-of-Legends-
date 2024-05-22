@@ -11,8 +11,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     void Start()
     {
         Debug.Log("Connecting to server.");
-        PhotonNetwork.NickName = MasterManager.GameSettings.NickName;
-        PhotonNetwork.GameVersion = MasterManager.GameSettings.GameVersion;
+        //PhotonNetwork.NickName = MasterManager.GameSettings.NickName;
+        //PhotonNetwork.GameVersion = MasterManager.GameSettings.GameVersion;
         //ConnectMethod to the Photon server
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -27,7 +27,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
-        SceneManager.LoadScene("MainLobby");
+        SceneManager.LoadScene("PartyLobby");
     }
 
     public override void OnDisconnected(DisconnectCause cause) 

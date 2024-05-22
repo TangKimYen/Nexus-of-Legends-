@@ -73,10 +73,12 @@ AnimationClip:
     - time: 2.5
       value: {fileID: 21300000, guid: 49fe86a1a4cce4143b29f7658fa90718, type: 3}
     - time: 2.6
-      value: {fileID: 21300000, guid: 31cc53fdc2106f04c891733d464240cc, type: 3}
+      value: {fileID: 21300000, guid: f92ecdd07d51ea547a90f5e5b0e55314, type: 3}
     - time: 2.7
-      value: {fileID: 21300000, guid: 78edb53ab7c466742abfd1cc3c8aa430, type: 3}
+      value: {fileID: 21300000, guid: 31cc53fdc2106f04c891733d464240cc, type: 3}
     - time: 2.8
+      value: {fileID: 21300000, guid: 78edb53ab7c466742abfd1cc3c8aa430, type: 3}
+    - time: 2.9
       value: {fileID: 21300000, guid: c79fa250ddd40564aaee7909b19b2fa3, type: 3}
     attribute: m_Sprite
     path: 
@@ -126,6 +128,7 @@ AnimationClip:
     - {fileID: 21300000, guid: c5850c835f65b9c4c96862585e1e9ebb, type: 3}
     - {fileID: 21300000, guid: e7a19b2a72762a24ea7178448972e0f8, type: 3}
     - {fileID: 21300000, guid: 49fe86a1a4cce4143b29f7658fa90718, type: 3}
+    - {fileID: 21300000, guid: f92ecdd07d51ea547a90f5e5b0e55314, type: 3}
     - {fileID: 21300000, guid: 31cc53fdc2106f04c891733d464240cc, type: 3}
     - {fileID: 21300000, guid: 78edb53ab7c466742abfd1cc3c8aa430, type: 3}
     - {fileID: 21300000, guid: c79fa250ddd40564aaee7909b19b2fa3, type: 3}
@@ -134,7 +137,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 2.8999999
+    m_StopTime: 3
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -153,4 +156,18 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.7
+    functionName: DashInSkill3
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 2.6
+    functionName: ReturnInSkill3
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

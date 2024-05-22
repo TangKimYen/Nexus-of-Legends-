@@ -406,6 +406,7 @@ GameObject:
   - component: {fileID: 978442276}
   - component: {fileID: 978442275}
   - component: {fileID: 978442274}
+  - component: {fileID: 978442278}
   m_Layer: 5
   m_Name: Party Button
   m_TagString: Untagged
@@ -528,7 +529,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 978442276}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 978442278}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_MethodName: PartyButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &978442276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,6 +580,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 978442272}
   m_CullTransparentMesh: 1
+--- !u!114 &978442278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978442272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd7091ba66899cc46bc79659e1f749d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1370917295
 GameObject:
   m_ObjectHideFlags: 0
