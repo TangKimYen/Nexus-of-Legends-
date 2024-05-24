@@ -8,14 +8,14 @@ public class PlayerAttack : MonoBehaviour
     //[SerializeField] private Transform hitPoint;
     //[SerializeField] private GameObject[] hits;
     private Animator anim;
-    private PlayerMovement playerMovement;
+    private AssassinMovements playerMovement;
     private float cooldownTimer = Mathf.Infinity;
     //[SerializeField] private AudioSource attackSoundEffect;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
-        playerMovement = GetComponent<PlayerMovement>();
+        playerMovement = GetComponent<AssassinMovements>();
     }
 
     private void Update()

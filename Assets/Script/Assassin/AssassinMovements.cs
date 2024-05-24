@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class AssassinMovements : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private CircleCollider2D coll;
+    private CapsuleCollider2D coll;
     private Animator anim;
 
     [SerializeField] private LayerMask jumpableGround;
@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        coll = GetComponent<CircleCollider2D>();
+        coll = GetComponent<CapsuleCollider2D>();
         anim = GetComponent<Animator>();
     }
 
