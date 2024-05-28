@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,7 @@ public class SkeletonController : MonoBehaviour
     [SerializeField] private int pointBoss;
 
     private Animator anim;
+    private int countAttack = 0;
     [SerializeField] private int maxHealth;
     //[SerializeField] private AudioSource deathSoundEffect;
     //[SerializeField] private AudioSource hurtSoundEffect;
@@ -117,21 +119,19 @@ public class SkeletonController : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Attack"))
-    //    {
-    //        countAttack++;
-    //        if (countAttack < maxHealth)
-    //        {
-    //            Hurt();
-    //        }
-    //        else if (countAttack == maxHealth)
-    //        {
-    //            Death();
-    //            Debug.Log("Kill monster!");
-    //            ScoreManager.instance.AddPoint(pointBoss);
-    //        }
-    //    }
-    //}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Attack"))
+        {
+            countAttack++;
+            if (countAttack < maxHealth)
+            {
+                Hurt();
+            }
+            else if (countAttack == maxHealth)
+            {
+                Death();
+            }
+        }
+    }
 }

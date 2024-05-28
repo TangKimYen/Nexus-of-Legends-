@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private float attackCooldown;
-    //[SerializeField] private Transform hitPoint;
-    //[SerializeField] private GameObject[] hits;
+    [SerializeField] private Transform hitPoint;
+    [SerializeField] private GameObject[] hits;
     private Animator anim;
     private AssassinMovements playerMovement;
     private float cooldownTimer = Mathf.Infinity;
@@ -44,8 +44,8 @@ public class PlayerAttack : MonoBehaviour
         anim.SetTrigger("attack");
         cooldownTimer = 0;
 
-        //hits[FindHit()].transform.position = hitPoint.position;
-        //hits[FindHit()].GetComponent<MeleeHit>().SetDirection(Mathf.Sign(transform.localScale.x));
+        hits[FindHit()].transform.position = hitPoint.position;
+        hits[FindHit()].GetComponent<MeleeHit>().SetDirection(Mathf.Sign(transform.localScale.x));
     }
 
     private void Skill1()
@@ -76,15 +76,15 @@ public class PlayerAttack : MonoBehaviour
         transform.position = new Vector3(transform.position.x - 3.9f, transform.position.y, transform.position.z);
     }
 
-    //private int FindHit()
-    //{
-    //    for (int i = 0; i < hits.Length; i++)
-    //    {
-    //        if (!hits[i].activeInHierarchy)
-    //        {
-    //            return i;
-    //        }
-    //    }
-    //    return 0;
-    //}
+    private int FindHit()
+    {
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (!hits[i].activeInHierarchy)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
 }
