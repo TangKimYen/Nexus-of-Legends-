@@ -55,6 +55,19 @@ public class PlayerHealth : MonoBehaviour
                 Hurt();
             }
         }
+        else if (collision.gameObject.CompareTag("Enemies"))
+        {
+            health--;
+            Debug.Log("Hurt");
+            if (health <= 0)
+            {
+                Die();
+            }
+            else
+            {
+                Hurt();
+            }
+        }
         //else if (collision.transform.tag == "Heart")
         //{
         //    if (health < maxHealth)
