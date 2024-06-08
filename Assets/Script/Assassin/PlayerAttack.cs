@@ -57,6 +57,14 @@ public class PlayerAttack : MonoBehaviour
         cooldownSkill2 += Time.deltaTime;
         cooldownSkill3 += Time.deltaTime;
     }
+
+
+    private void ShootArrow()
+    {
+        GameObject arrow = hits[FindHit()];
+        arrow.transform.position = hitPoint.position;
+        arrow.GetComponent<ArrowHit>().SetDirection(Mathf.Sign(transform.localScale.x));
+    }
     private void Attack()
     {
         //attackSoundEffect.Play();
@@ -79,7 +87,7 @@ public class PlayerAttack : MonoBehaviour
     {
         //attackSoundEffect.Play();
         anim.SetTrigger("skill2");
-        skill2[FindSkill2()].transform.position = skill1Point.position;
+        skill2[FindSkill2()].transform.position = skill2Point.position;
         skill2[FindSkill2()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
         cooldownSkill2 = 0;
     }
@@ -87,7 +95,7 @@ public class PlayerAttack : MonoBehaviour
     {
         //attackSoundEffect.Play();
         anim.SetTrigger("skill3");
-        skill3[FindSkill3()].transform.position = skill1Point.position;
+        skill3[FindSkill3()].transform.position = skill3Point.position;
         skill3[FindSkill3()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
         cooldownSkill3 = 0;
     }
