@@ -12,10 +12,11 @@ public class SkeletonAttack : MonoBehaviour
     [SerializeField] private GameObject[] hits;
     [SerializeField] private BoxCollider2D boxColl;
     [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private bool twoTypeAttack;
     private float cooldownTimer = Mathf.Infinity;
 
     private Animator anim;
-
+    private int randomAttack = 0;
     //private PlayerLife playerLife;
 
     private void Awake()
@@ -30,10 +31,19 @@ public class SkeletonAttack : MonoBehaviour
         //attack when the player insight
         if (PlayerInsight())
         {
+            randomAttack = Random.Range(0, 2);
             if (cooldownTimer >= attackCooldown)
             {
                 cooldownTimer = 0;
-                anim.SetTrigger("attack");
+                if (twoTypeAttack && randomAttack == 1)
+                {
+                    anim.SetTrigger("attack2");
+                    randomAttack = Random.Range(0, 2);
+                } 
+                else
+                {
+                    anim.SetTrigger("attack");
+                }
             }
         }
     }

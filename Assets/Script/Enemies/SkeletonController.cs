@@ -123,12 +123,12 @@ public class SkeletonController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Attack"))
         {
-            countAttack++;
-            if (countAttack < maxHealth)
+            maxHealth = maxHealth - 1;
+            if (maxHealth > 0)
             {
                 Hurt();
             }
-            else if (countAttack == maxHealth)
+            else
             {
                 Death();
             }
