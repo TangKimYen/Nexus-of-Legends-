@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class AssassinMovements : MonoBehaviour
 {
     private Rigidbody2D rb;
     private CapsuleCollider2D coll;
     private Animator anim;
+    PhotonView view;
 
     [SerializeField] private LayerMask jumpableGround;
 
@@ -24,20 +26,23 @@ public class AssassinMovements : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<CapsuleCollider2D>();
         anim = GetComponent<Animator>();
+        view = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame 
     private void Update()
     {
-        dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
-
-        if ((Input.GetButtonDown("Vertical") || Input.GetButtonDown("Jump")) && IsGrounded())
+        if (view.IsMine)
         {
-            //jumpSoundEffect.Play();
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
+            dirX = Input.GetAxisRaw("Horizontal");
+            rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
+            if ((Input.GetButtonDown("Vertical") || Input.GetButtonDown("Jump")) && IsGrounded())
+            {
+                //jumpSoundEffect.Play();
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            }
+        }
         UpdateAnimationUpdate();
     }
 
