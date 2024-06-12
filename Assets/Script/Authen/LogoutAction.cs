@@ -26,7 +26,7 @@ public class LogoutAction : MonoBehaviour
     {
         if (PopupLog != null)
         {
-            PopupLog.SetActive(false);
+            PopupLog.SetActive(true);
         }
     }
 }

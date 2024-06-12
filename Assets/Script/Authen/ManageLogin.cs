@@ -11,7 +11,7 @@ public class ManageLogin : MonoBehaviour
         // ?n popup ??ng nh?p khi b?t ??u
         if (PopupLog != null)
         {
-            PopupLog.SetActive(true);
+            PopupLog.SetActive(false);
         }
     }
 

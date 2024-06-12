@@ -20,7 +20,7 @@ public class LoginAction : MonoBehaviour
         if (ValidateLogin(username, password))
         {
             // ??ng nh?p thành công, chuy?n ??n màn hình chính ho?c màn hình khác
-            SceneManager.LoadScene("NewMainLobby");
+            SceneManager.LoadScene("NewMainLobby 1");
         }
         else
         {
