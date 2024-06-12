@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class CameraController : MonoBehaviour
 {
@@ -15,9 +16,9 @@ public class CameraController : MonoBehaviour
     public Vector2 xLimit;
     public Vector2 yLimit;
 
-    private void Awake()
+    public void SetTarget(Transform newTarget)
     {
-        target = GameObject.FindGameObjectWithTag("Character").transform;
+        target = newTarget;
     }
 
     private void LateUpdate()
