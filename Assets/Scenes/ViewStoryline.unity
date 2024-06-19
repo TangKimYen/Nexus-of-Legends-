@@ -200,12 +200,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 31642945}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0008, y: -0.0106, z: 0}
-  m_LocalScale: {x: 0.8755856, y: 0.6097279, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.07950769, y: -1.0534769, z: -8944.616}
+  m_LocalScale: {x: 87.019745, y: 60.597576, z: 99.38462}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 394732055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &275477835
 GameObject:
@@ -289,8 +289,8 @@ MonoBehaviour:
     spill out into the world. To protect peace, the young heroes continued to inherit
     the legacy of the team, rising up against the resurgence of the Demon Lord."'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 263f39e743f2a3f4584d074591386470, type: 2}
-  m_sharedMaterial: {fileID: -2103291714593547283, guid: 263f39e743f2a3f4584d074591386470, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 40408e77e80f2434da598740f7cdd488, type: 2}
+  m_sharedMaterial: {fileID: -5025602530117463689, guid: 40408e77e80f2434da598740f7cdd488, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -314,8 +314,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35
-  m_fontSizeBase: 35
+  m_fontSize: 42
+  m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -604,9 +604,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1045580528}
   - {fileID: 275477836}
   - {fileID: 353583186}
+  - {fileID: 1599171133}
+  - {fileID: 31642947}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -773,16 +774,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1045580527}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 90}
+  m_LocalScale: {x: 0.0035935426, y: 0.0050309594, z: 0.010061919}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 394732055}
+  m_Father: {fileID: 1599171133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 403}
+  m_AnchoredPosition: {x: -0.071, y: 0.02}
   m_SizeDelta: {x: 730, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1045580529
@@ -807,8 +808,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Nexus of Legends Story '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b98b827c4cd922748bae153832e309ae, type: 2}
-  m_sharedMaterial: {fileID: 1865027683046375116, guid: b98b827c4cd922748bae153832e309ae, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 40408e77e80f2434da598740f7cdd488, type: 2}
+  m_sharedMaterial: {fileID: -5025602530117463689, guid: 40408e77e80f2434da598740f7cdd488, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -832,15 +833,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70
-  m_fontSizeBase: 70
+  m_fontSize: 90
+  m_fontSizeBase: 90
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -868,7 +869,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -45.287292, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1027,12 +1028,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599171131}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 3.98, z: 0}
-  m_LocalScale: {x: 2.8, y: 2, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.9938462, y: 395.55078, z: -8944.616}
+  m_LocalScale: {x: 278.27695, y: 198.76924, z: 99.38462}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
+  m_Children:
+  - {fileID: 1045580528}
+  m_Father: {fileID: 394732055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1925869208
 GameObject:
@@ -1131,7 +1133,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1925869211}
-  - {fileID: 1599171133}
   - {fileID: 394732055}
   - {fileID: 1462389477}
-  - {fileID: 31642947}
