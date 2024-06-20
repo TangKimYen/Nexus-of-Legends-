@@ -21,6 +21,6 @@ public class Menu : MonoBehaviour
 
     public void PartyButton()
     {
-        SceneManager.LoadScene("Partylobby");
+        SceneManager.LoadScene("PartyLobby");
     }
 }

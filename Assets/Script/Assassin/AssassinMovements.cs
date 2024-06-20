@@ -9,6 +9,7 @@ public class AssassinMovements : MonoBehaviour
     private CapsuleCollider2D coll;
     private Animator anim;
     PhotonView view;
+    private PhotonAnimatorView photonAnimatorView;
 
     [SerializeField] private LayerMask jumpableGround;
 
@@ -27,6 +28,7 @@ public class AssassinMovements : MonoBehaviour
         coll = GetComponent<CapsuleCollider2D>();
         anim = GetComponent<Animator>();
         view = GetComponent<PhotonView>();
+        photonAnimatorView = GetComponent<PhotonAnimatorView>();
     }
 
     // Update is called once per frame 
@@ -42,8 +44,8 @@ public class AssassinMovements : MonoBehaviour
                 //jumpSoundEffect.Play();
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             }
+            UpdateAnimationUpdate();
         }
-        UpdateAnimationUpdate();
     }
 
     private void UpdateAnimationUpdate()
@@ -75,6 +77,8 @@ public class AssassinMovements : MonoBehaviour
         }
 
         anim.SetInteger("state", (int)state);
+        // Ensure the PhotonAnimatorView component updates the parameter
+        photonAnimatorView.SetParameterSynchronized("state", PhotonAnimatorView.ParameterType.Int, PhotonAnimatorView.SynchronizeType.Discrete);
     }
 
     private bool IsGrounded()
