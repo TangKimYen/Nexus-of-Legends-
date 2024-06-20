@@ -24,12 +24,4 @@ public class DeactivateIfNotMine : MonoBehaviourPunCallbacks
             gameObject.SetActive(false);
         }
     }
-
-    // Update is called once per frame
-    private void LateUpdate()
-    {
-        Vector3 targetPosition = target.position + positionOffSet;
-        targetPosition = new Vector3(Mathf.Clamp(targetPosition.x, xLimit.x, xLimit.y), Mathf.Clamp(targetPosition.y, yLimit.x, yLimit.y), -10);
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
-    }
 }

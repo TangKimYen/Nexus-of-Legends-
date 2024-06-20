@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class SkeletonController : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class SkeletonController : MonoBehaviour
 
     void Update()
     {
+        player = GameObject.FindGameObjectWithTag("Character");
         if (player == null)
         {
             return;
