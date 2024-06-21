@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun; 
 
-public class EnemiesGenerator : MonoBehaviour
+public class EnemiesGenerator : MonoBehaviourPunCallbacks
 {
+    public static EnemiesGenerator Instance;
+
     [SerializeField] PhotonView myPV;
     public GameObject enemyPrefab;
-    [SerializeField] float yRange;
+    [SerializeField] Transform SpawnPoint;
     [SerializeField] int enemyCount;
     EnemiesList enemiesList;
-    [SerializeField] Transform xRangeMin;
-    [SerializeField] Transform xRangeMax;
     
     // Start is called before the first frame update
     void Start()
@@ -22,20 +22,20 @@ public class EnemiesGenerator : MonoBehaviour
             enemiesList = new EnemiesList();
             enemiesList.List = new List<Vector2>();
 
-            HashSet<int> usedRandx = new HashSet<int>();
+            HashSet<float> usedRandx = new HashSet<float>();
 
             for (int i = 0; i < enemyCount; i++)
             {
-                int randx;
+                float randx;
                 do
                 {
-                    randx = (int)Random.Range(xRangeMin.position.x, xRangeMax.position.x);
+                    randx = (float)Random.Range(SpawnPoint.position.x - 5f, SpawnPoint.position.x + 5f);
                 } while (usedRandx.Contains(randx));
 
                 usedRandx.Add(randx);
 
                 GameObject enemy = Instantiate(enemyPrefab, transform);
-                enemy.transform.position = new Vector3(randx, yRange, 0);
+                enemy.transform.position = new Vector3(randx, SpawnPoint.position.y, 0);
                 enemiesList.List.Add(enemy.transform.position);
             }
 
@@ -44,6 +44,7 @@ public class EnemiesGenerator : MonoBehaviour
         }
     }
 
+    [PunRPC]
     public void RPC_SyncEnemies(string enemies)
     {
         enemiesList = JsonUtility.FromJson<EnemiesList>(enemies);

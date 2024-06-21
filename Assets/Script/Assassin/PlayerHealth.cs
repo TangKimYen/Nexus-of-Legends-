@@ -7,7 +7,7 @@ public class PlayerHealth : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     //public Image[] hearts;
-    //public StartGame gameOver;
+    public HealController healController;
     //[SerializeField] private Sprite FullHeart;
     //[SerializeField] private Sprite EmptyHeart;
     [SerializeField] private int health;
@@ -68,20 +68,30 @@ public class PlayerHealth : MonoBehaviour
                 Hurt();
             }
         }
-        //else if (collision.transform.tag == "Heart")
-        //{
-        //    if (health < maxHealth)
-        //    {
-        //        collision.gameObject.SetActive(false);
-        //        health++;
-        //        PlayerPrefs.SetInt("health", health);
-        //    }
-        //}
+        else if (collision.gameObject.CompareTag("Heal"))
+        {
+            if (health < maxHealth)
+            {
+                Heal();
+                int 
+                if ()
+                health = health + healController.healAmount;
+            }
+            else
+            {
+                Heal();
+            }
+        }
     }
 
     public void Hurt()
     {
         anim.SetTrigger("hurt");
+    }
+
+    public void Heal()
+    {
+        anim.SetTrigger("heal");
     }
 
     public void Die()

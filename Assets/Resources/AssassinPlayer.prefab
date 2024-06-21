@@ -1044,8 +1044,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36170aae87350db428e155661be1bd9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  maxHealth: 100
+  health: 500
+  maxHealth: 500
 --- !u!61 &1835774115478123206
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1144,9 +1144,9 @@ MonoBehaviour:
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5
   m_ScaleModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     InterpolateOption: 1
-    InterpolateMoveTowardsSpeed: 1
+    InterpolateMoveTowardsSpeed: 100
     InterpolateLerpSpeed: 0
 --- !u!114 &8946891583999381664
 MonoBehaviour:
@@ -1167,22 +1167,22 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: state
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: death
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: hurt
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: attack
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: skill1
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: skill2
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: skill3
   m_SynchronizeLayers:
   - SynchronizeType: 0

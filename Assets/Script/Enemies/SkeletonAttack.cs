@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class SkeletonAttack : MonoBehaviour
+public class SkeletonAttack : MonoBehaviourPunCallbacks
 {
     [SerializeField] private float attackCooldown;
     [SerializeField] private float range;
@@ -27,9 +27,14 @@ public class SkeletonAttack : MonoBehaviour
 
     private void Update()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
+
         cooldownTimer += Time.deltaTime;
 
-        //attack when the player insight
+        //attack when the player is in sight
         if (PlayerInsight())
         {
             randomAttack = Random.Range(0, 2);
@@ -38,15 +43,20 @@ public class SkeletonAttack : MonoBehaviour
                 cooldownTimer = 0;
                 if (twoTypeAttack && randomAttack == 1)
                 {
-                    anim.SetTrigger("attack2");
-                    randomAttack = Random.Range(0, 2);
-                } 
+                    photonView.RPC("RPC_Attack", RpcTarget.All, "attack2");
+                }
                 else
                 {
-                    anim.SetTrigger("attack");
+                    photonView.RPC("RPC_Attack", RpcTarget.All, "attack");
                 }
             }
         }
+    }
+
+    [PunRPC]
+    private void RPC_Attack(string attackType)
+    {
+        anim.SetTrigger(attackType);
     }
 
     private int FindHit()
