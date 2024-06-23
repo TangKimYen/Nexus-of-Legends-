@@ -81,7 +81,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Count(); i++)
         {
             Instantiate(playerItemPrefab, playerListContain).GetComponent<PlayerListItem>().SetUp(players[i]);
-
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }

@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class ArcherAttack : MonoBehaviour
     [SerializeField] private GameObject[] skill3;
     private Animator anim;
     private float dirX = 0f;
-    GameObject yourGameObject;
+    PhotonView view;
 
     private AssassinMovements playerMovement;
     private float cooldownAttack = Mathf.Infinity;
@@ -31,31 +32,35 @@ public class ArcherAttack : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<AssassinMovements>();
+        view = GetComponent<PhotonView>();
     }
 
     private void Update()
     {
-        dirX = Input.GetAxisRaw("Horizontal");
-        if (Input.GetMouseButton(0) && cooldownAttack > attackCooldown && playerMovement.canAttack())
+        if (view.IsMine)
         {
-            Attack();
+            dirX = Input.GetAxisRaw("Horizontal");
+            if (Input.GetMouseButton(0) && cooldownAttack > attackCooldown && playerMovement.canAttack())
+            {
+                Attack();
+            }
+            else if (Input.GetButtonDown("Fire1") && cooldownSkill1 > skill1Cooldown && playerMovement.canAttack())
+            {
+                Skill1();
+            }
+            else if (Input.GetButtonDown("Fire2") && cooldownSkill2 > skill2Cooldown && playerMovement.canAttack())
+            {
+                Skill2();
+            }
+            else if (Input.GetButtonDown("Fire3") && cooldownSkill3 > skill3Cooldown && playerMovement.canAttack())
+            {
+                Skill3();
+            }
+            cooldownAttack += Time.deltaTime;
+            cooldownSkill1 += Time.deltaTime;
+            cooldownSkill2 += Time.deltaTime;
+            cooldownSkill3 += Time.deltaTime;
         }
-        else if (Input.GetButtonDown("Fire1") && cooldownSkill1 > skill1Cooldown && playerMovement.canAttack())
-        {
-            Skill1();
-        }
-        else if (Input.GetButtonDown("Fire2") && cooldownSkill2 > skill2Cooldown && playerMovement.canAttack())
-        {
-            Skill2();
-        }
-        else if (Input.GetButtonDown("Fire3") && cooldownSkill3 > skill3Cooldown && playerMovement.canAttack())
-        {
-            Skill3();
-        }
-        cooldownAttack += Time.deltaTime;
-        cooldownSkill1 += Time.deltaTime;
-        cooldownSkill2 += Time.deltaTime;
-        cooldownSkill3 += Time.deltaTime;
     }
 
 
@@ -70,9 +75,6 @@ public class ArcherAttack : MonoBehaviour
         //attackSoundEffect.Play();
         anim.SetTrigger("attack");
         cooldownAttack = 0;
-
-        hits[FindHit()].transform.position = hitPoint.position;
-        hits[FindHit()].GetComponent<MeleeHit>().SetDirection(Mathf.Sign(transform.localScale.x));
     }
 
     private void Skill1()
