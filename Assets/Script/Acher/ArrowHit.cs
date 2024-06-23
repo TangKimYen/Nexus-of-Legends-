@@ -1,8 +1,9 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArrowHit : MonoBehaviour
+public class ArrowHit : MonoBehaviourPun
 {
     [SerializeField] private float speed;
     [SerializeField] private float maxLifetime;
@@ -34,7 +35,7 @@ public class ArrowHit : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!gameObject.CompareTag("Chase"))
+        if (collision.gameObject.CompareTag("Enemies"))
         {
             hit = true;
             boxCollider.enabled = false;
@@ -42,6 +43,12 @@ public class ArrowHit : MonoBehaviour
         }
     }
     public void SetDirection(float _direction)
+    {
+        photonView.RPC("RPC_SetDirection", RpcTarget.All, _direction);
+    }
+
+    [PunRPC]
+    public void RPC_SetDirection(float _direction)
     {
         lifetime = 0;
         direction = _direction;
@@ -55,6 +62,7 @@ public class ArrowHit : MonoBehaviour
 
         transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
     }
+
     private void Deactivate()
     {
         gameObject.SetActive(false);

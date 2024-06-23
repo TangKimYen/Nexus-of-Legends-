@@ -1,17 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviourPunCallbacks
 {
     private Rigidbody2D rb;
     private Animator anim;
     //public Image[] hearts;
-    public HealController healController;
     //[SerializeField] private Sprite FullHeart;
     //[SerializeField] private Sprite EmptyHeart;
     [SerializeField] private int health;
     [SerializeField] private int maxHealth;
+    [SerializeField] private Transform healPoint;
+    [SerializeField] private GameObject[] HealEffect;
 
     //[SerializeField] private AudioSource deathSoundEffect;
     //[SerializeField] private AudioSource restartSoundEffect;
@@ -73,14 +75,22 @@ public class PlayerHealth : MonoBehaviour
             if (health < maxHealth)
             {
                 Heal();
-                int 
-                if ()
-                health = health + healController.healAmount;
+                int bloodHeal;
+                if (HealController.Instance.GetHealAmount() + health > maxHealth)
+                {
+                    bloodHeal = HealController.Instance.GetHealAmount() - (HealController.Instance.GetHealAmount() + health - maxHealth);
+                }
+                else
+                {
+                    bloodHeal = HealController.Instance.GetHealAmount();
+                }
+                health = health + bloodHeal;
             }
             else
             {
                 Heal();
             }
+            photonView.RPC("HealEffectRPC", RpcTarget.All, healPoint.position, transform.localScale.x);
         }
     }
 
@@ -89,9 +99,32 @@ public class PlayerHealth : MonoBehaviour
         anim.SetTrigger("hurt");
     }
 
+    [PunRPC]
+    private void HealEffectRPC(Vector3 healPosition, float direction)
+    {
+        int effectIndex = FindHealEffect();
+        HealEffect[effectIndex].transform.position = healPosition;
+        HealEffect[effectIndex].GetComponent<SkillHit>().SetDirection(Mathf.Sign(direction));
+    }
+
+    private int FindHealEffect()
+    {
+        for (int i = 0; i < HealEffect.Length; i++)
+        {
+            if (!HealEffect[i].activeInHierarchy)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     public void Heal()
     {
-        anim.SetTrigger("heal");
+        int effectIndex = FindHealEffect();
+        HealEffect[effectIndex].SetActive(true);
+        HealEffect[effectIndex].transform.position = healPoint.position;
+        HealEffect[effectIndex].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
     }
 
     public void Die()

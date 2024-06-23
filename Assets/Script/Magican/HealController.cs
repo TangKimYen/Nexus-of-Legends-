@@ -4,18 +4,30 @@ using UnityEngine;
 
 public class HealController : MonoBehaviour
 {
-    [SerializeField] public int healAmount;
+    [SerializeField] private int healAmount;
 
-    public static HealController instance;
-    // Start is called before the first frame update
-    void Start()
+    public static HealController Instance { get; private set; }
+
+    private void Awake()
     {
-       
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Holds the HealController's game object when transitioning scenes
+        }
+        else
+        {
+            Destroy(gameObject); // Destroy new instances if another instance already exists
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public int GetHealAmount()
     {
-        
+        return healAmount;
+    }
+
+    public void SetHealAmount(int amount)
+    {
+        healAmount = amount;
     }
 }
