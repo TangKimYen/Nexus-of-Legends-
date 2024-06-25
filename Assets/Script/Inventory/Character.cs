@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public CharacterStat Strength;
-    public CharacterStat Intellect;
-    public CharacterStat Defense;
-    public CharacterStat Blood;
-    public CharacterStat Movement;
-    public CharacterStat AttackSpeed;
-
     [SerializeField] Inventory inventory;
     [SerializeField] EquipmentPanel equipmentPanel;
 
