@@ -1,8 +1,8 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro; // S? d?ng TextMeshPro n?u b?n dùng TMP cho Text
+using Photon.Pun;
+using TMPro;
 
-public class MapManager : MonoBehaviour
+public class MapManager : MonoBehaviourPunCallbacks
 {
     public GameObject listMapLayout; // ??i t??ng ch?a danh sách b?n ?? (ViewListMap)
     public TextMeshProUGUI selectedMapDisplay; // Text ?? hi?n th? thông tin b?n ?? ?ã ch?n
@@ -22,6 +22,7 @@ public class MapManager : MonoBehaviour
     }
 
     // G?i hàm này khi ch?n m?t b?n ?? t? danh sách
+    [PunRPC]
     public void OnMapSelected(string map, string floor, string levelRequire)
     {
         selectedMap = map; // L?u l?i b?n ?? ?ã ch?n
@@ -35,7 +36,20 @@ public class MapManager : MonoBehaviour
         selectedLevelRequireDisplay.text = "Level: " + selectedLevelRequire;
 
         // C?p nh?t thông tin Dungeon và LevelRequire bên d??i
-        dungeonDisplay.text = "" + selectedFloor;
-        levelRequireDisplay.text = "" + selectedLevelRequire;
+        dungeonDisplay.text = "Dungeon: " + selectedFloor;
+        levelRequireDisplay.text = "LevelRequire: " + selectedLevelRequire;
+    }
+
+    // G?i hàm này ?? ch?n b?n ?? và ??ng b? v?i các ng??i ch?i khác trong phòng
+    public void SelectMap(string map, string floor, string levelRequire)
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            photonView.RPC("OnMapSelected", RpcTarget.AllBuffered, map, floor, levelRequire);
+        }
+        else
+        {
+            Debug.LogWarning("RPCs can only be sent in rooms. Call of \"OnMapSelected\" gets executed locally, if at all.");
+        }
     }
 }

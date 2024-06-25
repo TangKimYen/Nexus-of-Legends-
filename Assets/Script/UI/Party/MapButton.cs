@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapButton : MonoBehaviour
 {
@@ -6,8 +7,17 @@ public class MapButton : MonoBehaviour
     public string floor; // T?ng c?a b?n ??
     public string levelRequire; // Yêu c?u c?p ?? c?a b?n ??
 
-    public void OnMapButtonClicked()
+    private Button button;
+
+    void Start()
     {
-        FindObjectOfType<MapManager>().OnMapSelected(mapName, floor, levelRequire);
+        button = GetComponent<Button>();
+        button.onClick.AddListener(OnMapButtonClicked);
+    }
+
+    void OnMapButtonClicked()
+    {
+        Debug.Log("Map selected: " + mapName);
+        FindObjectOfType<PartyOptionsManager>().OnMapSelected(mapName, floor, levelRequire);
     }
 }
