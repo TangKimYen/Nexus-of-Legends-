@@ -1,17 +1,29 @@
-﻿using System.Collections;
+﻿using NOL.CharacterStats;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    public CharacterStat Strength;
+    public CharacterStat Intelect;
+    public CharacterStat Defense;
+    public CharacterStat Blood;
+    public CharacterStat Movement;
+    public CharacterStat AttackSpeed;
+
+
     [SerializeField] Inventory inventory;
     [SerializeField] EquipmentPanel equipmentPanel;
+    [SerializeField] StatPanel statPanel;  
 
     private void Awake()
     {
+        statPanel.SetStat(Strength, Intelect, Defense, Blood, Movement, AttackSpeed);
+        statPanel.UpdateStatValues();
+
         inventory.OnItemRightClickedEvent += EquipFromInventory;
         equipmentPanel.OnItemRightClickedEvent += UnequipFromEquipPanel;
-
     }
 
     private void EquipFromInventory(Item item)
@@ -45,7 +57,11 @@ public class Character : MonoBehaviour
                 {
                     Debug.Log("Previous item: " + previousItem);
                     inventory.AddItem(previousItem);
+                    previousItem.Unequip(this);
+                    statPanel.UpdateStatValues();
                 }
+                item.Equip(this);
+                statPanel.UpdateStatValues();
             }
             else
             {
@@ -59,6 +75,8 @@ public class Character : MonoBehaviour
     {
         if (!inventory.IsFull() && equipmentPanel.RemoveItem(item))
         {
+            item.Unequip(this);
+            statPanel.UpdateStatValues();
             inventory.AddItem(item);
         }
     }

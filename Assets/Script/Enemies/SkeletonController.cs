@@ -16,7 +16,6 @@ public class SkeletonController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private int pointBoss;
 
     private Animator anim;
-    private int countAttack = 0;
     [SerializeField] private int maxHealth;
     //[SerializeField] private AudioSource deathSoundEffect;
     //[SerializeField] private AudioSource hurtSoundEffect;
