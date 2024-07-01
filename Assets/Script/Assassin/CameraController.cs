@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Unity.VisualScripting;
 
-public class CameraController : MonoBehaviour
+public class CameraController : MonoBehaviourPunCallbacks
 {
     Transform target;
+    PhotonView view;
     Vector3 velocity = Vector3.zero;
 
     [Range(0, 1)]
@@ -16,9 +18,9 @@ public class CameraController : MonoBehaviour
     public Vector2 xLimit;
     public Vector2 yLimit;
 
-    public void SetTarget(Transform newTarget)
+    private void Update()
     {
-        target = newTarget;
+            target = GameObject.FindGameObjectWithTag("Character").transform;
     }
 
     private void LateUpdate()

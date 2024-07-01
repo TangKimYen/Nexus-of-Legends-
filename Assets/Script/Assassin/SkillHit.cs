@@ -1,8 +1,9 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillHit : MonoBehaviour
+public class SkillHit : MonoBehaviourPun
 {
     [SerializeField] private float speed;
     [SerializeField] private float maxLifetime;
@@ -43,6 +44,12 @@ public class SkillHit : MonoBehaviour
     }*/
 
     public void SetDirection(float _direction)
+    {
+        photonView.RPC("RPC_SetDirection", RpcTarget.All, _direction);
+    }
+
+    [PunRPC]
+    public void RPC_SetDirection(float _direction)
     {
         lifetime = 0;
         direction = _direction;

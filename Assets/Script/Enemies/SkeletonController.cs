@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
-public class SkeletonController : MonoBehaviour
+public class SkeletonController : MonoBehaviourPunCallbacks, IPunObservable
 {
     private GameObject player;
     public float speed = 3f;
@@ -16,7 +16,6 @@ public class SkeletonController : MonoBehaviour
     [SerializeField] private int pointBoss;
 
     private Animator anim;
-    private int countAttack = 0;
     [SerializeField] private int maxHealth;
     //[SerializeField] private AudioSource deathSoundEffect;
     //[SerializeField] private AudioSource hurtSoundEffect;
@@ -31,6 +30,11 @@ public class SkeletonController : MonoBehaviour
 
     void Update()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
+
         player = GameObject.FindGameObjectWithTag("Character");
         if (player == null)
         {
@@ -126,14 +130,53 @@ public class SkeletonController : MonoBehaviour
         if (collision.gameObject.CompareTag("Attack"))
         {
             maxHealth = maxHealth - 1;
+            photonView.RPC("RPC_UpdateHealth", RpcTarget.OthersBuffered, maxHealth);
             if (maxHealth > 0)
             {
                 Hurt();
+                photonView.RPC("RPC_Hurt", RpcTarget.OthersBuffered);
             }
             else
             {
                 Death();
+                photonView.RPC("RPC_Death", RpcTarget.OthersBuffered);
             }
+        }
+    }
+
+    [PunRPC]
+    void RPC_UpdateHealth(int newHealth)
+    {
+        maxHealth = newHealth;
+    }
+
+    [PunRPC]
+    void RPC_Hurt()
+    {
+        Hurt();
+    }
+
+    [PunRPC]
+    void RPC_Death()
+    {
+        Death();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // Send data to others
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+            stream.SendNext(maxHealth);
+        }
+        else
+        {
+            // Receive data
+            transform.position = (Vector3)stream.ReceiveNext();
+            transform.rotation = (Quaternion)stream.ReceiveNext();
+            maxHealth = (int)stream.ReceiveNext();
         }
     }
 }

@@ -48,7 +48,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         MenuManager.Instance.OpenMenu("Title");
-        PhotonNetwork.NickName = "Nexus " + Random.Range(0, 1000).ToString("0000");
+        PhotonNetwork.NickName = "Nexus" + Random.Range(0, 1000).ToString("0000");
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -81,7 +81,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Count(); i++)
         {
             Instantiate(playerItemPrefab, playerListContain).GetComponent<PlayerListItem>().SetUp(players[i]);
-
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
@@ -135,6 +134,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("Map3");
+        PhotonNetwork.LoadLevel("Map2");
     }
 }

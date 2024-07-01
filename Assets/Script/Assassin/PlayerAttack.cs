@@ -19,7 +19,6 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private GameObject[] skill3;
     private Animator anim;
     private float dirX = 0f;
-    GameObject yourGameObject;
     PhotonView view;
 
     private AssassinMovements playerMovement;
