@@ -1,25 +1,72 @@
-﻿using NOL.CharacterStats;
+﻿using Firebase.Database;
+using NOL.CharacterStats;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    public string characterId;
+    DatabaseReference dbRef;
     public CharacterStat Strength;
-    public CharacterStat Intelect;
+    public CharacterStat Intellect;
     public CharacterStat Defense;
     public CharacterStat Blood;
     public CharacterStat Movement;
     public CharacterStat AttackSpeed;
 
-
     [SerializeField] Inventory inventory;
     [SerializeField] EquipmentPanel equipmentPanel;
-    [SerializeField] StatPanel statPanel;  
+    [SerializeField] StatPanel statPanel;
+
+    void Start()
+    {
+        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        LoadCharacterData();
+    }
+
+    public void LoadCharacterData()
+    {
+        StartCoroutine(LoadCharacterDataEnum());
+    }
+
+    IEnumerator LoadCharacterDataEnum()
+    {
+        var serverData = dbRef.Child("characters").Child(characterId).GetValueAsync();
+        yield return new WaitUntil(predicate: () => serverData.IsCompleted);
+
+        print("Process is Complete!");
+
+        DataSnapshot snapshot = serverData.Result;
+        string jsonData = snapshot.GetRawJsonValue();
+
+        if (jsonData != null)
+        {
+            print("Character data is found.");
+            CharacterBaseStats characterBaseStats = JsonUtility.FromJson<CharacterBaseStats>(jsonData);
+            SetCharacterStats(characterBaseStats);
+        }
+        else
+        {
+            print("Character data is not found.");
+        }
+    }
+
+    private void SetCharacterStats(CharacterBaseStats stats)
+    {
+        Strength.BaseValue = stats.baseStrength;
+        Intellect.BaseValue = stats.baseIntellect;
+        Defense.BaseValue = stats.baseDefense;
+        Blood.BaseValue = stats.baseBlood;
+        Movement.BaseValue = stats.baseMovement;
+        AttackSpeed.BaseValue = stats.baseAttackSpeed;
+
+        statPanel.UpdateStatValues();
+    }
 
     private void Awake()
     {
-        statPanel.SetStat(Strength, Intelect, Defense, Blood, Movement, AttackSpeed);
+        statPanel.SetStat(Strength, Intellect, Defense, Blood, Movement, AttackSpeed);
         statPanel.UpdateStatValues();
 
         inventory.OnItemRightClickedEvent += EquipFromInventory;

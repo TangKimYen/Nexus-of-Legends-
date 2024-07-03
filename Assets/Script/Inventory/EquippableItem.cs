@@ -44,7 +44,7 @@ public class EquippableItem : Item
         if (itemAttackSpeedStat != 0)
             c.AttackSpeed.AddModifier(new StatModifier(itemAttackSpeedStat, StatModType.Flat, this));
         if (itemIntellectStat != 0)
-            c.Intelect.AddModifier(new StatModifier(itemIntellectStat, StatModType.Flat, this));
+            c.Intellect.AddModifier(new StatModifier(itemIntellectStat, StatModType.Flat, this));
         if (itemDefenseStat != 0)
             c.Defense.AddModifier(new StatModifier(itemDefenseStat, StatModType.Flat, this));
 
@@ -57,7 +57,7 @@ public class EquippableItem : Item
         if (itemAttackSpeedPercent != 0)
             c.AttackSpeed.AddModifier(new StatModifier(itemAttackSpeedPercent, StatModType.PercentMult, this));
         if (itemIntellectPercent != 0)
-            c.Intelect.AddModifier(new StatModifier(itemIntellectPercent, StatModType.PercentMult, this));
+            c.Intellect.AddModifier(new StatModifier(itemIntellectPercent, StatModType.PercentMult, this));
         if (itemDefensePercent != 0)
             c.Defense.AddModifier(new StatModifier(itemDefensePercent, StatModType.PercentMult, this));
     }
@@ -65,7 +65,7 @@ public class EquippableItem : Item
     public void Unequip(Character c)
     {
         c.Strength.RemoveAllModifiersFromSource(this);
-        c.Intelect.RemoveAllModifiersFromSource(this);
+        c.Intellect.RemoveAllModifiersFromSource(this);
         c.Movement.RemoveAllModifiersFromSource(this);
         c.Blood.RemoveAllModifiersFromSource(this);
         c.Defense.RemoveAllModifiersFromSource(this);

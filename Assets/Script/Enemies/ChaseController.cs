@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ChaseController : MonoBehaviour
 {
-    public SkeletonController[] bossArray;
+    public EnemiesController[] bossArray;
     // Start is called before the first frame update
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Character"))
         {
-            foreach (SkeletonController enemy in bossArray)
+            foreach (EnemiesController enemy in bossArray)
             {
                 enemy.chase = true;
             }
@@ -21,7 +21,7 @@ public class ChaseController : MonoBehaviour
     {
         if (collision.CompareTag("Character"))
         {
-            foreach (SkeletonController enemy in bossArray)
+            foreach (EnemiesController enemy in bossArray)
             {
                 enemy.chase = false;
             }

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
-public class SkeletonController : MonoBehaviourPunCallbacks, IPunObservable
+public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 {
     private GameObject player;
     public float speed = 3f;

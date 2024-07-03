@@ -44,54 +44,53 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Hits"))
+        if (collision.gameObject.CompareTag("Hits") || collision.gameObject.CompareTag("Enemies"))
         {
-            health--;
-            Debug.Log("Hurt");
-            if (health <= 0)
-            {
-                Die();
-            }
-            else
-            {
-                Hurt();
-            }
-        }
-        else if (collision.gameObject.CompareTag("Enemies"))
-        {
-            health--;
-            Debug.Log("Hurt");
-            if (health <= 0)
-            {
-                Die();
-            }
-            else
-            {
-                Hurt();
-            }
+            TakeDamage(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Heal"))
         {
-            if (health < maxHealth)
+            HealPlayer();
+        }
+    }
+
+    public void TakeDamage(GameObject attacker)
+    {
+        DataEnemiesSaver monster = attacker.GetComponent<DataEnemiesSaver>();
+        if (monster != null)
+        {
+            float damage = monster.CalculateMonsterDamage();
+            health -= Mathf.RoundToInt(damage);
+            Debug.Log("Player took " + damage + " damage from " + monster.monsterStats.monsterName);
+
+            if (health <= 0)
             {
-                Heal();
-                int bloodHeal;
-                if (HealController.Instance.GetHealAmount() + health > maxHealth)
-                {
-                    bloodHeal = HealController.Instance.GetHealAmount() - (HealController.Instance.GetHealAmount() + health - maxHealth);
-                }
-                else
-                {
-                    bloodHeal = HealController.Instance.GetHealAmount();
-                }
-                health = health + bloodHeal;
+                Die();
             }
             else
             {
-                Heal();
+                Hurt();
             }
-            photonView.RPC("HealEffectRPC", RpcTarget.All, healPoint.position, transform.localScale.x);
         }
+    }
+
+    private void HealPlayer()
+    {
+        if (health < maxHealth)
+        {
+            int bloodHeal;
+            if (HealController.Instance.GetHealAmount() + health > maxHealth)
+            {
+                bloodHeal = HealController.Instance.GetHealAmount() - (HealController.Instance.GetHealAmount() + health - maxHealth);
+            }
+            else
+            {
+                bloodHeal = HealController.Instance.GetHealAmount();
+            }
+            health += bloodHeal;
+        }
+        Heal();
+        photonView.RPC("HealEffectRPC", RpcTarget.All, healPoint.position, transform.localScale.x);
     }
 
     public void Hurt()

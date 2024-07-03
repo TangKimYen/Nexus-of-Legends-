@@ -134,6 +134,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("Map2");
+        PhotonNetwork.LoadLevel("Map6");
     }
 }

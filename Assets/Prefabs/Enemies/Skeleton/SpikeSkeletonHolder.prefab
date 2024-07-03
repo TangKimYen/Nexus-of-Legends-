@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 8710704626544839951}
   - component: {fileID: 7920581332238728450}
   - component: {fileID: 7385597100130648918}
+  - component: {fileID: 6998331339959498608}
   m_Layer: 11
   m_Name: SpikeSkeleton
   m_TagString: Enemies
@@ -489,6 +490,25 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &6998331339959498608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4291159950876617223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392be035c225ef04d947a227964b3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterStats:
+    monsterName: 
+    health: 0
+    strength: 0
+    intellect: 0
+    defense: 0
+  monsterId: m03
 --- !u!1 &5424171033542945625
 GameObject:
   m_ObjectHideFlags: 0
