@@ -100,7 +100,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void Flip()
     {
-        if (transform.position.x > player.transform.position.x)
+        if (transform.position.x > (player.transform.position.x + 0.5f))
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }

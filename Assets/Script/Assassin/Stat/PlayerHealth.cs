@@ -65,11 +65,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
             if (health <= 0)
             {
-                Die();
+                photonView.RPC("DieRPC", RpcTarget.All);
             }
             else
             {
-                Hurt();
+                photonView.RPC("HurtRPC", RpcTarget.All);
             }
         }
     }
@@ -93,9 +93,18 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         photonView.RPC("HealEffectRPC", RpcTarget.All, healPoint.position, transform.localScale.x);
     }
 
-    public void Hurt()
+    [PunRPC]
+    private void HurtRPC()
     {
         anim.SetTrigger("hurt");
+    }
+
+    [PunRPC]
+    private void DieRPC()
+    {
+        rb.bodyType = RigidbodyType2D.Static;
+        anim.SetTrigger("death");
+        // You might want to add additional code here for handling the death (e.g., respawn, game over)
     }
 
     [PunRPC]
@@ -126,24 +135,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         HealEffect[effectIndex].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
     }
 
-    public void Die()
-    {
-        //deathSoundEffect.Play();
-        rb.bodyType = RigidbodyType2D.Static;
-        anim.SetTrigger("death");
-        //new WaitForSeconds(2);
-        //int score = PlayerPrefs.GetInt("score", 0);
-        //int highscore = PlayerPrefs.GetInt("highscore", 0);
-        //GameOver(score, highscore);
-        //PlayerPrefs.SetInt("score", 0);
-        //PlayerPrefs.SetInt("health", 5);
-        //PlayerPrefs.SetInt("key", 0);
-    }
-
-    //public void GameOver(int score, int highscore)
-    //{
-    //    gameOver.GameOver(score, highscore);
-    //}
     private void Deactivate()
     {
         gameObject.SetActive(false);

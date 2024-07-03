@@ -24,7 +24,7 @@ public class SpawnCharacter : MonoBehaviourPunCallbacks
             index2++;*/
 
         // Instantiate the selected player prefabs
-        GameObject player1 = PhotonNetwork.Instantiate(playerPrefabs[index1].name, new Vector3(Random.Range(-2, 2), 0, 0), Quaternion.identity, 0);
+        GameObject player1 = PhotonNetwork.Instantiate(playerPrefabs[index1].name, transform.position, Quaternion.identity, 0);
         //GameObject player2 = PhotonNetwork.Instantiate(playerPrefabs[index2].name, new Vector3(Random.Range(-3, 3), 0, 0), Quaternion.identity, 0);
     }
 

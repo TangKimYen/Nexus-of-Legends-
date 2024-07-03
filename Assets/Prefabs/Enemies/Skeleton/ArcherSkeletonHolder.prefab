@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1930125481871235755}
   - component: {fileID: 69558726390908507}
   - component: {fileID: 6512952260778436215}
+  - component: {fileID: 4787092684341677915}
   m_Layer: 0
   m_Name: PoisonArrow (1)
   m_TagString: Hits
@@ -195,6 +196,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &4787092684341677915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7027095966568803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392be035c225ef04d947a227964b3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterStats:
+    monsterName: 
+    health: 0
+    strength: 0
+    intellect: 0
+    defense: 0
+  monsterId: m04
 --- !u!1 &577730868860675731
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,6 +229,7 @@ GameObject:
   - component: {fileID: 3932025705804517732}
   - component: {fileID: 7063081496229612400}
   - component: {fileID: 5670001916731374067}
+  - component: {fileID: 8502230669756188671}
   m_Layer: 0
   m_Name: PoisonArrow
   m_TagString: Hits
@@ -390,6 +411,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8502230669756188671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 577730868860675731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392be035c225ef04d947a227964b3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterStats:
+    monsterName: 
+    health: 0
+    strength: 0
+    intellect: 0
+    defense: 0
+  monsterId: ArcherSkeleton
 --- !u!1 &3489621097665980061
 GameObject:
   m_ObjectHideFlags: 0
@@ -761,7 +801,7 @@ MonoBehaviour:
     strength: 0
     intellect: 0
     defense: 0
-  monsterId: m04
+  monsterId: ArcherSkeleton
 --- !u!1 &4551160533942000493
 GameObject:
   m_ObjectHideFlags: 0
