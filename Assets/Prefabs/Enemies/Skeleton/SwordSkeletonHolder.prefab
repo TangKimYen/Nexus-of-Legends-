@@ -176,6 +176,7 @@ GameObject:
   - component: {fileID: 4631683895933522006}
   - component: {fileID: 2029680194288721760}
   - component: {fileID: 394471682803268255}
+  - component: {fileID: 7663245066640237833}
   m_Layer: 11
   m_Name: SwordSkeleton
   m_TagString: Enemies
@@ -520,3 +521,22 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &7663245066640237833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290490908583683087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392be035c225ef04d947a227964b3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterStats:
+    monsterName: 
+    health: 0
+    strength: 0
+    intellect: 0
+    defense: 0
+  monsterId: SwordSkeleton

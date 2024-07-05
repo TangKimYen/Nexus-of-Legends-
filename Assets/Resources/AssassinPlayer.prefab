@@ -932,39 +932,7 @@ Transform:
   - {fileID: 2657539236970309717}
   - {fileID: 7932153251116999096}
   - {fileID: 5997227180961004089}
-  - {fileID: 7594364383227686394}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3184087391280450998
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7594364383227686394}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7594364383227686394
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3184087391280450998}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.16489935, y: -0.48462802, z: -0.049877197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 745566812423084865}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4980960901109253759
 GameObject:
@@ -1427,6 +1395,7 @@ GameObject:
   - component: {fileID: 1179740696627422779}
   - component: {fileID: 3504600769333527246}
   - component: {fileID: 3829738491177087804}
+  - component: {fileID: 8658751559297675874}
   m_Layer: 6
   m_Name: Assassin
   m_TagString: Character
@@ -1792,6 +1761,27 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &8658751559297675874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596470770138430869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 395a2b5b07dd23847b44e88fdaa77df9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterBaseStats:
+    characterName: 
+    baseStrength: 0
+    baseIntellect: 0
+    baseDefense: 0
+    baseBlood: 0
+    baseMovement: 0
+    baseAttackSpeed: 0
+  characterId: c01
 --- !u!1 &7619503710900009037
 GameObject:
   m_ObjectHideFlags: 0

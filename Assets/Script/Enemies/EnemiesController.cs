@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
-public class SkeletonController : MonoBehaviourPunCallbacks, IPunObservable
+public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 {
     private GameObject player;
     public float speed = 3f;
@@ -100,7 +100,7 @@ public class SkeletonController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void Flip()
     {
-        if (transform.position.x > player.transform.position.x)
+        if (transform.position.x > (player.transform.position.x + 0.5f))
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }

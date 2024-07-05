@@ -4875,9 +4875,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 840443470}
-        m_TargetAssemblyTypeName: DataSaver, Assembly-CSharp
-        m_MethodName: SaveData
+      - m_Target: {fileID: 1683113311}
+        m_TargetAssemblyTypeName: DataEnemiesSaver, Assembly-CSharp
+        m_MethodName: SaveMonsterData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13153,7 +13153,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 840443471}
-  - component: {fileID: 840443470}
+  - component: {fileID: 840443472}
   m_Layer: 0
   m_Name: DataSaver
   m_TagString: Untagged
@@ -13161,31 +13161,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &840443470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840443469}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e7ea984efb4e0a42add542be60c1671, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dts:
-    userName: Nexus003
-    totalGold: 1200
-    totalGem: 100
-    level: 15
-    exp: 200
-    baseStrength: 12
-    baseIntellect: 10
-    baseDefense: 5
-    baseBlood: 130
-    baseMovement: 6
-    baseAttackSpeed: 2
-  userId: Nexus03
 --- !u!4 &840443471
 Transform:
   m_ObjectHideFlags: 0
@@ -13201,6 +13176,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &840443472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840443469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 395a2b5b07dd23847b44e88fdaa77df9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterBaseStats:
+    characterName: 
+    baseStrength: 0
+    baseIntellect: 0
+    baseDefense: 0
+    baseBlood: 0
+    baseMovement: 0
+    baseAttackSpeed: 0
+  characterId: 
 --- !u!1 &848860001
 GameObject:
   m_ObjectHideFlags: 0
@@ -25998,6 +25994,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1674203993}
   m_CullTransparentMesh: 1
+--- !u!1 &1683113310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1683113312}
+  - component: {fileID: 1683113311}
+  m_Layer: 0
+  m_Name: DataEnemiesSaver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1683113311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683113310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392be035c225ef04d947a227964b3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterStats:
+    monsterName: 
+    health: 0
+    strength: 0
+    intellect: 0
+    defense: 0
+  monsterId: 
+--- !u!4 &1683113312
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683113310}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1006.4494, y: 493.29337, z: -5.6708922}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1699433523
 GameObject:
   m_ObjectHideFlags: 0
@@ -30716,18 +30763,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9b72f8cd3b43ee4b9683f138e333d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterId: c03
   Strength:
-    BaseValue: 10
-  Intelect:
-    BaseValue: 5
+    BaseValue: 0
+  Intellect:
+    BaseValue: 0
   Defense:
-    BaseValue: 3
+    BaseValue: 0
   Blood:
-    BaseValue: 100
+    BaseValue: 0
   Movement:
-    BaseValue: 5
+    BaseValue: 0
   AttackSpeed:
-    BaseValue: 1
+    BaseValue: 0
   inventory: {fileID: 1890031385}
   equipmentPanel: {fileID: 1541876566}
   statPanel: {fileID: 1564709454}
@@ -32295,9 +32343,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 840443470}
-        m_TargetAssemblyTypeName: DataSaver, Assembly-CSharp
-        m_MethodName: LoadData
+      - m_Target: {fileID: 840443472}
+        m_TargetAssemblyTypeName: DataCharacterSaver, Assembly-CSharp
+        m_MethodName: LoadCharacterData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -33215,3 +33263,4 @@ SceneRoots:
   - {fileID: 1370917298}
   - {fileID: 184839308}
   - {fileID: 840443471}
+  - {fileID: 1683113312}

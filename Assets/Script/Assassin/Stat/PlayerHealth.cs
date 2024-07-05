@@ -44,59 +44,67 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Hits"))
+        if (collision.gameObject.CompareTag("Hits") || collision.gameObject.CompareTag("Enemies"))
         {
-            health--;
-            Debug.Log("Hurt");
-            if (health <= 0)
-            {
-                Die();
-            }
-            else
-            {
-                Hurt();
-            }
-        }
-        else if (collision.gameObject.CompareTag("Enemies"))
-        {
-            health--;
-            Debug.Log("Hurt");
-            if (health <= 0)
-            {
-                Die();
-            }
-            else
-            {
-                Hurt();
-            }
+            TakeDamage(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Heal"))
         {
-            if (health < maxHealth)
-            {
-                Heal();
-                int bloodHeal;
-                if (HealController.Instance.GetHealAmount() + health > maxHealth)
-                {
-                    bloodHeal = HealController.Instance.GetHealAmount() - (HealController.Instance.GetHealAmount() + health - maxHealth);
-                }
-                else
-                {
-                    bloodHeal = HealController.Instance.GetHealAmount();
-                }
-                health = health + bloodHeal;
-            }
-            else
-            {
-                Heal();
-            }
-            photonView.RPC("HealEffectRPC", RpcTarget.All, healPoint.position, transform.localScale.x);
+            HealPlayer();
         }
     }
 
-    public void Hurt()
+    public void TakeDamage(GameObject attacker)
+    {
+        DataEnemiesSaver monster = attacker.GetComponent<DataEnemiesSaver>();
+        if (monster != null)
+        {
+            float damage = monster.CalculateMonsterDamage();
+            health -= Mathf.RoundToInt(damage);
+            Debug.Log("Player took " + damage + " damage from " + monster.monsterStats.monsterName);
+
+            if (health <= 0)
+            {
+                photonView.RPC("DieRPC", RpcTarget.All);
+            }
+            else
+            {
+                photonView.RPC("HurtRPC", RpcTarget.All);
+            }
+        }
+    }
+
+    private void HealPlayer()
+    {
+        if (health < maxHealth)
+        {
+            int bloodHeal;
+            if (HealController.Instance.GetHealAmount() + health > maxHealth)
+            {
+                bloodHeal = HealController.Instance.GetHealAmount() - (HealController.Instance.GetHealAmount() + health - maxHealth);
+            }
+            else
+            {
+                bloodHeal = HealController.Instance.GetHealAmount();
+            }
+            health += bloodHeal;
+        }
+        Heal();
+        photonView.RPC("HealEffectRPC", RpcTarget.All, healPoint.position, transform.localScale.x);
+    }
+
+    [PunRPC]
+    private void HurtRPC()
     {
         anim.SetTrigger("hurt");
+    }
+
+    [PunRPC]
+    private void DieRPC()
+    {
+        rb.bodyType = RigidbodyType2D.Static;
+        anim.SetTrigger("death");
+        // You might want to add additional code here for handling the death (e.g., respawn, game over)
     }
 
     [PunRPC]
@@ -127,24 +135,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         HealEffect[effectIndex].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
     }
 
-    public void Die()
-    {
-        //deathSoundEffect.Play();
-        rb.bodyType = RigidbodyType2D.Static;
-        anim.SetTrigger("death");
-        //new WaitForSeconds(2);
-        //int score = PlayerPrefs.GetInt("score", 0);
-        //int highscore = PlayerPrefs.GetInt("highscore", 0);
-        //GameOver(score, highscore);
-        //PlayerPrefs.SetInt("score", 0);
-        //PlayerPrefs.SetInt("health", 5);
-        //PlayerPrefs.SetInt("key", 0);
-    }
-
-    //public void GameOver(int score, int highscore)
-    //{
-    //    gameOver.GameOver(score, highscore);
-    //}
     private void Deactivate()
     {
         gameObject.SetActive(false);

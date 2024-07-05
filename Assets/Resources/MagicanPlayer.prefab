@@ -1685,6 +1685,7 @@ GameObject:
   - component: {fileID: 479219298104619859}
   - component: {fileID: 6434926268902943225}
   - component: {fileID: 4604221323719923042}
+  - component: {fileID: 541226809210515475}
   m_Layer: 6
   m_Name: Magican
   m_TagString: Character
@@ -2049,6 +2050,27 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &541226809210515475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7597509568131248386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 395a2b5b07dd23847b44e88fdaa77df9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterBaseStats:
+    characterName: 
+    baseStrength: 0
+    baseIntellect: 0
+    baseDefense: 0
+    baseBlood: 0
+    baseMovement: 0
+    baseAttackSpeed: 0
+  characterId: c04
 --- !u!1 &7873922647320169459
 GameObject:
   m_ObjectHideFlags: 0

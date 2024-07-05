@@ -48,7 +48,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         MenuManager.Instance.OpenMenu("Title");
-        PhotonNetwork.NickName = "Nexus" + Random.Range(0, 1000).ToString("0000");
+        PhotonNetwork.NickName = "Nexus " + Random.Range(0, 1000).ToString("0000");
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -134,6 +134,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("Map2");
+        PhotonNetwork.LoadLevel("Map6");
     }
 }
