@@ -31,6 +31,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public GameObject listMapLayout;
     public GameObject partyOptionLayout;
 
+    public RoomInfo roomInfo;
+
     public int currentMember;
 
     public TextMeshProUGUI dungeonRoomDisplay;
@@ -47,7 +49,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public string selectedFloor;
     public string selectedLevelRequire;
     public string selectedMapBGName;
-    public int maxPlayers;
+    public int maxPlayers = 1;
 
     private void Awake()
     {
@@ -58,7 +60,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         currentMember = playerListContain.childCount;
         currentMemberDisplay.text = currentMember.ToString();
-        SendUpdatedMapData();
     }
 
     // Start is called before the first frame update
@@ -126,6 +127,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         levelRequireMapDisplay.text = selectedLevelRequire; // C?p nh?t yêu c?u c?p ?? trên b?n ??
         currentMemberDisplay.text = currentMember.ToString();
         maxMemberDisplay.text = maxPlayers.ToString();
+        photonView.RPC("SetSelectedMap", RpcTarget.AllBuffered, selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName);
         listMapLayout.SetActive(false);
 
         SendUpdatedMapData();
@@ -159,6 +161,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         }
         else
         {
+            partyOptionLayout.SetActive(false);
+            MenuManager.Instance.OpenMenu("Error");
+            errorText.text = "Failed to create room. Please ensure all fields are filled correctly.";
             Debug.LogError("Failed to create room. Please ensure all fields are filled correctly.");
         }
     }
@@ -167,14 +172,14 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined room successfully");
         roomNameText.text = selectedFloor;
-        dungeonRoomDisplay.text = selectedFloor; // C?p nh?t thông tin t?ng trên b?n ??
-        levelRequireRoomDisplay.text = selectedLevelRequire; // C?p nh?t yêu c?u c?p ?? trên b?n ??
+        dungeonRoomDisplay.text = selectedFloor;
+        levelRequireRoomDisplay.text = selectedLevelRequire; 
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
         MenuManager.Instance.OpenMenu("Room");
         selectedFloor = PhotonNetwork.CurrentRoom.Name;
 
         Player[] players = PhotonNetwork.PlayerList;
-        photonView.RPC("SetSelectedMap", RpcTarget.AllBuffered, selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName);
+        
         foreach (Transform child in playerListContain)
         {
             Destroy(child.gameObject);
@@ -186,6 +191,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         SendUpdatedMapData();
+        UpdateRoomInfo();
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -195,9 +201,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        currentMemberDisplay.text = currentMember.ToString();
+        currentMemberDisplay.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+        maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();    
         Instantiate(playerItemPrefab, playerListContain).GetComponent<PlayerListItem>().SetUp(newPlayer);
-
+        UpdateRoomInfo();
         SendUpdatedMapData();
     }
 
@@ -213,8 +220,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         selectedFloor = floor;
         selectedLevelRequire = levelRequire;
         selectedMapBGName = mapBGName;
-        mapBGRoomDisplay.sprite = Resources.Load<Sprite>(mapBGName);
-        Debug.Log("Map set: " + map + ", Floor: " + floor + ", Level Require: " + levelRequire);
+        UpdateRoomInfo();
+        Debug.Log("Map set: " + map + ", Floor: " + floor + ", Level Require: " + levelRequire + "MapBG: " + mapBGName);
     }
 
     private void SendUpdatedMapData()
@@ -225,6 +232,18 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         }
     }
 
+    private void UpdateRoomInfo()
+    {
+        currentMember = PhotonNetwork.CurrentRoom.PlayerCount;
+        currentMemberDisplay.text = currentMember.ToString();
+        maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
+        dungeonRoomDisplay.text = selectedFloor;
+        levelRequireRoomDisplay.text = selectedLevelRequire;
+        mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
+
+        roomNameText.text = selectedFloor;
+    }
+
     public void StartGame()
     {
         PhotonNetwork.LoadLevel(selectedMap);
@@ -232,6 +251,14 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public void JoinRoom(RoomInfo info)
     {
+        if (info.PlayerCount >= info.MaxPlayers)
+        {
+            // Notify the player that the room is full
+            errorText.text = "Room is full!";
+            MenuManager.Instance.OpenMenu("Error");
+            return;
+        }
+
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenMenu("Loading");
     }

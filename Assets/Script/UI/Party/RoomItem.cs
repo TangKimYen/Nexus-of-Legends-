@@ -23,8 +23,8 @@ public class RoomItem : MonoBehaviour
 
     public void SetRoomData(string map, string floor, string levelRequire, string mapBGName, int currentMember, int maxMembers)
     {
-        levelRequiredText.text = $"Level Required: {levelRequire}";
-        memberText.text = $"Members: {currentMember}/{maxMembers}";
+        levelRequiredText.text = $"{levelRequire}";
+        memberText.text = $"Members: {info.PlayerCount}/{info.MaxPlayers}";
         mapBGSprite.sprite = Resources.Load<Sprite>(mapBGName);
     }
 

@@ -1035,7 +1035,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
+  m_AnchoredPosition: {x: 0, y: -0.00024414062}
   m_SizeDelta: {x: 0, y: 6816.966}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &66776092
@@ -1444,7 +1444,7 @@ GameObject:
   - component: {fileID: 120929366}
   - component: {fileID: 120929365}
   m_Layer: 5
-  m_Name: MaxMembers
+  m_Name: MaxMembersInRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1875,7 +1875,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &153441099
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,7 +2040,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 42}
+  m_AnchoredPosition: {x: 0, y: 42}
   m_SizeDelta: {x: -1157.8333, y: -273.3361}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &157078754
@@ -3145,7 +3145,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &323739052
 GameObject:
   m_ObjectHideFlags: 0
@@ -5835,7 +5835,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2123899091}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.099777214
+  m_Size: 0.09977721
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9940,7 +9940,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Floor 30
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
   m_sharedMaterial: {fileID: 3005861670212803318, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
@@ -11754,7 +11754,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Floor 30
+  m_text: None
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
   m_sharedMaterial: {fileID: 3005861670212803318, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
@@ -12014,7 +12014,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level 30+
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
   m_sharedMaterial: {fileID: 3005861670212803318, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
@@ -14510,7 +14510,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9a8b5507820abaa47a4c0adb006f0b35, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a3bcb00e189cc444afb776f183feaa3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15437,7 +15437,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '30 '
+  m_text: None
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
   m_sharedMaterial: {fileID: 3005861670212803318, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
@@ -15519,7 +15519,7 @@ GameObject:
   - component: {fileID: 1257005168}
   - component: {fileID: 1257005167}
   m_Layer: 5
-  m_Name: SelectedMap
+  m_Name: SelectedMapInRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18390,7 +18390,7 @@ GameObject:
   - component: {fileID: 1434715894}
   - component: {fileID: 1434715893}
   m_Layer: 5
-  m_Name: Floor
+  m_Name: FloorInRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19097,7 +19097,7 @@ MonoBehaviour:
   selectedFloor: 
   selectedLevelRequire: 
   selectedMapBGName: 
-  maxPlayers: 4
+  maxPlayers: 0
 --- !u!114 &1483212875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23208,7 +23208,7 @@ GameObject:
   - component: {fileID: 1794028344}
   - component: {fileID: 1794028343}
   m_Layer: 5
-  m_Name: CurrentMembers
+  m_Name: CurrentMembersInRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23500,7 +23500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 366.3109, y: -440}
+  m_AnchoredPosition: {x: 366.3109, y: -260}
   m_SizeDelta: {x: 732.6218, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1821370834
@@ -26993,7 +26993,7 @@ GameObject:
   - component: {fileID: 2071820910}
   - component: {fileID: 2071820909}
   m_Layer: 5
-  m_Name: LevelRequired
+  m_Name: LevelRequiredInRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27612,7 +27612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2145473627
 RectTransform:
   m_ObjectHideFlags: 0
