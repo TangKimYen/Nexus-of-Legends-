@@ -6,20 +6,28 @@ using UnityEngine;
 
 public class PhotonChatManager : MonoBehaviour, IChatClientListener
 {
-    [SerializeField] GameObject joinChatButton;
+    public static PhotonChatManager Instance;
+
     [SerializeField] GameObject chatPanel;
     [SerializeField] TMP_InputField chatField;
     [SerializeField] TMP_Text chatDisplay;
-    [SerializeField] TMP_InputField usernameInputField;
     [SerializeField] string username;
 
     bool isConnected;
     ChatClient chatClient;
     string currentChat;
 
-    void Start()
+    void Awake()
     {
-        // Không c?n kh?i t?o chatClient ? ?ây n?u dùng nút join chat
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
     }
 
     void Update()
@@ -30,14 +38,20 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         }
     }
 
-    public void UsernameOnValueChange(string valueIn)
+    public void InitializeChat(string user)
     {
-        username = valueIn;
+        username = user;
+        ConnectToChat();
     }
 
-    public void ChatConnectOnClick()
+    private void ConnectToChat()
     {
-        username = usernameInputField.text;
+        if (string.IsNullOrEmpty(username))
+        {
+            Debug.LogError("Username is required");
+            return;
+        }
+
         isConnected = true;
         chatClient = new ChatClient(this);
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(username));
@@ -48,6 +62,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     {
         if (!string.IsNullOrEmpty(chatField.text))
         {
+            // G?i tin nh?n công c?ng
             chatClient.PublishMessage("LobbyChannel", chatField.text);
             chatField.text = "";
         }
@@ -66,7 +81,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     public void OnConnected()
     {
         Debug.Log("Connected to chat.");
-        joinChatButton.SetActive(false);
+        chatPanel.SetActive(true);  // Hi?n th? giao di?n chat
         chatClient.Subscribe(new string[] { "LobbyChannel" });
     }
 
@@ -95,7 +110,6 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 
     public void OnSubscribed(string[] channels, bool[] results)
     {
-        chatPanel.SetActive(true);
         Debug.Log("Subscribed to channel.");
     }
 
