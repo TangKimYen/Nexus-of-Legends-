@@ -54,7 +54,7 @@ public class LogoutAction : MonoBehaviour
             // Ví dụ: quay lại màn hình đăng nhập hoặc tắt các chức năng của người dùng đã đăng nhập
 
             // Đợi 5 giây trước khi tắt popup
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(1);
 
             // Ẩn popup đăng xuất
             if (logoutPopup != null)
