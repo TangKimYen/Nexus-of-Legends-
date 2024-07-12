@@ -187,7 +187,12 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < players.Count(); i++)
         {
-            Instantiate(playerItemPrefab, playerListContain).GetComponent<PlayerListItem>().SetUp(players[i]);
+            GameObject playerItem = PhotonNetwork.Instantiate(playerItemPrefab.name, Vector3.zero, Quaternion.identity);
+            playerItem.transform.SetParent(playerListContain);
+            RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
+            rectTransform.localScale = Vector3.one;
+            rectTransform.anchoredPosition3D = Vector3.zero;
+            playerItem.GetComponent<PlayerListItem>().SetUp(players[i]);
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         SendUpdatedMapData();
@@ -202,8 +207,20 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         currentMemberDisplay.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
-        maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();    
-        Instantiate(playerItemPrefab, playerListContain).GetComponent<PlayerListItem>().SetUp(newPlayer);
+        maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
+        GameObject playerItem = PhotonNetwork.Instantiate(playerItemPrefab.name, Vector3.zero, Quaternion.identity);
+        playerItem.transform.SetParent(playerListContain);
+        RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
+        rectTransform.localScale = Vector3.one;
+        rectTransform.anchoredPosition3D = Vector3.zero;
+        playerItem.GetComponent<PlayerListItem>().SetUp(newPlayer);
+        UpdateRoomInfo();
+        SendUpdatedMapData();
+    }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        currentMemberDisplay.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+        maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
         UpdateRoomInfo();
         SendUpdatedMapData();
     }
@@ -247,6 +264,11 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         PhotonNetwork.LoadLevel(selectedMap);
+    }
+
+    public void ReturnLobby()
+    {
+        PhotonNetwork.LoadLevel("MainLobby");
     }
 
     public void JoinRoom(RoomInfo info)
