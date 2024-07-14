@@ -98,22 +98,33 @@ public class LoginAction : MonoBehaviour
                 messageText.text = "Login successful! Welcome " + user.DisplayName;
                 messageText.gameObject.SetActive(true);
 
+                
+
+                // Lưu tên người dùng
+                PlayerPrefs.SetString("username", username);
+                PlayerPrefs.Save();
+
+                // Xóa các trường nhập liệu sau khi đăng nhập thành công
+                ResetInputFields();
+
+                // Ẩn màn hình loading sau khi đăng nhập thành công
+                loadingScreen.SetActive(false);               
+
+                // Đợi 3 giây trước khi tắt popup đăng nhập
+                yield return new WaitForSeconds(1);
+
                 // Hiển thị username sau khi đăng nhập thành công
                 if (usernameDisplayText != null)
                 {
                     usernameDisplayText.text = "Player: " + username;
                     usernameDisplayText.gameObject.SetActive(true);
                 }
+                // Ẩn popup đăng nhập khi người dùng nhấn nút close
+                if (loginPopup != null)
+                {
+                    loginPopup.SetActive(false);
+                }
 
-                // Lưu tên người dùng
-                PlayerPrefs.SetString("username", username);
-                PlayerPrefs.Save();
-
-                // Ẩn màn hình loading sau khi đăng nhập thành công
-                loadingScreen.SetActive(false);
-
-                // Xóa các trường nhập liệu sau khi đăng nhập thành công
-                ResetInputFields();
             }
         }
     }
