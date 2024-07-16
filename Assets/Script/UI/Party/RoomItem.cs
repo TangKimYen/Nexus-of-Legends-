@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class RoomItem : MonoBehaviour
 {
-    public static RoomItem Instance;
-
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] TMP_Text levelRequiredText;
     [SerializeField] TMP_Text memberText;

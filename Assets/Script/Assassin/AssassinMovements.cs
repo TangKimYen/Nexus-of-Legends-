@@ -90,4 +90,6 @@ public class AssassinMovements : MonoBehaviour
     {
         return dirX == 0;
     }
+
+
 }
