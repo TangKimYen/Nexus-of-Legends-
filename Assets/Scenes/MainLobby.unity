@@ -15373,9 +15373,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterBaseStats:
-    characterName: 
-    baseStrength: 0
-    baseIntellect: 0
+    characterName: Player
+    baseStrength: 30
+    baseIntellect: 7000
     baseDefense: 0
     baseBlood: 0
     baseMovement: 0
@@ -39159,9 +39159,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 840443472}
-        m_TargetAssemblyTypeName: DataCharacterSaver, Assembly-CSharp
-        m_MethodName: LoadCharacterData
+      - m_Target: {fileID: 1683113311}
+        m_TargetAssemblyTypeName: DataEnemiesSaver, Assembly-CSharp
+        m_MethodName: LoadMonsterData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
