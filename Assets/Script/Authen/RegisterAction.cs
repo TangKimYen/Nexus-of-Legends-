@@ -41,6 +41,7 @@ public class RegisterAction : MonoBehaviour
     public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng ký thành công
     public GameObject loadingScreen;  // Hiển thị khi đang xử lý
     public GameObject registerPopup; // Popup đăng ký
+    public GameObject loginPopup;
 
     // Định nghĩa các màu tùy chỉnh bằng mã màu hex
     private Color successColor;
@@ -237,11 +238,11 @@ public class RegisterAction : MonoBehaviour
                     }
 
                     // Hiển thị username sau khi đăng ký thành công
-                    if (usernameDisplayText != null)
+                    /*if (usernameDisplayText != null)
                     {
                         usernameDisplayText.text = "Player: " + username;
                         usernameDisplayText.gameObject.SetActive(true);
-                    }
+                    }*/
 
                     // Xóa thông tin trong các trường nhập liệu
                     ResetInputFields();
@@ -255,6 +256,15 @@ public class RegisterAction : MonoBehaviour
                         messageText.color = successColor;
                         messageText.text = "Registration successful! Please verify your email.";
                         messageText.gameObject.SetActive(true);
+                    }
+                    yield return new WaitForSeconds(1);
+                    if (registerPopup != null)
+                    {
+                        registerPopup.SetActive(false);
+                    }
+                    if (loginPopup != null)
+                    {
+                        loginPopup.SetActive(true);
                     }
                 }
             }
