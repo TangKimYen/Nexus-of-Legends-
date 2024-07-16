@@ -1,4 +1,4 @@
-using Photon.Pun;
+ï»¿using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,22 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ExitGames.Client.Photon;
+using Firebase.Database;
+using Firebase;
+using Firebase.Extensions;
 
+
+[System.Serializable]
+public class PlayerData
+{
+    public string NickName;
+
+    public PlayerData(string nickName)
+    {
+        NickName = nickName;
+    }
+}
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     public static ConnectToServer Instance;
@@ -23,8 +38,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public TextMeshProUGUI dungeonDisplay;
     public TextMeshProUGUI levelRequireDisplay;
-    public TextMeshProUGUI floorDisplay; // Thêm TextMeshPro ?? hi?n th? thông tin t?ng
-    public TextMeshProUGUI levelRequireMapDisplay; // Thêm TextMeshPro ?? hi?n th? yêu c?u c?p ??
+    public TextMeshProUGUI floorDisplay; // ThÃªm TextMeshPro ?? hi?n th? thÃ´ng tin t?ng
+    public TextMeshProUGUI levelRequireMapDisplay; // ThÃªm TextMeshPro ?? hi?n th? yÃªu c?u c?p ??
     public TextMeshProUGUI currentMemberDisplay;
     public TextMeshProUGUI maxMemberDisplay;
     public Image mapBGDisplay;
@@ -51,15 +66,25 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public string selectedMapBGName;
     public int maxPlayers = 1;
 
+    [SerializeField] Transform lobbyPlayerListContain;
+    [SerializeField] GameObject lobbyPlayerItemPrefab;
+    private List<PlayerData> lobbyPlayers = new List<PlayerData>();
+    private DatabaseReference databaseReference;
+
     private void Awake()
     {
         Instance = this;
+        // Initialize Firebase
+        FirebaseApp app = FirebaseApp.DefaultInstance;
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+        GetLobbyPlayersFromFirebase();
     }
 
     private void Update()
     {
         currentMember = playerListContain.childCount;
         currentMemberDisplay.text = currentMember.ToString();
+        UpdateLobbyPlayerList();
     }
 
     // Start is called before the first frame update
@@ -92,6 +117,73 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         Debug.Log("Joined Lobby");
         MenuManager.Instance.OpenMenu("Title");
         PhotonNetwork.NickName = "Nexus " + Random.Range(0, 1000).ToString("0000");
+
+        AddPlayerToFirebase(PhotonNetwork.LocalPlayer);
+        // Clear the current lobby players list
+        lobbyPlayers.Clear();
+
+        // Populate the lobby players list with the current players in the lobby
+        GetLobbyPlayersFromFirebase();
+
+        // Update the UI
+        UpdateLobbyPlayerList();
+        
+    }
+
+    private void AddPlayerToFirebase(Player player)
+    {
+        string playerKey = player.UserId ?? player.NickName;
+        databaseReference.Child("lobbyPlayers").Child(playerKey).SetValueAsync(player.NickName);
+    }
+
+    private void RemovePlayerFromFirebase(Player player)
+    {
+        string playerKey = player.UserId ?? player.NickName;
+        databaseReference.Child("lobbyPlayers").Child(playerKey).RemoveValueAsync();
+    }
+
+    private void GetLobbyPlayersFromFirebase()
+    {
+        databaseReference.Child("lobbyPlayers").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to retrieve lobby players from Firebase.");
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                foreach (DataSnapshot playerSnapshot in snapshot.Children)
+                {
+                    string playerName = playerSnapshot.Value.ToString();
+                    // Create a new PlayerData object and add to lobbyPlayers list
+                    PlayerData newPlayerData = new PlayerData(playerName);
+                    lobbyPlayers.Add(newPlayerData);
+                }
+
+                // Update the UI
+                UpdateLobbyPlayerList();
+            }
+        });
+    }
+
+    private void UpdateLobbyPlayerList()
+    {
+        // Clear the current UI list
+        foreach (Transform child in lobbyPlayerListContain)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Populate the UI list with the updated lobby players list
+        foreach (PlayerData playerData in lobbyPlayers)
+        {
+            GameObject playerItem = Instantiate(lobbyPlayerItemPrefab, lobbyPlayerListContain);
+            RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
+            rectTransform.localScale = Vector3.one;
+            rectTransform.anchoredPosition3D = Vector3.zero;
+            playerItem.GetComponent<LobbyPlayerListItem>().SetUp(playerData);
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -120,17 +212,15 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         selectedFloor = floor;
         selectedLevelRequire = levelRequire;
         selectedMapBGName = mapBG.name;
-        dungeonDisplay.text = floor; // C?p nh?t thông tin t?ng trên b?n ??
-        levelRequireDisplay.text = levelRequire; // C?p nh?t yêu c?u c?p ?? trên b?n ??
+        dungeonDisplay.text = floor; // C?p nh?t thÃ´ng tin t?ng trÃªn b?n ??
+        levelRequireDisplay.text = levelRequire; // C?p nh?t yÃªu c?u c?p ?? trÃªn b?n ??
         mapBGDisplay.sprite = mapBG;
-        floorDisplay.text = selectedFloor; // C?p nh?t thông tin t?ng trên b?n ??
-        levelRequireMapDisplay.text = selectedLevelRequire; // C?p nh?t yêu c?u c?p ?? trên b?n ??
+        floorDisplay.text = selectedFloor; // C?p nh?t thÃ´ng tin t?ng trÃªn b?n ??
+        levelRequireMapDisplay.text = selectedLevelRequire; // C?p nh?t yÃªu c?u c?p ?? trÃªn b?n ??
         currentMemberDisplay.text = currentMember.ToString();
         maxMemberDisplay.text = maxPlayers.ToString();
         photonView.RPC("SetSelectedMap", RpcTarget.AllBuffered, selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName);
         listMapLayout.SetActive(false);
-
-        SendUpdatedMapData();
     }
 
     public void OnToggleValueChanged()
@@ -141,7 +231,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         else if (toggle4.isOn) maxPlayers = 4;
 
         Debug.Log("Max Players set to: " + maxPlayers);
-        SendUpdatedMapData();
     }
 
     public void OnCreateRoomButtonClicked()
@@ -153,6 +242,15 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         {
             RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = (byte)maxPlayers;
+
+            // Set Custom Room Properties
+            ExitGames.Client.Photon.Hashtable customRoomProperties = new ExitGames.Client.Photon.Hashtable();
+            customRoomProperties["SelectedMap"] = selectedMap;
+            customRoomProperties["SelectedFloor"] = selectedFloor;
+            customRoomProperties["SelectedLevelRequire"] = selectedLevelRequire;
+            customRoomProperties["SelectedMapBGName"] = selectedMapBGName;
+            roomOptions.CustomRoomProperties = customRoomProperties;
+            roomOptions.CustomRoomPropertiesForLobby = new string[] { "SelectedMap", "SelectedFloor", "SelectedLevelRequire", "SelectedMapBGName" };
 
             Debug.Log("Creating room...");
             partyOptionLayout.SetActive(false);
@@ -170,6 +268,23 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedMap"))
+        {
+            selectedMap = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedMap"];
+        }
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedFloor"))
+        {
+            selectedFloor = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedFloor"];
+        }
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedLevelRequire"))
+        {
+            selectedLevelRequire = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedLevelRequire"];
+        }
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedMapBGName"))
+        {
+            selectedMapBGName = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedMapBGName"];
+        }
+
         Debug.Log("Joined room successfully");
         roomNameText.text = selectedFloor;
         dungeonRoomDisplay.text = selectedFloor;
@@ -187,6 +302,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < players.Count(); i++)
         {
+            UpdateRoomInfo();
             GameObject playerItem = PhotonNetwork.Instantiate(playerItemPrefab.name, Vector3.zero, Quaternion.identity);
             playerItem.transform.SetParent(playerListContain);
             RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
@@ -195,7 +311,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             playerItem.GetComponent<PlayerListItem>().SetUp(players[i]);
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        SendUpdatedMapData();
         UpdateRoomInfo();
     }
 
@@ -206,6 +321,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        dungeonRoomDisplay.text = selectedFloor;
+        levelRequireRoomDisplay.text = selectedLevelRequire;
+        mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
+        Debug.Log("Floor: " + selectedFloor + ", Level Require: " + selectedLevelRequire + "MapBG: " + selectedMapBGName);
         currentMemberDisplay.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
         maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
         GameObject playerItem = PhotonNetwork.Instantiate(playerItemPrefab.name, Vector3.zero, Quaternion.identity);
@@ -215,14 +334,18 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         rectTransform.anchoredPosition3D = Vector3.zero;
         playerItem.GetComponent<PlayerListItem>().SetUp(newPlayer);
         UpdateRoomInfo();
-        SendUpdatedMapData();
+
+        UpdateLobbyPlayerList();
+        RemovePlayerFromFirebase(newPlayer);
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         currentMemberDisplay.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
         maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
         UpdateRoomInfo();
-        SendUpdatedMapData();
+
+        UpdateLobbyPlayerList();
+        AddPlayerToFirebase(otherPlayer);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -241,14 +364,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         Debug.Log("Map set: " + map + ", Floor: " + floor + ", Level Require: " + levelRequire + "MapBG: " + mapBGName);
     }
 
-    private void SendUpdatedMapData()
-    {
-        if (PhotonNetwork.InRoom)
-        {
-            photonView.RPC("SetSelectedMap", RpcTarget.AllBuffered, selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName);
-        }
-    }
-
     private void UpdateRoomInfo()
     {
         currentMember = PhotonNetwork.CurrentRoom.PlayerCount;
@@ -259,6 +374,23 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
 
         roomNameText.text = selectedFloor;
+        // Update Room Custom Properties
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedMap"))
+        {
+            selectedMap = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedMap"];
+        }
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedFloor"))
+        {
+            selectedFloor = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedFloor"];
+        }
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedLevelRequire"))
+        {
+            selectedLevelRequire = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedLevelRequire"];
+        }
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedMapBGName"))
+        {
+            selectedMapBGName = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedMapBGName"];
+        }
     }
 
     public void StartGame()
@@ -311,7 +443,15 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             RoomItem roomItem = roomItemObject.GetComponent<RoomItem>();
             roomItem.SetUp(roomList[i]);
 
-            roomItem.SetRoomData(selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName, currentMember, maxPlayers);
+            // Get Info from Custom Room Properties
+            string map = roomList[i].CustomProperties.ContainsKey("SelectedMap") ? (string)roomList[i].CustomProperties["SelectedMap"] : "Unknown";
+            string floor = roomList[i].CustomProperties.ContainsKey("SelectedFloor") ? (string)roomList[i].CustomProperties["SelectedFloor"] : "Unknown";
+            string levelRequire = roomList[i].CustomProperties.ContainsKey("SelectedLevelRequire") ? (string)roomList[i].CustomProperties["SelectedLevelRequire"] : "Unknown";
+            string mapBGName = roomList[i].CustomProperties.ContainsKey("SelectedMapBGName") ? (string)roomList[i].CustomProperties["SelectedMapBGName"] : "Unknown";
+            Sprite mapBG = Resources.Load<Sprite>(mapBGName);
+
+            // Show info
+            roomItem.SetRoomData(map, floor, levelRequire, mapBGName, roomList[i].PlayerCount, roomList[i].MaxPlayers);
         }
     }
 }
