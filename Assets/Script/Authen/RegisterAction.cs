@@ -8,12 +8,13 @@ using Firebase.Auth;
 using Firebase.Extensions;
 using Firebase;
 using Firebase.Database;
+using UnityEngine.SceneManagement;
 
 public class PlayerInfo
 {
     public string usernameInfo;
     public string emailInfo;
-    public string passwordHash;  // Thay đổi để lưu trữ mật khẩu dạng băm
+    public string passwordHash;
     public string characterId;
     public float exp;
     public float gold;
@@ -41,13 +42,11 @@ public class RegisterAction : MonoBehaviour
     public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng ký thành công
     public GameObject loadingScreen;  // Hiển thị khi đang xử lý
     public GameObject registerPopup; // Popup đăng ký
-    public GameObject loginPopup;
 
     // Định nghĩa các màu tùy chỉnh bằng mã màu hex
     private Color successColor;
     private Color errorColor;
 
-    public PlayerInfo playerInfo;
     DatabaseReference dbRef;
 
     void Start()
@@ -194,7 +193,7 @@ public class RegisterAction : MonoBehaviour
             var profileTask = user.UpdateUserProfileAsync(profile);
             yield return new WaitUntil(() => profileTask.IsCompleted);
 
-            string characterId = "c01";
+            string characterId = ""; // Để trống ban đầu
             float exp = 0;
             float gold = 0;
             float gem = 0;
@@ -237,12 +236,22 @@ public class RegisterAction : MonoBehaviour
                         messageText.gameObject.SetActive(true);
                     }
 
-                    // Hiển thị username sau khi đăng ký thành công
-                    /*if (usernameDisplayText != null)
+                    // Lưu thông tin người dùng vào PlayerData
+                    if (PlayerData.instance != null)
                     {
-                        usernameDisplayText.text = "Player: " + username;
-                        usernameDisplayText.gameObject.SetActive(true);
-                    }*/
+                        PlayerData.instance.playerId = user.UserId;
+                        PlayerData.instance.username = username;
+                        PlayerData.instance.email = email;
+                        PlayerData.instance.passwordHash = passwordHash;
+                        PlayerData.instance.characterId = characterId;
+                        PlayerData.instance.exp = exp;
+                        PlayerData.instance.gold = gold;
+                        PlayerData.instance.gem = gem;
+                    }
+                    else
+                    {
+                        Debug.LogError("PlayerData.instance is null!");
+                    }
 
                     // Xóa thông tin trong các trường nhập liệu
                     ResetInputFields();
@@ -257,15 +266,14 @@ public class RegisterAction : MonoBehaviour
                         messageText.text = "Registration successful! Please verify your email.";
                         messageText.gameObject.SetActive(true);
                     }
+
+                    // Đợi 1 giây trước khi chuyển sang scene chọn nhân vật
                     yield return new WaitForSeconds(1);
-                    if (registerPopup != null)
-                    {
-                        registerPopup.SetActive(false);
-                    }
-                    if (loginPopup != null)
-                    {
-                        loginPopup.SetActive(true);
-                    }
+
+                    // Chuyển sang scene chọn nhân vật sau khi đăng ký thành công
+                    SceneManager.LoadScene("ChooseCharacter");
+
+
                 }
             }
         }
