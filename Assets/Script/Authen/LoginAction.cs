@@ -1,32 +1,17 @@
-﻿using System.Collections;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Firebase.Auth;
-using Firebase.Extensions;
-using Firebase.Database;
-using Firebase;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoginAction : MonoBehaviour
 {
     public TMP_InputField usernameInput;
     public TMP_InputField passwordInput;
-    public TextMeshProUGUI messageText;  // Dùng để hiển thị thông báo, nếu cần
-    public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng nhập thành công
-    public GameObject loadingScreen;  // Hiển thị khi đang xử lý
-    public GameObject loginPopup; // Popup đăng nhập
+    public TMP_Text messageText;  // D�ng ?? hi?n th? th�ng b�o, n?u c?n
 
-    private Color successColor;
-    private Color errorColor;
-    private DatabaseReference dbRef;
-
-    void Start()
-    {
-        // Chuyển đổi mã màu hex sang Color
-        ColorUtility.TryParseHtmlString("#007213", out successColor); // Màu xanh lục
-        ColorUtility.TryParseHtmlString("#C02E31", out errorColor);   // Màu đỏ
-        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-    }
-
+    // H�m n�y ???c g?i khi ng??i d�ng nh?n v�o n�t ??ng nh?p
     public void OnLoginButtonClicked()
     {
         string username = usernameInput.text;
@@ -34,120 +19,25 @@ public class LoginAction : MonoBehaviour
 
         if (ValidateLogin(username, password))
         {
-            StartCoroutine(LoginUser(username, password));
+            // ??ng nh?p th�nh c�ng, chuy?n ??n m�n h�nh ch�nh ho?c m�n h�nh kh�c
+            SceneManager.LoadScene("NewMainLobby 1");
         }
         else
         {
+            // ??ng nh?p th?t b?i, hi?n th? th�ng b�o l?i
             if (messageText != null)
             {
-                messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
-                messageText.text = "Invalid login information.";
-                messageText.gameObject.SetActive(true); // Hiển thị thông báo
+                messageText.text = "Invalid username or password.";
+                messageText.gameObject.SetActive(true);
             }
         }
     }
 
+    // H�m gi? ??nh ?? ki?m tra th�ng tin ??ng nh?p
     private bool ValidateLogin(string username, string password)
     {
-        // Kiểm tra xem các trường có bị trống không
-        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    private IEnumerator LoginUser(string username, string password)
-    {
-        loadingScreen.SetActive(true);
-
-        // Lấy email từ username
-        var getEmailTask = dbRef.Child("players").Child(username).Child("emailInfo").GetValueAsync();
-        yield return new WaitUntil(() => getEmailTask.IsCompleted);
-
-        if (getEmailTask.Exception != null || !getEmailTask.Result.Exists)
-        {
-            messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
-            messageText.text = "Login failed: Invalid username.";
-            messageText.gameObject.SetActive(true);
-            loadingScreen.SetActive(false);
-        }
-        else
-        {
-            string email = getEmailTask.Result.Value.ToString();
-
-            FirebaseAuth auth = FirebaseAuth.DefaultInstance;
-            var loginTask = auth.SignInWithEmailAndPasswordAsync(email, password);
-            yield return new WaitUntil(() => loginTask.IsCompleted);
-
-            if (loginTask.Exception != null)
-            {
-                FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
-                AuthError errorCode = (AuthError)firebaseException.ErrorCode;
-                messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
-                messageText.text = "Login failed: " + errorCode.ToString();
-                messageText.gameObject.SetActive(true);
-                loadingScreen.SetActive(false);
-            }
-            else
-            {
-                AuthResult result = loginTask.Result;
-                FirebaseUser user = result.User;
-                messageText.color = successColor;  // Thiết lập màu xanh cho thông báo thành công
-                messageText.text = "Login successful! Welcome " + user.DisplayName;
-                messageText.gameObject.SetActive(true);
-
-                
-
-                // Lưu tên người dùng
-                PlayerPrefs.SetString("username", username);
-                PlayerPrefs.Save();
-
-                // Xóa các trường nhập liệu sau khi đăng nhập thành công
-                ResetInputFields();
-
-                // Ẩn màn hình loading sau khi đăng nhập thành công
-                loadingScreen.SetActive(false);               
-
-                // Đợi 3 giây trước khi tắt popup đăng nhập
-                yield return new WaitForSeconds(1);
-
-                // Hiển thị username sau khi đăng nhập thành công
-                if (usernameDisplayText != null)
-                {
-                    usernameDisplayText.text = "Player: " + username;
-                    usernameDisplayText.gameObject.SetActive(true);
-                }
-                // Ẩn popup đăng nhập khi người dùng nhấn nút close
-                if (loginPopup != null)
-                {
-                    loginPopup.SetActive(false);
-                }
-
-            }
-        }
-    }
-
-    private void ResetInputFields()
-    {
-        usernameInput.text = "";
-        passwordInput.text = "";
-    }
-
-    public void OnCloseLoginPopup()
-    {
-        // Reset thông báo đăng nhập thành công
-        if (messageText != null)
-        {
-            messageText.text = "";
-            messageText.gameObject.SetActive(false);
-        }
-
-        // Ẩn popup đăng nhập khi người dùng nhấn nút close
-        if (loginPopup != null)
-        {
-            loginPopup.SetActive(false);
-        }
+        // Thay th? ?o?n m� n�y b?ng logic th?c t? ?? ki?m tra th�ng tin ??ng nh?p
+        // V� d?: k?t n?i ??n m�y ch? ?? x�c th?c th�ng tin ??ng nh?p
+        return username == "player" && password == "1234"; // ?�y ch? l� m?t v� d? ??n gi?n
     }
 }
