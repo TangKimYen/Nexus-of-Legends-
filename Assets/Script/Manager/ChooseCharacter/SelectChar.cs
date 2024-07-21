@@ -1,95 +1,56 @@
-Ôªøusing TMPro;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SelectChar : MonoBehaviour
 {
-    public GameObject confirmationPopup;
-    public TextMeshProUGUI confirmationText;
-    private string selectedCharacterId;
-    private string selectedCharacterName;
-    private CharSelectManager charSelectManager;
+    public GameObject confirmationPopup; // G·n GameObject c?a popup x·c nh?n v‡o ?‚y
+    public TextMeshProUGUI confirmationText; // G·n th‡nh ph?n Text c?a popup v‡o ?‚y
 
-    void Start()
-    {
-        confirmationPopup.SetActive(false); // ƒê·∫£m b·∫£o popup ·∫©n khi b·∫Øt ƒë·∫ßu
-        charSelectManager = FindObjectOfType<CharSelectManager>();
-        if (charSelectManager == null)
-        {
-            Debug.LogError("CharSelectManager not found in the scene.");
-        }
-    }
+    private string selectedCharacter;
 
     public void SelectFireKnight()
     {
-        SelectCharacter("c01", "Fire Knight");
+        selectedCharacter = "Fire Knight";
+        ShowConfirmationPopup();
     }
 
     public void SelectLeafRanger()
     {
-        SelectCharacter("c02", "Leaf Ranger");
+        selectedCharacter = "Leaf Ranger";
+        ShowConfirmationPopup();
     }
 
     public void SelectWaterPriestess()
     {
-        SelectCharacter("c03", "Water Priestess");
+        selectedCharacter = "Water Priestess";
+        ShowConfirmationPopup();
     }
 
     public void SelectWindAssassin()
     {
-        SelectCharacter("c04", "Wind Assassin");
-    }
-
-    private void SelectCharacter(string characterId, string characterName)
-    {
-        selectedCharacterId = characterId;
-        selectedCharacterName = characterName;
+        selectedCharacter = "Wind Assassin";
         ShowConfirmationPopup();
     }
 
     private void ShowConfirmationPopup()
     {
-        if (confirmationText != null)
-        {
-            confirmationText.text = "Are you sure you want to select " + selectedCharacterName + " as your character?";
-            if (confirmationPopup != null)
-            {
-                confirmationPopup.SetActive(true);
-                Debug.Log("Showing confirmation popup for " + selectedCharacterName);
-            }
-            else
-            {
-                Debug.LogError("Confirmation popup is not assigned.");
-            }
-        }
-        else
-        {
-            Debug.LogError("Confirmation text is not assigned.");
-        }
+        confirmationText.text = "Are you sure you want to select the " + selectedCharacter + " as your character?";
+        confirmationPopup.SetActive(true);
     }
 
-    public void OnConfirm()
+    public void ConfirmSelection()
     {
-        if (charSelectManager != null)
-        {
-            Debug.Log("Confirming selection: ID = " + selectedCharacterId + ", Name = " + selectedCharacterName);
-            charSelectManager.SelectCharacter(selectedCharacterId, selectedCharacterName);
-            confirmationPopup.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError("charSelectManager is null.");
-        }
+        // Logic ?? x? l˝ khi ng??i ch?i x·c nh?n ch?n nh‚n v?t
+        Debug.Log("Selected Character: " + selectedCharacter);
+        confirmationPopup.SetActive(false);
     }
 
-    public void OnCancel()
+    public void CancelSelection()
     {
-        if (confirmationPopup != null)
-        {
-            confirmationPopup.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError("Confirmation popup is not assigned.");
-        }
+        confirmationPopup.SetActive(false);
     }
 }
+
