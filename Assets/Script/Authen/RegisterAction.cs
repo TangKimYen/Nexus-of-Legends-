@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
-<<<<<<< HEAD
 using Firebase.Auth;
 using Firebase.Extensions;
 using Firebase;
@@ -31,9 +30,6 @@ public class PlayerInfo
         this.gem = gem;
     }
 }
-=======
-using UnityEngine.SceneManagement;
->>>>>>> main
 
 public class RegisterAction : MonoBehaviour
 {
@@ -42,24 +38,18 @@ public class RegisterAction : MonoBehaviour
     public TMP_InputField confirmPasswordInput;
     public TMP_InputField fullnameInput;
     public TMP_InputField emailInput;
-<<<<<<< HEAD
-    public TextMeshProUGUI messageText;  // Dùng để hiển thị thông báo, nếu cần
-    public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng ký thành công
-    public GameObject loadingScreen;  // Hiển thị khi đang xử lý
-    public GameObject registerPopup; // Popup đăng ký
+    public TextMeshProUGUI messageText;  // DÃ¹ng Ä‘á»ƒ hiá»ƒn thá»‹ thÃ´ng bÃ¡o, náº¿u cáº§n
+    public TextMeshProUGUI usernameDisplayText; // Text Ä‘á»ƒ hiá»ƒn thá»‹ username sau khi Ä‘Äƒng kÃ½ thÃ nh cÃ´ng
+    public GameObject loadingScreen;  // Hiá»ƒn thá»‹ khi Ä‘ang xá»­ lÃ½
+    public GameObject registerPopup; // Popup Ä‘Äƒng kÃ½
 
-    // Định nghĩa các màu tùy chỉnh bằng mã màu hex
+    // Äá»‹nh nghÄ©a cÃ¡c mÃ u tÃ¹y chá»‰nh báº±ng mÃ£ mÃ u hex
     private Color successColor;
     private Color errorColor;
 
     DatabaseReference dbRef;
 
     void Start()
-=======
-    public TextMeshProUGUI messageText;  // D�ng ?? hi?n th? th�ng b�o, n?u c?n
-
-    /*void Start()
->>>>>>> main
     {
         // Thi?t l?p input type cho password fields
         passwordInput.inputType = TMP_InputField.InputType.Password;
@@ -76,26 +66,26 @@ public class RegisterAction : MonoBehaviour
 
         if (ValidateRegister(username, password, confirmPassword, email, phone))
         {
-            // ??ng k� th�nh c�ng, chuy?n ??n m�n h�nh ch�nh ho?c m�n h�nh kh�c
+            // ??ng ký thành công, chuy?n ??n màn hình chính ho?c màn hình khác
             SceneManager.LoadScene("ChooseCharacter");
         }
         else
         {
-            // ??ng k� th?t b?i, hi?n th? th�ng b�o l?i
+            // ??ng ký th?t b?i, hi?n th? thông báo l?i
             if (messageText != null)
             {
                 messageText.text = "Invalid registration information.";
-                messageText.gameObject.SetActive(true); // Hi?n th? th�ng b�o
+                messageText.gameObject.SetActive(true); // Hi?n th? thông báo
             }
         }
     }
 
-    // H�m gi? ??nh ?? ki?m tra th�ng tin ??ng k�
+    // Hàm gi? ??nh ?? ki?m tra thông tin ??ng ký
     private bool ValidateRegister(string username, string password, string confirmPassword, string email, string fullname)
     {
-        // Thay th? ?o?n m� n�y b?ng logic th?c t? ?? ki?m tra th�ng tin ??ng k�
-        // V� d?: ki?m tra c�c ?i?u ki?n nh? ?? d�i c?a t�n ng??i d�ng v� m?t kh?u,
-        // s? kh?p c?a m?t kh?u v� m?t kh?u x�c nh?n, ??nh d?ng c?a email, v.v.
+        // Thay th? ?o?n mã này b?ng logic th?c t? ?? ki?m tra thông tin ??ng ký
+        // Ví d?: ki?m tra các ?i?u ki?n nh? ?? dài c?a tên ng??i dùng và m?t kh?u,
+        // s? kh?p c?a m?t kh?u và m?t kh?u xác nh?n, ??nh d?ng c?a email, v.v.
         if (string.IsNullOrEmpty(username) ||
                !string.IsNullOrEmpty(password) ||
                password == confirmPassword ||
@@ -104,7 +94,7 @@ public class RegisterAction : MonoBehaviour
         {
             return false;
         }
-        // Ki?m tra xem m?t kh?u v� m?t kh?u x�c nh?n kh?p nhau
+        // Ki?m tra xem m?t kh?u và m?t kh?u xác nh?n kh?p nhau
         if (password != confirmPassword)
         {
             return false ;
@@ -116,11 +106,10 @@ public class RegisterAction : MonoBehaviour
             return false;
         }
 
-        // Th�m c�c ki?m tra kh�c n?u c?n
+        // Thêm các ki?m tra khác n?u c?n
 
         return true;
     }
-<<<<<<< HEAD
 
     private IEnumerator CheckUsernameAndRegister(string username, string email, string password)
     {
@@ -133,9 +122,9 @@ public class RegisterAction : MonoBehaviour
         {
             if (messageText != null)
             {
-                messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
+                messageText.color = errorColor;  // Thiáº¿t láº­p mÃ u Ä‘á» cho thÃ´ng bÃ¡o lá»—i
                 messageText.text = "Error checking username.";
-                messageText.gameObject.SetActive(true); // Hiển thị thông báo
+                messageText.gameObject.SetActive(true); // Hiá»ƒn thá»‹ thÃ´ng bÃ¡o
             }
             loadingScreen.SetActive(false);
         }
@@ -143,9 +132,9 @@ public class RegisterAction : MonoBehaviour
         {
             if (messageText != null)
             {
-                messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
+                messageText.color = errorColor;  // Thiáº¿t láº­p mÃ u Ä‘á» cho thÃ´ng bÃ¡o lá»—i
                 messageText.text = "Username is already taken.";
-                messageText.gameObject.SetActive(true); // Hiển thị thông báo
+                messageText.gameObject.SetActive(true); // Hiá»ƒn thá»‹ thÃ´ng bÃ¡o
             }
             loadingScreen.SetActive(false);
         }
@@ -185,7 +174,7 @@ public class RegisterAction : MonoBehaviour
 
             if (messageText != null)
             {
-                messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
+                messageText.color = errorColor;  // Thiáº¿t láº­p mÃ u Ä‘á» cho thÃ´ng bÃ¡o lá»—i
                 messageText.text = errorMessage;
                 messageText.gameObject.SetActive(true);
             }
@@ -199,11 +188,11 @@ public class RegisterAction : MonoBehaviour
             var profileTask = user.UpdateUserProfileAsync(profile);
             yield return new WaitUntil(() => profileTask.IsCompleted);
 
-            string characterId = ""; // Để trống ban đầu
+            string characterId = ""; // Äá»ƒ trá»‘ng ban Ä‘áº§u
             float exp = 0;
             float gold = 0;
             float gem = 0;
-            string passwordHash = ComputeHash(password); // Băm mật khẩu
+            string passwordHash = ComputeHash(password); // BÄƒm máº­t kháº©u
             PlayerInfo playerInfo = new PlayerInfo(username, email, passwordHash, characterId, exp, gold, gem);
             string json = JsonUtility.ToJson(playerInfo);
             dbRef.Child("players").Child(username).SetRawJsonValueAsync(json);
@@ -212,7 +201,7 @@ public class RegisterAction : MonoBehaviour
             {
                 if (messageText != null)
                 {
-                    messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
+                    messageText.color = errorColor;  // Thiáº¿t láº­p mÃ u Ä‘á» cho thÃ´ng bÃ¡o lá»—i
                     messageText.text = "Failed to set user profile.";
                     messageText.gameObject.SetActive(true);
                 }
@@ -227,7 +216,7 @@ public class RegisterAction : MonoBehaviour
                 {
                     if (messageText != null)
                     {
-                        messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
+                        messageText.color = errorColor;  // Thiáº¿t láº­p mÃ u Ä‘á» cho thÃ´ng bÃ¡o lá»—i
                         messageText.text = "Failed to send verification email.";
                         messageText.gameObject.SetActive(true);
                     }
@@ -237,12 +226,12 @@ public class RegisterAction : MonoBehaviour
                 {
                     if (messageText != null)
                     {
-                        messageText.color = successColor;  // Thiết lập màu xanh cho thông báo thành công
+                        messageText.color = successColor;  // Thiáº¿t láº­p mÃ u xanh cho thÃ´ng bÃ¡o thÃ nh cÃ´ng
                         messageText.text = "Registration successful! Please verify your email.";
                         messageText.gameObject.SetActive(true);
                     }
 
-                    // Lưu thông tin người dùng vào PlayerData
+                    // LÆ°u thÃ´ng tin ngÆ°á»i dÃ¹ng vÃ o PlayerData
                     if (PlayerData.instance != null)
                     {
                         PlayerData.instance.playerId = user.UserId;
@@ -259,13 +248,13 @@ public class RegisterAction : MonoBehaviour
                         Debug.LogError("PlayerData.instance is null!");
                     }
 
-                    // Xóa thông tin trong các trường nhập liệu
+                    // XÃ³a thÃ´ng tin trong cÃ¡c trÆ°á»ng nháº­p liá»‡u
                     ResetInputFields();
 
-                    // Ẩn màn hình loading sau khi đăng ký thành công
+                    // áº¨n mÃ n hÃ¬nh loading sau khi Ä‘Äƒng kÃ½ thÃ nh cÃ´ng
                     loadingScreen.SetActive(false);
 
-                    // Hiển thị thông báo thành công trên popup đăng ký
+                    // Hiá»ƒn thá»‹ thÃ´ng bÃ¡o thÃ nh cÃ´ng trÃªn popup Ä‘Äƒng kÃ½
                     if (registerPopup != null)
                     {
                         messageText.color = successColor;
@@ -273,10 +262,10 @@ public class RegisterAction : MonoBehaviour
                         messageText.gameObject.SetActive(true);
                     }
 
-                    // Đợi 1 giây trước khi chuyển sang scene chọn nhân vật
+                    // Äá»£i 1 giÃ¢y trÆ°á»›c khi chuyá»ƒn sang scene chá»n nhÃ¢n váº­t
                     yield return new WaitForSeconds(1);
 
-                    // Chuyển sang scene chọn nhân vật sau khi đăng ký thành công
+                    // Chuyá»ƒn sang scene chá»n nhÃ¢n váº­t sau khi Ä‘Äƒng kÃ½ thÃ nh cÃ´ng
                     SceneManager.LoadScene("ChooseCharacter");
 
 
@@ -292,7 +281,7 @@ public class RegisterAction : MonoBehaviour
         confirmPasswordInput.text = "";
         emailInput.text = "";
 
-        // Reset thông báo lỗi
+        // Reset thÃ´ng bÃ¡o lá»—i
         if (messageText != null)
         {
             messageText.text = "";
@@ -303,13 +292,13 @@ public class RegisterAction : MonoBehaviour
     public void OnCloseRegisterPopup()
     {
         ResetInputFields();
-        // Reset thông báo đăng ký thành công
+        // Reset thÃ´ng bÃ¡o Ä‘Äƒng kÃ½ thÃ nh cÃ´ng
         if (messageText != null)
         {
             messageText.text = "";
             messageText.gameObject.SetActive(false);
         }
-        // Ẩn popup đăng ký khi người dùng nhấn nút close
+        // áº¨n popup Ä‘Äƒng kÃ½ khi ngÆ°á»i dÃ¹ng nháº¥n nÃºt close
         if (registerPopup != null)
         {
             registerPopup.SetActive(false);
@@ -333,6 +322,3 @@ public class RegisterAction : MonoBehaviour
         }
     }
 }
-=======
-}
->>>>>>> main
