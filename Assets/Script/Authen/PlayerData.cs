@@ -9,14 +9,13 @@ public class PlayerData : MonoBehaviour
     public string email;
     public string passwordHash;
     public string characterId = "";
-    public string characterName = ""; // Thêm thuộc tính này
+    public string characterName = "";
     public float exp;
     public float gold;
     public float gem;
     public string sessionId;
     public string loginTime;
     public string logoutTime;
-    public int level;
 
     void Awake()
     {
@@ -31,12 +30,5 @@ public class PlayerData : MonoBehaviour
             Destroy(gameObject);
             Debug.LogWarning("Duplicate PlayerData instance destroyed.");
         }
-    }
-
-    public PlayerData(string NickName, int Level, string CharacterId)
-    {
-        username = NickName;
-        level = Level;
-        characterId = CharacterId;
     }
 }
