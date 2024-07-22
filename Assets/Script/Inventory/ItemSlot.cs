@@ -12,7 +12,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public event Action<Item> OnRightClickEvent;
 
-    public Item _item;
+    private Item _item;
     public Item Item
     {
         get { return _item; }
@@ -53,8 +53,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(Item is EquippableItem)
-        tooltip.ShowTooltip((EquippableItem)Item);
+        if (Item is EquippableItem equippableItem)
+        {
+            tooltip.ShowTooltip(equippableItem);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
