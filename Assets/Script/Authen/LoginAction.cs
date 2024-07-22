@@ -155,9 +155,6 @@ public class LoginAction : MonoBehaviour
                         {
                             loginPopup.SetActive(false);
                         }
-
-                        // Chuyển sang scene MainLobby sau khi đăng nhập thành công
-                        SceneManager.LoadScene("MainLobby");
                     }
                     else
                     {
