@@ -21,12 +21,12 @@ public class LobbyPlayerListItem : MonoBehaviour
 
     public void SetUp(PlayerData playerData)
     {
-        playerNameText.text = playerData.NickName;
-        playerId = playerData.NickName.ToString();
-        playerLevelText.text = playerData.Level.ToString(); // Set level text
+        playerNameText.text = playerData.username;
+        playerId = playerData.username.ToString();
+        playerLevelText.text = playerData.level.ToString(); // Set level text
         inviteButton.onClick.AddListener(() => ConnectToServer.Instance.OnInviteButtonClicked(playerId));
         // Set avatar image based on CharacterId
-        switch (playerData.CharacterId)
+        switch (playerData.characterId)
         {
             case "c01":
                 avatarImage.sprite = c01AssassinAvatar;

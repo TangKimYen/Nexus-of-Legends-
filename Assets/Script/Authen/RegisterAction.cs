@@ -8,6 +8,8 @@ using Firebase.Extensions;
 using Firebase;
 using Firebase.Database;
 using UnityEngine.SceneManagement;
+using System.Security.Cryptography;
+using System.Text;
 
 public class PlayerInfo
 {
@@ -54,7 +56,7 @@ public class RegisterAction : MonoBehaviour
         // Thi?t l?p input type cho password fields
         passwordInput.inputType = TMP_InputField.InputType.Password;
         confirmPasswordInput.inputType = TMP_InputField.InputType.Password;
-    }*/
+    }
 
     public void OnRegisterButtonClicked()
     {

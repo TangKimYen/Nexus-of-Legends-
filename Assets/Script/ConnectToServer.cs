@@ -28,20 +28,6 @@ public class PlayerInformation
     public string usernameInfo;
 }
 
-[System.Serializable]
-public class PlayerData
-{
-    public string NickName;
-    public int Level;
-    public string CharacterId; 
-
-    public PlayerData(string nickName, int level, string characterId)
-    {
-        NickName = nickName;
-        Level = level;
-        CharacterId = characterId;
-    }
-}
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     public static ConnectToServer Instance;
