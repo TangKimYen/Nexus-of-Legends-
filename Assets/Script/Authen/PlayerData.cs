@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
@@ -14,11 +14,11 @@ public class PlayerData : MonoBehaviour
     public float exp;
     public float gold;
     public float gem;
+    public int level; // Thêm thuộc tính level
     public string sessionId;
     public string loginTime;
     public string logoutTime;
-    public bool isLoggedIn = false;
-    public int level = 1;
+    public bool isLoggedIn;
 
     void Awake()
     {

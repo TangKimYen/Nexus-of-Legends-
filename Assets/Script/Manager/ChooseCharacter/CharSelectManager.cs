@@ -11,7 +11,7 @@ public class CharSelectManager : MonoBehaviour
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public void SelectCharacter(string characterId, string characterName, string characterAvatarPrefabName)
+    public void SelectCharacter(string characterId, string characterName)
     {
         if (PlayerData.instance == null)
         {
@@ -33,7 +33,7 @@ public class CharSelectManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Saving Character ID: " + characterId + ", Character Name: " + characterName + ", Avatar Prefab: " + characterAvatarPrefabName + " for user: " + username);
+        Debug.Log("Saving Character ID: " + characterId + ", Character Name: " + characterName + " for user: " + username);
 
         // Save character information to Firebase
         dbRef.Child("players").Child(username).Child("characterId").SetValueAsync(characterId).ContinueWith(task =>
@@ -44,28 +44,14 @@ public class CharSelectManager : MonoBehaviour
                 {
                     if (task2.IsCompleted)
                     {
-                        dbRef.Child("players").Child(username).Child("characterAvatarPrefabName").SetValueAsync(characterAvatarPrefabName).ContinueWith(task3 =>
+                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
                         {
-                            if (task3.IsCompleted)
-                            {
-                                UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                                {
-                                    Debug.Log("Character selected successfully");
-                                    PlayerData.instance.characterId = characterId;
-                                    PlayerData.instance.characterName = characterName;
-                                    PlayerData.instance.characterAvatarPrefabName = characterAvatarPrefabName;
+                            Debug.Log("Character selected successfully");
+                            PlayerData.instance.characterId = characterId;
+                            PlayerData.instance.characterName = characterName;
 
-                                    // Chuyển sang scene MainLobby sau khi chọn nhân vật
-                                    SceneManager.LoadScene("TitleScreen");
-                                });
-                            }
-                            else
-                            {
-                                UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                                {
-                                    Debug.LogError("Failed to save character avatar prefab name: " + task3.Exception);
-                                });
-                            }
+                            // Chuyển sang scene TitleScreen sau khi chọn nhân vật
+                            SceneManager.LoadScene("TitleScreen");
                         });
                     }
                     else
