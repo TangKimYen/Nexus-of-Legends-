@@ -1,4 +1,4 @@
-﻿using Firebase.Database;
+using Firebase.Database;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +11,7 @@ public class CharSelectManager : MonoBehaviour
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public void SelectCharacter(string characterId, string characterName)
+    public void SelectCharacter(string characterId, string characterName, string characterAvatarPrefabName)
     {
         if (PlayerData.instance == null)
         {
@@ -33,8 +33,9 @@ public class CharSelectManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Saving Character ID: " + characterId + " and Character Name: " + characterName + " for user: " + username);
+        Debug.Log("Saving Character ID: " + characterId + ", Character Name: " + characterName + ", Avatar Prefab: " + characterAvatarPrefabName + " for user: " + username);
 
+        // Save character information to Firebase
         dbRef.Child("players").Child(username).Child("characterId").SetValueAsync(characterId).ContinueWith(task =>
         {
             if (task.IsCompleted)
@@ -43,14 +44,28 @@ public class CharSelectManager : MonoBehaviour
                 {
                     if (task2.IsCompleted)
                     {
-                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                        dbRef.Child("players").Child(username).Child("characterAvatarPrefabName").SetValueAsync(characterAvatarPrefabName).ContinueWith(task3 =>
                         {
-                            Debug.Log("Character selected successfully");
-                            PlayerData.instance.characterId = characterId; // Lưu ID của nhân vật vào PlayerData
-                            PlayerData.instance.characterName = characterName; // Lưu tên nhân vật vào PlayerData
+                            if (task3.IsCompleted)
+                            {
+                                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                                {
+                                    Debug.Log("Character selected successfully");
+                                    PlayerData.instance.characterId = characterId;
+                                    PlayerData.instance.characterName = characterName;
+                                    PlayerData.instance.characterAvatarPrefabName = characterAvatarPrefabName;
 
-                            // Chuyển sang scene chính của game sau khi chọn nhân vật
-                            SceneManager.LoadScene("MainGameScene");
+                                    // Chuy?n sang scene MainLobby sau khi ch?n nh�n v?t
+                                    SceneManager.LoadScene("MainLobby");
+                                });
+                            }
+                            else
+                            {
+                                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                                {
+                                    Debug.LogError("Failed to save character avatar prefab name: " + task3.Exception);
+                                });
+                            }
                         });
                     }
                     else

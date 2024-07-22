@@ -5,44 +5,58 @@ public class SelectChar : MonoBehaviour
 {
     public GameObject confirmationPopup;
     public TextMeshProUGUI confirmationText;
-    private string selectedCharacterId;
-    private string selectedCharacterName;
-    private CharSelectManager charSelectManager;
+
+    private string characterId;
+    private string characterName;
+    private string characterAvatarPrefabName;
+    public CharSelectManager charSelectManager;
 
     void Start()
     {
-        confirmationPopup.SetActive(false); // Đảm bảo popup ẩn khi bắt đầu
-        charSelectManager = FindObjectOfType<CharSelectManager>();
         if (charSelectManager == null)
         {
-            Debug.LogError("CharSelectManager not found in the scene.");
+            charSelectManager = FindObjectOfType<CharSelectManager>();
+            if (charSelectManager == null)
+            {
+                Debug.LogError("CharSelectManager not assigned and not found in the scene.");
+            }
+            else
+            {
+                Debug.Log("CharSelectManager found and assigned automatically.");
+            }
         }
+        confirmationPopup.SetActive(false);
     }
 
     public void SelectFireKnight()
     {
-        SelectCharacter("c01", "Fire Knight");
+        characterId = "c01";
+        characterName = "Fire Knight";
+        characterAvatarPrefabName = "FireKnightPrefab"; // Tên prefab của Fire Knight
+        ShowConfirmationPopup();
     }
 
     public void SelectLeafRanger()
     {
-        SelectCharacter("c02", "Leaf Ranger");
+        characterId = "c02";
+        characterName = "Leaf Ranger";
+        characterAvatarPrefabName = "LeafRangerPrefab"; // Tên prefab của Leaf Ranger
+        ShowConfirmationPopup();
     }
 
     public void SelectWaterPriestess()
     {
-        SelectCharacter("c03", "Water Priestess");
+        characterId = "c03";
+        characterName = "Water Priestess";
+        characterAvatarPrefabName = "WaterPriestessPrefab"; // Tên prefab của Water Priestess
+        ShowConfirmationPopup();
     }
 
     public void SelectWindAssassin()
     {
-        SelectCharacter("c04", "Wind Assassin");
-    }
-
-    private void SelectCharacter(string characterId, string characterName)
-    {
-        selectedCharacterId = characterId;
-        selectedCharacterName = characterName;
+        characterId = "c04";
+        characterName = "Wind Assassin";
+        characterAvatarPrefabName = "WindAssassinPrefab"; // Tên prefab của Wind Assassin
         ShowConfirmationPopup();
     }
 
@@ -50,11 +64,11 @@ public class SelectChar : MonoBehaviour
     {
         if (confirmationText != null)
         {
-            confirmationText.text = "Are you sure you want to select " + selectedCharacterName + " as your character?";
+            confirmationText.text = "Are you sure you want to select " + characterName + " as your character?";
             if (confirmationPopup != null)
             {
                 confirmationPopup.SetActive(true);
-                Debug.Log("Showing confirmation popup for " + selectedCharacterName);
+                Debug.Log("Showing confirmation popup for " + characterName);
             }
             else
             {
@@ -67,21 +81,29 @@ public class SelectChar : MonoBehaviour
         }
     }
 
-    public void OnConfirm()
+    public void ConfirmSelection()
     {
-        if (charSelectManager != null)
+        Debug.Log("Confirmed selection of Character ID: " + characterId);
+        if (confirmationPopup != null)
         {
-            Debug.Log("Confirming selection: ID = " + selectedCharacterId + ", Name = " + selectedCharacterName);
-            charSelectManager.SelectCharacter(selectedCharacterId, selectedCharacterName);
             confirmationPopup.SetActive(false);
         }
         else
         {
-            Debug.LogError("charSelectManager is null.");
+            Debug.LogError("Confirmation popup is not assigned.");
+        }
+
+        if (charSelectManager != null)
+        {
+            charSelectManager.SelectCharacter(characterId, characterName, characterAvatarPrefabName);
+        }
+        else
+        {
+            Debug.LogError("CharSelectManager is null.");
         }
     }
 
-    public void OnCancel()
+    public void CancelSelection()
     {
         if (confirmationPopup != null)
         {

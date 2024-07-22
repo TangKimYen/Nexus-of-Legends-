@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
@@ -9,7 +9,8 @@ public class PlayerData : MonoBehaviour
     public string email;
     public string passwordHash;
     public string characterId = "";
-    public string characterName = ""; // Thêm thuộc tính này
+    public string characterName = "";
+    public string characterAvatarPrefabName = "";
     public float exp;
     public float gold;
     public float gem;
