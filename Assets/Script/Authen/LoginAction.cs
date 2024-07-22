@@ -126,6 +126,10 @@ public class LoginAction : MonoBehaviour
                         PlayerData.instance.exp = snapshot.Child("exp").Value != null ? float.Parse(snapshot.Child("exp").Value.ToString()) : 0f;
                         PlayerData.instance.gold = snapshot.Child("gold").Value != null ? float.Parse(snapshot.Child("gold").Value.ToString()) : 0f;
                         PlayerData.instance.gem = snapshot.Child("gem").Value != null ? float.Parse(snapshot.Child("gem").Value.ToString()) : 0f;
+                        PlayerData.instance.level = snapshot.Child("level").Value != null ? int.Parse(snapshot.Child("level").Value.ToString()) : 1;
+
+                        PlayerData.instance.sessionId = System.Guid.NewGuid().ToString();
+                        PlayerData.instance.loginTime = System.DateTime.UtcNow.ToString("o");
 
                         // Tạo session ID và thời gian đăng nhập
                         PlayerData.instance.sessionId = System.Guid.NewGuid().ToString();
@@ -134,6 +138,9 @@ public class LoginAction : MonoBehaviour
                         // Cập nhật thông tin session và thời gian đăng nhập vào Firebase
                         dbRef.Child("players").Child(username).Child("sessionId").SetValueAsync(PlayerData.instance.sessionId);
                         dbRef.Child("players").Child(username).Child("loginTime").SetValueAsync(PlayerData.instance.loginTime);
+
+                        // Đặt cờ đánh dấu người chơi đã đăng nhập
+                        PlayerData.instance.isLoggedIn = true;
 
                         // Xóa các trường nhập liệu sau khi đăng nhập thành công
                         ResetInputFields();

@@ -17,6 +17,8 @@ public class PlayerData : MonoBehaviour
     public string sessionId;
     public string loginTime;
     public string logoutTime;
+    public bool isLoggedIn = false;
+    public int level = 1;
 
     void Awake()
     {
