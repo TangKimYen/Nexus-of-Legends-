@@ -29,13 +29,13 @@ public class PlayerInformation
 }
 
 [System.Serializable]
-public class PlayerData
+public class PlayerLobbyData
 {
     public string NickName;
     public int Level;
-    public string CharacterId; 
+    public string CharacterId;
 
-    public PlayerData(string nickName, int level, string characterId)
+    public PlayerLobbyData(string nickName, int level, string characterId)
     {
         NickName = nickName;
         Level = level;
@@ -95,8 +95,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     [SerializeField] Transform lobbyPlayerListContain;
     [SerializeField] GameObject lobbyPlayerItemPrefab;
-    private List<PlayerData> lobbyPlayers = new List<PlayerData>();
-    public PlayerData playerLobbyData;
+    private List<PlayerLobbyData> lobbyPlayers = new List<PlayerLobbyData>();
+    public PlayerLobbyData playerLobbyData;
     private DatabaseReference databaseReference;
 
     private string[] playerIds = new string[] { "thanhdat123", "nhuquynh", "Tlinh", "kimyen24" };
@@ -207,7 +207,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     private void AddPlayerToFirebase(Player player, int level, string characterId)
     {
         string playerKey = player.UserId ?? player.NickName;
-        PlayerData playerData = new PlayerData(player.NickName, level, characterId);
+        PlayerLobbyData playerData = new PlayerLobbyData(player.NickName, level, characterId);
         string json = JsonUtility.ToJson(playerData);
         databaseReference.Child("lobbyPlayers").Child(playerKey).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
         {
@@ -246,7 +246,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
                     {
                         try
                         {
-                            PlayerData newPlayerData = JsonUtility.FromJson<PlayerData>(json);
+                            PlayerLobbyData newPlayerData = JsonUtility.FromJson<PlayerLobbyData>(json);
                             if (newPlayerData != null)
                             {
                                 lobbyPlayers.Add(newPlayerData);
@@ -284,7 +284,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         }
 
         // Populate the UI list with the updated lobby players list
-        foreach (PlayerData playerData in lobbyPlayers)
+        foreach (PlayerLobbyData playerLobbyData in lobbyPlayers)
         {
             GameObject playerItem = Instantiate(lobbyPlayerItemPrefab, lobbyPlayerListContain);
             RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
@@ -293,7 +293,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             LobbyPlayerListItem listItem = playerItem.GetComponent<LobbyPlayerListItem>();
             if (listItem != null)
             {
-                listItem.SetUp(playerData);
+                listItem.SetUp(playerLobbyData);
             }
             else
             {

@@ -19,7 +19,7 @@ public class LobbyPlayerListItem : MonoBehaviour
     public Sprite c03WarriorAvatar;
     public Sprite c04MagicanAvatar;
 
-    public void SetUp(PlayerData playerData)
+    public void SetUp(PlayerLobbyData playerData)
     {
         playerNameText.text = playerData.NickName;
         playerId = playerData.NickName.ToString();
