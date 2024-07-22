@@ -16,17 +16,17 @@ using Photon.Pun.Demo.PunBasics;
 using System;
 using Newtonsoft.Json;
 
-[Serializable]
-public class PlayerInformation
-{
-    public string characterId;
-    public string emailInfo;
-    public int exp;
-    public float gem;
-    public float gold;
-    public string passwordHash;
-    public string usernameInfo;
-}
+//[Serializable]
+//public class PlayerInformation
+//{
+//    public string characterId;
+//    public string emailInfo;
+//    public int exp;
+//    public float gem;
+//    public float gold;
+//    public string passwordHash;
+//    public string usernameInfo;
+//}
 
 [System.Serializable]
 public class PlayerLobbyData
@@ -96,12 +96,12 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     [SerializeField] Transform lobbyPlayerListContain;
     [SerializeField] GameObject lobbyPlayerItemPrefab;
     private List<PlayerLobbyData> lobbyPlayers = new List<PlayerLobbyData>();
-    public PlayerLobbyData playerLobbyData;
+    public PlayerData playerData;
     private DatabaseReference databaseReference;
 
-    private string[] playerIds = new string[] { "thanhdat123", "nhuquynh", "Tlinh", "kimyen24" };
-    private string playerId;
-    public PlayerInformation playerInfo;
+    //private string[] playerIds = new string[] { "thanhdat123", "nhuquynh", "Tlinh", "kimyen24" };
+    //private string playerId;
+    //public PlayerInformation playerInfo;
 
     private List<RoomInfo> availableRooms = new List<RoomInfo>();
     private Invitation currentInvitation; // Store the current invitation
@@ -124,7 +124,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        playerId = playerIds[UnityEngine.Random.Range(0, playerIds.Length)];
+        //playerId = playerIds[UnityEngine.Random.Range(0, playerIds.Length)];
         if (!PhotonNetwork.IsConnected)
         {
             Debug.Log("Connecting to server.");
@@ -150,7 +150,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     IEnumerator LoadPlayerDataEnum()
     {
-        var serverData = databaseReference.Child("players").Child(playerId).GetValueAsync();
+        var serverData = databaseReference.Child("players").Child(PlayerData.instance.username).GetValueAsync();
         yield return new WaitUntil(predicate: () => serverData.IsCompleted);
 
         print("Process is Complete!");
@@ -161,7 +161,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         if (jsonData != null)
         {
             print("Player data is found.");
-            playerInfo = JsonUtility.FromJson<PlayerInformation>(jsonData);
+            playerData = JsonUtility.FromJson<PlayerData>(jsonData);
         }
         else
         {
@@ -181,9 +181,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         MenuManager.Instance.OpenMenu("Title");  
-        PhotonNetwork.NickName = playerInfo.usernameInfo;
+        PhotonNetwork.NickName = playerData.username;
 
-        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, playerInfo.exp, playerInfo.characterId);
+        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, 1, playerData.characterId);
         // Clear the current lobby players list
         lobbyPlayers.Clear();
 
@@ -206,10 +206,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void AddPlayerToFirebase(Player player, int level, string characterId)
     {
-        string playerKey = player.UserId ?? player.NickName;
         PlayerLobbyData playerData = new PlayerLobbyData(player.NickName, level, characterId);
         string json = JsonUtility.ToJson(playerData);
-        databaseReference.Child("lobbyPlayers").Child(playerKey).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        databaseReference.Child("lobbyPlayers").Child(player.NickName).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
@@ -220,8 +219,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void RemovePlayerFromFirebase(Player player)
     {
-        string playerKey = player.UserId ?? player.NickName;
-        databaseReference.Child("lobbyPlayers").Child(playerKey).RemoveValueAsync();
+        databaseReference.Child("lobbyPlayers").Child(player.NickName).RemoveValueAsync();
     }
 
     private void GetLobbyPlayersFromFirebase()
@@ -465,7 +463,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         UpdateRoomInfo();
 
         UpdateLobbyPlayerList();
-        AddPlayerToFirebase(otherPlayer, playerInfo.exp, playerInfo.characterId);
+        AddPlayerToFirebase(otherPlayer, 1, playerData.characterId);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -624,7 +622,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void ListenForInvitations()
     {
-        databaseReference.Child("invitations").Child(playerId).ValueChanged += HandleInvitationReceived;
+        databaseReference.Child("invitations").Child(playerData.username).ValueChanged += HandleInvitationReceived;
     }
 
     private void HandleInvitationReceived(object sender, ValueChangedEventArgs e)
@@ -705,13 +703,13 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinRoom(currentInvitation.RoomName);
         invitationPanel.SetActive(false);
-        DeleteInvitation(playerId);
+        DeleteInvitation(playerData.username);
     }
 
     public void DeclineInvitation()
     {
         invitationPanel.SetActive(false);
-        DeleteInvitation(playerId);
+        DeleteInvitation(playerData.username);
     }
 
     private void DeleteInvitation(string playerId)
