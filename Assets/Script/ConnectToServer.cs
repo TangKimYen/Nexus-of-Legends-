@@ -11,16 +11,35 @@ using ExitGames.Client.Photon;
 using Firebase.Database;
 using Firebase;
 using Firebase.Extensions;
+using UnityEngine.TextCore.Text;
+using Photon.Pun.Demo.PunBasics;
+using System;
+using Newtonsoft.Json;
 
+[Serializable]
+public class PlayerInformation
+{
+    public string characterId;
+    public string emailInfo;
+    public int exp;
+    public float gem;
+    public float gold;
+    public string passwordHash;
+    public string usernameInfo;
+}
 
 [System.Serializable]
 public class PlayerData
 {
     public string NickName;
+    public int Level;
+    public string CharacterId; 
 
-    public PlayerData(string nickName)
+    public PlayerData(string nickName, int level, string characterId)
     {
         NickName = nickName;
+        Level = level;
+        CharacterId = characterId;
     }
 }
 public class ConnectToServer : MonoBehaviourPunCallbacks
@@ -38,13 +57,17 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public TextMeshProUGUI dungeonDisplay;
     public TextMeshProUGUI levelRequireDisplay;
-    public TextMeshProUGUI floorDisplay; // Thêm TextMeshPro ?? hi?n th? thông tin t?ng
-    public TextMeshProUGUI levelRequireMapDisplay; // Thêm TextMeshPro ?? hi?n th? yêu c?u c?p ??
+    public TextMeshProUGUI floorDisplay; 
+    public TextMeshProUGUI levelRequireMapDisplay; 
     public TextMeshProUGUI currentMemberDisplay;
     public TextMeshProUGUI maxMemberDisplay;
     public Image mapBGDisplay;
     public GameObject listMapLayout;
     public GameObject partyOptionLayout;
+    public GameObject invitationLayout;
+    public GameObject inviteButton;
+    public GameObject invitationPanel;
+    public TextMeshProUGUI invitationText;
 
     public RoomInfo roomInfo;
 
@@ -53,6 +76,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public TextMeshProUGUI dungeonRoomDisplay;
     public TextMeshProUGUI levelRequireRoomDisplay;
     public Image mapBGRoomDisplay;
+
+    public TextMeshProUGUI dungeonInvitationDisplay;
+    public TextMeshProUGUI levelRequireInvitationDisplay;
+    public Image mapBGInvitationDisplay;
 
     public ToggleGroup toggleGroup;
     public Toggle toggle1;
@@ -69,7 +96,15 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     [SerializeField] Transform lobbyPlayerListContain;
     [SerializeField] GameObject lobbyPlayerItemPrefab;
     private List<PlayerData> lobbyPlayers = new List<PlayerData>();
+    public PlayerData playerLobbyData;
     private DatabaseReference databaseReference;
+
+    private string[] playerIds = new string[] { "thanhdat123", "nhuquynh", "Tlinh", "kimyen24" };
+    private string playerId;
+    public PlayerInformation playerInfo;
+
+    private List<RoomInfo> availableRooms = new List<RoomInfo>();
+    private Invitation currentInvitation; // Store the current invitation
 
     private void Awake()
     {
@@ -84,24 +119,54 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         currentMember = playerListContain.childCount;
         currentMemberDisplay.text = currentMember.ToString();
-        UpdateLobbyPlayerList();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        playerId = playerIds[UnityEngine.Random.Range(0, playerIds.Length)];
         if (!PhotonNetwork.IsConnected)
         {
             Debug.Log("Connecting to server.");
             PhotonNetwork.ConnectUsingSettings();
         }
-
+        LoadPlayerData();
         listMapLayout.SetActive(false);
 
         toggle1.onValueChanged.AddListener(delegate { OnToggleValueChanged(); });
         toggle2.onValueChanged.AddListener(delegate { OnToggleValueChanged(); });
         toggle3.onValueChanged.AddListener(delegate { OnToggleValueChanged(); });
         toggle4.onValueChanged.AddListener(delegate { OnToggleValueChanged(); });
+
+        StartCoroutine(UpdateLobbyPlayerListCoroutine());
+        ListenForInvitations();
+        //TestDeserialization();
+    }
+
+    public void LoadPlayerData()
+    {
+        StartCoroutine(LoadPlayerDataEnum());
+    }
+
+    IEnumerator LoadPlayerDataEnum()
+    {
+        var serverData = databaseReference.Child("players").Child(playerId).GetValueAsync();
+        yield return new WaitUntil(predicate: () => serverData.IsCompleted);
+
+        print("Process is Complete!");
+
+        DataSnapshot snapshot = serverData.Result;
+        string jsonData = snapshot.GetRawJsonValue();
+
+        if (jsonData != null)
+        {
+            print("Player data is found.");
+            playerInfo = JsonUtility.FromJson<PlayerInformation>(jsonData);
+        }
+        else
+        {
+            print("Player data is not found.");
+        }
     }
 
     public override void OnConnectedToMaster()
@@ -115,25 +180,42 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
-        MenuManager.Instance.OpenMenu("Title");
-        PhotonNetwork.NickName = "Nexus " + Random.Range(0, 1000).ToString("0000");
+        MenuManager.Instance.OpenMenu("Title");  
+        PhotonNetwork.NickName = playerInfo.usernameInfo;
 
-        AddPlayerToFirebase(PhotonNetwork.LocalPlayer);
+        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, playerInfo.exp, playerInfo.characterId);
         // Clear the current lobby players list
         lobbyPlayers.Clear();
 
-        // Populate the lobby players list with the current players in the lobby
-        GetLobbyPlayersFromFirebase();
-
         // Update the UI
         UpdateLobbyPlayerList();
-        
+
+        // Populate the lobby players list with the current players in the lobby
+        GetLobbyPlayersFromFirebase();
     }
 
-    private void AddPlayerToFirebase(Player player)
+    private IEnumerator UpdateLobbyPlayerListCoroutine()
+    {
+        while (true)
+        {
+            UpdateLobbyPlayerList();
+            GetLobbyPlayersFromFirebase();
+            yield return new WaitForSeconds(1.0f);
+        }
+    }
+
+    private void AddPlayerToFirebase(Player player, int level, string characterId)
     {
         string playerKey = player.UserId ?? player.NickName;
-        databaseReference.Child("lobbyPlayers").Child(playerKey).SetValueAsync(player.NickName);
+        PlayerData playerData = new PlayerData(player.NickName, level, characterId);
+        string json = JsonUtility.ToJson(playerData);
+        databaseReference.Child("lobbyPlayers").Child(playerKey).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to add player to Firebase: " + task.Exception);
+            }
+        });
     }
 
     private void RemovePlayerFromFirebase(Player player)
@@ -148,21 +230,47 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Failed to retrieve lobby players from Firebase.");
+                Debug.LogError("Failed to retrieve lobby players from Firebase: " + task.Exception);
             }
             else if (task.IsCompleted)
             {
                 DataSnapshot snapshot = task.Result;
+
+                lobbyPlayers.Clear();
+
                 foreach (DataSnapshot playerSnapshot in snapshot.Children)
                 {
-                    string playerName = playerSnapshot.Value.ToString();
-                    // Create a new PlayerData object and add to lobbyPlayers list
-                    PlayerData newPlayerData = new PlayerData(playerName);
-                    lobbyPlayers.Add(newPlayerData);
-                }
+                    string json = playerSnapshot.GetRawJsonValue();
 
-                // Update the UI
+                    if (!string.IsNullOrEmpty(json) && json.StartsWith("{"))
+                    {
+                        try
+                        {
+                            PlayerData newPlayerData = JsonUtility.FromJson<PlayerData>(json);
+                            if (newPlayerData != null)
+                            {
+                                lobbyPlayers.Add(newPlayerData);
+                            }
+                            else
+                            {
+                                Debug.LogError("Failed to deserialize player data from JSON: " + json);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            Debug.LogError("Exception while deserializing player data: " + e.Message);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Invalid JSON string for player data snapshot: " + playerSnapshot.Key + ", JSON: " + json);
+                    }
+                }
                 UpdateLobbyPlayerList();
+            }
+            else
+            {
+                Debug.LogWarning("Task to retrieve lobby players from Firebase is not completed.");
             }
         });
     }
@@ -182,13 +290,16 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
             rectTransform.localScale = Vector3.one;
             rectTransform.anchoredPosition3D = Vector3.zero;
-            playerItem.GetComponent<LobbyPlayerListItem>().SetUp(playerData);
+            LobbyPlayerListItem listItem = playerItem.GetComponent<LobbyPlayerListItem>();
+            if (listItem != null)
+            {
+                listItem.SetUp(playerData);
+            }
+            else
+            {
+                Debug.LogError("Lobby Player List Item component is missing on the prefab.");
+            }
         }
-    }
-
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        Debug.Log("Disconnect from server for reason " + cause.ToString());
     }
 
     public void CreateRoom()
@@ -206,17 +317,23 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         listMapLayout.SetActive(true);
     }
 
+    public void OnInviteButtonClicked()
+    {
+        StartCoroutine(UpdateLobbyPlayerListCoroutine());
+        invitationLayout.SetActive(true);
+    }
+
     public void OnMapSelected(string map, string floor, string levelRequire, Sprite mapBG)
     {
         selectedMap = map;
         selectedFloor = floor;
         selectedLevelRequire = levelRequire;
         selectedMapBGName = mapBG.name;
-        dungeonDisplay.text = floor; // C?p nh?t thông tin t?ng trên b?n ??
-        levelRequireDisplay.text = levelRequire; // C?p nh?t yêu c?u c?p ?? trên b?n ??
+        dungeonDisplay.text = floor; 
+        levelRequireDisplay.text = levelRequire;
         mapBGDisplay.sprite = mapBG;
-        floorDisplay.text = selectedFloor; // C?p nh?t thông tin t?ng trên b?n ??
-        levelRequireMapDisplay.text = selectedLevelRequire; // C?p nh?t yêu c?u c?p ?? trên b?n ??
+        floorDisplay.text = selectedFloor;
+        levelRequireMapDisplay.text = selectedLevelRequire; 
         currentMemberDisplay.text = currentMember.ToString();
         maxMemberDisplay.text = maxPlayers.ToString();
         photonView.RPC("SetSelectedMap", RpcTarget.AllBuffered, selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName);
@@ -268,6 +385,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
+
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("SelectedMap"))
         {
             selectedMap = (string)PhotonNetwork.CurrentRoom.CustomProperties["SelectedMap"];
@@ -310,6 +429,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             rectTransform.anchoredPosition3D = Vector3.zero;
             playerItem.GetComponent<PlayerListItem>().SetUp(players[i]);
         }
+        inviteButton.SetActive(PhotonNetwork.IsMasterClient);
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         UpdateRoomInfo();
     }
@@ -345,7 +465,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         UpdateRoomInfo();
 
         UpdateLobbyPlayerList();
-        AddPlayerToFirebase(otherPlayer);
+        AddPlayerToFirebase(otherPlayer, playerInfo.exp, playerInfo.characterId);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -393,13 +513,26 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.Log("Disconnect from server for reason " + cause.ToString());
+        RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
+    }
+
+    private void OnApplicationQuit()
+    {
+        RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
+    }
+
     public void StartGame()
     {
+        RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
         PhotonNetwork.LoadLevel(selectedMap);
     }
 
     public void ReturnLobby()
     {
+        RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
         PhotonNetwork.LoadLevel("MainLobby");
     }
 
@@ -431,11 +564,13 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        availableRooms = roomList;
+
         foreach (Transform trans in roomListContain)
         {
             Destroy(trans.gameObject);
         }
-        for (int i = 0; i < roomList.Count; i++)
+        for (int i = 0; i < roomList.Count; i++)    
         {
             if (roomList[i].RemovedFromList)
                 continue;
@@ -453,5 +588,149 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             // Show info
             roomItem.SetRoomData(map, floor, levelRequire, mapBGName, roomList[i].PlayerCount, roomList[i].MaxPlayers);
         }
+    }
+
+    public void SendInvitation(string receiverId)
+    {
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.LogError("Not connected to Photon.");
+            return;
+        }
+
+        Invitation invitation = new Invitation(
+            PhotonNetwork.LocalPlayer.NickName,
+            receiverId,
+            selectedFloor,
+            selectedMap,
+            selectedFloor,
+            selectedLevelRequire,
+            selectedMapBGName
+        );
+
+        string jsonInvitation = JsonUtility.ToJson(invitation);
+        databaseReference.Child("invitations").Child(receiverId).SetRawJsonValueAsync(jsonInvitation).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to send invitation: " + task.Exception);
+            }
+            else
+            {
+                Debug.Log("Invitation sent to " + receiverId);
+            }
+        });
+    }
+
+    private void ListenForInvitations()
+    {
+        databaseReference.Child("invitations").Child(playerId).ValueChanged += HandleInvitationReceived;
+    }
+
+    private void HandleInvitationReceived(object sender, ValueChangedEventArgs e)
+    {
+        if (e.DatabaseError != null)
+        {
+            Debug.LogError("Error receiving invitation: " + e.DatabaseError.Message);
+            return;
+        }
+
+        if (e.Snapshot.Value != null)
+        {
+            string jsonInvitation = e.Snapshot.GetRawJsonValue();
+            Debug.Log("Received JSON: " + jsonInvitation);
+            try
+            {
+                currentInvitation = JsonConvert.DeserializeObject<Invitation>(jsonInvitation);
+
+                // Hiển thị lời mời tới người chơi (tuỳ chỉnh phần hiển thị UI này)
+                Debug.Log("Invitation received from " + currentInvitation.SenderId);
+                ShowInvitation(currentInvitation); // Gọi hàm để hiển thị lời mời
+            }
+            catch (ArgumentException ex)
+            {
+                Debug.LogError("ArgumentException while deserializing invitation: " + ex.Message);
+                Debug.LogError("Stack Trace: " + ex.StackTrace);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Exception while deserializing invitation: " + ex.Message);
+                Debug.LogError("Stack Trace: " + ex.StackTrace);
+            }
+        }
+    }
+
+    public void OnInviteButtonClicked(string receiverId)
+    {
+        SendInvitation(receiverId);
+    }
+
+    public void ShowInvitation(Invitation invitation)
+    {
+        invitationText.text = $"{invitation.SenderId} invite you to join {invitation.RoomName}.";
+        invitationPanel.SetActive(true);
+
+        dungeonInvitationDisplay.text = invitation.Floor;
+        levelRequireInvitationDisplay.text = invitation.LevelRequirement;
+        mapBGInvitationDisplay.sprite = Resources.Load<Sprite>(invitation.MapBackgroundName);
+
+        currentInvitation = invitation;
+
+        Button acceptButton = invitationPanel.transform.Find("AcceptButton").GetComponent<Button>();
+        Button cancelButton = invitationPanel.transform.Find("CancelButton").GetComponent<Button>();
+
+        acceptButton.onClick.RemoveAllListeners();
+        acceptButton.onClick.AddListener(AcceptInvitation);
+
+        cancelButton.onClick.RemoveAllListeners();
+        cancelButton.onClick.AddListener(DeclineInvitation);
+    }
+
+    public void AcceptInvitation()
+    {
+        Debug.Log($"Attempting to join room: {currentInvitation.RoomName}");
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.LogError("Not connected to Photon.");
+            return;
+        }
+
+        bool roomExists = availableRooms.Any(room => room.Name == currentInvitation.RoomName);
+
+        if (!roomExists)
+        {
+            Debug.LogError($"Room '{currentInvitation.RoomName}' does not exist.");
+            return;
+        }
+
+        PhotonNetwork.JoinRoom(currentInvitation.RoomName);
+        invitationPanel.SetActive(false);
+        DeleteInvitation(playerId);
+    }
+
+    public void DeclineInvitation()
+    {
+        invitationPanel.SetActive(false);
+        DeleteInvitation(playerId);
+    }
+
+    private void DeleteInvitation(string playerId)
+    {
+        databaseReference.Child("invitations").Child(playerId).RemoveValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to delete invitation: " + task.Exception);
+            }
+            else
+            {
+                Debug.Log("Invitation deleted successfully.");
+            }
+        });
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.LogError($"Failed to join room: {message}");
     }
 }

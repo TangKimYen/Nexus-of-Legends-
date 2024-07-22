@@ -37,6 +37,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     void KickPlayer()
     {
         PhotonNetwork.LeaveRoom();
+        MenuManager.Instance.OpenMenu("Kick");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
