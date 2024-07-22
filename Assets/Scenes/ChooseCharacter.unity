@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 57564181}
   - component: {fileID: 57564180}
   - component: {fileID: 57564179}
-  - component: {fileID: 57564182}
   m_Layer: 5
   m_Name: SelectRanger
   m_TagString: Untagged
@@ -206,7 +205,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 57564182}
+      - m_Target: {fileID: 2067107646}
         m_TargetAssemblyTypeName: SelectChar, Assembly-CSharp
         m_MethodName: SelectLeafRanger
         m_Mode: 1
@@ -256,20 +255,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 57564177}
   m_CullTransparentMesh: 1
---- !u!114 &57564182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 57564177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 486dc3f5aeef91d4485f7bc9cb47e834, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmationPopup: {fileID: 2067107642}
-  confirmationText: {fileID: 1548007524}
 --- !u!1 &84329391
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,7 +795,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2032382451
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 402c7d790a411ea41b1e22cd39b4dc2a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1128,7 +1113,6 @@ GameObject:
   - component: {fileID: 973552591}
   - component: {fileID: 973552590}
   - component: {fileID: 973552589}
-  - component: {fileID: 973552592}
   m_Layer: 5
   m_Name: SelectKnight
   m_TagString: Untagged
@@ -1249,20 +1233,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973552587}
   m_CullTransparentMesh: 1
---- !u!114 &973552592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 973552587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 486dc3f5aeef91d4485f7bc9cb47e834, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmationPopup: {fileID: 2067107642}
-  confirmationText: {fileID: 1548007524}
 --- !u!1 &1012239907
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,7 +1820,6 @@ GameObject:
   - component: {fileID: 1158226317}
   - component: {fileID: 1158226316}
   - component: {fileID: 1158226315}
-  - component: {fileID: 1158226318}
   m_Layer: 5
   m_Name: SelectPriestess
   m_TagString: Untagged
@@ -1921,7 +1890,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1158226318}
+      - m_Target: {fileID: 2067107646}
         m_TargetAssemblyTypeName: SelectChar, Assembly-CSharp
         m_MethodName: SelectWaterPriestess
         m_Mode: 1
@@ -1971,20 +1940,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1158226313}
   m_CullTransparentMesh: 1
---- !u!114 &1158226318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1158226313}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 486dc3f5aeef91d4485f7bc9cb47e834, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmationPopup: {fileID: 2067107642}
-  confirmationText: {fileID: 1548007524}
 --- !u!1 &1324380257
 GameObject:
   m_ObjectHideFlags: 0
@@ -2254,6 +2209,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1548007522}
   m_CullTransparentMesh: 1
+--- !u!1 &1556440308
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1556440310}
+  - component: {fileID: 1556440309}
+  m_Layer: 0
+  m_Name: SelectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1556440309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556440308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20b827e8bd3673846b31f713a5ad1166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1556440310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556440308}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.015685081, y: 0, z: 0.65618896}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1568796148 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7702248548165008002, guid: b0fe22a4e6ed8fe4db939ccc203ca26c, type: 3}
@@ -2363,7 +2362,6 @@ GameObject:
   - component: {fileID: 1932621567}
   - component: {fileID: 1932621566}
   - component: {fileID: 1932621565}
-  - component: {fileID: 1932621568}
   m_Layer: 5
   m_Name: SelectAssassin
   m_TagString: Untagged
@@ -2434,7 +2432,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1932621568}
+      - m_Target: {fileID: 2067107646}
         m_TargetAssemblyTypeName: SelectChar, Assembly-CSharp
         m_MethodName: SelectWindAssassin
         m_Mode: 1
@@ -2484,20 +2482,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1932621563}
   m_CullTransparentMesh: 1
---- !u!114 &1932621568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1932621563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 486dc3f5aeef91d4485f7bc9cb47e834, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmationPopup: {fileID: 2067107642}
-  confirmationText: {fileID: 1548007524}
 --- !u!1 &1934015725
 GameObject:
   m_ObjectHideFlags: 0
@@ -2770,6 +2754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   confirmationPopup: {fileID: 2067107642}
   confirmationText: {fileID: 1548007524}
+  charSelectManager: {fileID: 1556440309}
 --- !u!1 &2067672922
 GameObject:
   m_ObjectHideFlags: 0
@@ -2961,7 +2946,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2065692051
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1015612067, guid: caa566e6741a34340b6df1948240cd68, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3304,3 +3289,4 @@ SceneRoots:
   - {fileID: 1850100840}
   - {fileID: 2028480276}
   - {fileID: 1934015728}
+  - {fileID: 1556440310}

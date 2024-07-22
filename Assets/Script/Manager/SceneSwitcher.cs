@@ -20,4 +20,8 @@ public class SceneSwitcher : MonoBehaviour
     {
         SceneManager.LoadScene("ViewStoryline");
     }
+    public void SwitchToPlayGame()
+    {
+        SceneManager.LoadScene("MainLobby");
+    }
 }

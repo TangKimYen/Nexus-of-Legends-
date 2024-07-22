@@ -1,4 +1,4 @@
-using Firebase.Database;
+﻿using Firebase.Database;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -55,8 +55,8 @@ public class CharSelectManager : MonoBehaviour
                                     PlayerData.instance.characterName = characterName;
                                     PlayerData.instance.characterAvatarPrefabName = characterAvatarPrefabName;
 
-                                    // Chuy?n sang scene MainLobby sau khi ch?n nh�n v?t
-                                    SceneManager.LoadScene("MainLobby");
+                                    // Chuyển sang scene MainLobby sau khi chọn nhân vật
+                                    SceneManager.LoadScene("TitleScreen");
                                 });
                             }
                             else
