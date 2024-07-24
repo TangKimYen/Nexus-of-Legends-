@@ -33,4 +33,6 @@ public class PlayerData : MonoBehaviour
             Debug.LogWarning("Duplicate PlayerData instance destroyed.");
         }
     }
+
+    public PlayerData() { }
 }

@@ -5,32 +5,44 @@ using Photon.Pun;
 
 public class SpawnCharacter : MonoBehaviourPunCallbacks
 {
-    public GameObject[] playerPrefabs; // Array to hold all player prefabs
+    public GameObject[] characterPrefabs; // Array to hold all player prefabs
+    public Transform spawnPoint; // Spawn point for the characters
 
     // Start is called before the first frame update
     void Start()
     {
-        // Ensure there are at least 2 prefabs in the array
-        if (playerPrefabs.Length < 1)
+        // Get the characterId of the player
+        string characterId = PlayerData.instance.characterId;
+
+        // Map the characterId to the index in the prefabs array
+        int characterIndex = GetCharacterIndex(characterId);
+
+        if (characterIndex >= 0 && characterIndex < characterPrefabs.Length)
         {
-            Debug.LogError("There must be at least 1 player prefabs assigned in the inspector!");
-            return;
+            // Instantiate the character based on the index
+            GameObject player = PhotonNetwork.Instantiate(characterPrefabs[characterIndex].name, spawnPoint.position, Quaternion.identity, 0);
         }
-
-        // Randomly select two different indices
-        int index1 = Random.Range(0, playerPrefabs.Length);
-/*        int index2 = Random.Range(0, playerPrefabs.Length - 1);
-        if (index2 >= index1)
-            index2++;*/
-
-        // Instantiate the selected player prefabs
-        GameObject player1 = PhotonNetwork.Instantiate(playerPrefabs[index1].name, transform.position, Quaternion.identity, 0);
-        //GameObject player2 = PhotonNetwork.Instantiate(playerPrefabs[index2].name, new Vector3(Random.Range(-3, 3), 0, 0), Quaternion.identity, 0);
+        else
+        {
+            Debug.LogError("Invalid characterId: " + characterId);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Function to map characterId to the index in the prefabs array
+    private int GetCharacterIndex(string characterId)
     {
-
+        switch (characterId)
+        {
+            case "c01":
+                return 0; // Index of Assassin
+            case "c02":
+                return 1; // Index of Archer
+            case "c03":
+                return 2; // Index of Warrior
+            case "c04":
+                return 3; // Index of Magican
+            default:
+                return -1; // If characterId is invalid
+        }
     }
 }
