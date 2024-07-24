@@ -41,7 +41,7 @@ public class LobbyPlayerListItem : MonoBehaviour
                 avatarImage.sprite = c04MagicanAvatar;
                 break;
             default:
-                avatarImage.sprite = null; // Or set a default avatar
+                avatarImage.sprite = c02ArcherAvatar; // Or set a default avatar
                 break;
         }
     }
