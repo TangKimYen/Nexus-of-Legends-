@@ -18,7 +18,7 @@ public class PlayerData : MonoBehaviour
     public string loginTime;
     public string logoutTime;
     public bool isLoggedIn = false;
-    public int level = 1;
+    public int level;
 
     void Awake()
     {
@@ -34,4 +34,6 @@ public class PlayerData : MonoBehaviour
             Debug.LogWarning("Duplicate PlayerData instance destroyed.");
         }
     }
+
+    public PlayerData() { }
 }

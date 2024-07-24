@@ -96,12 +96,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     [SerializeField] Transform lobbyPlayerListContain;
     [SerializeField] GameObject lobbyPlayerItemPrefab;
     private List<PlayerLobbyData> lobbyPlayers = new List<PlayerLobbyData>();
-    public PlayerData playerData;
+    public PlayerData playerData = PlayerData.instance;
     private DatabaseReference databaseReference;
-
-    //private string[] playerIds = new string[] { "thanhdat123", "nhuquynh", "Tlinh", "kimyen24" };
-    //private string playerId;
-    //public PlayerInformation playerInfo;
 
     private List<RoomInfo> availableRooms = new List<RoomInfo>();
     private Invitation currentInvitation; // Store the current invitation
@@ -130,7 +126,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             Debug.Log("Connecting to server.");
             PhotonNetwork.ConnectUsingSettings();
         }
-        LoadPlayerData();
         listMapLayout.SetActive(false);
 
         toggle1.onValueChanged.AddListener(delegate { OnToggleValueChanged(); });
@@ -140,33 +135,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
         StartCoroutine(UpdateLobbyPlayerListCoroutine());
         ListenForInvitations();
-        //TestDeserialization();
-    }
-
-    public void LoadPlayerData()
-    {
-        StartCoroutine(LoadPlayerDataEnum());
-    }
-
-    IEnumerator LoadPlayerDataEnum()
-    {
-        var serverData = databaseReference.Child("players").Child(PlayerData.instance.username).GetValueAsync();
-        yield return new WaitUntil(predicate: () => serverData.IsCompleted);
-
-        print("Process is Complete!");
-
-        DataSnapshot snapshot = serverData.Result;
-        string jsonData = snapshot.GetRawJsonValue();
-
-        if (jsonData != null)
-        {
-            print("Player data is found.");
-            playerData = JsonUtility.FromJson<PlayerData>(jsonData);
-        }
-        else
-        {
-            print("Player data is not found.");
-        }
     }
 
     public override void OnConnectedToMaster()
@@ -181,9 +149,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         MenuManager.Instance.OpenMenu("Title");  
-        PhotonNetwork.NickName = playerData.username;
+        PhotonNetwork.NickName = PlayerData.instance.username;
 
-        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, 1, playerData.characterId);
+        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, 1, PlayerData.instance.characterId);
         // Clear the current lobby players list
         lobbyPlayers.Clear();
 
@@ -206,8 +174,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void AddPlayerToFirebase(Player player, int level, string characterId)
     {
-        PlayerLobbyData playerData = new PlayerLobbyData(player.NickName, level, characterId);
-        string json = JsonUtility.ToJson(playerData);
+        PlayerLobbyData playerLobbyData = new PlayerLobbyData(player.NickName, level, characterId);
+        string json = JsonUtility.ToJson(playerLobbyData);
         databaseReference.Child("lobbyPlayers").Child(player.NickName).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
@@ -450,9 +418,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
         rectTransform.localScale = Vector3.one;
         rectTransform.anchoredPosition3D = Vector3.zero;
-        playerItem.GetComponent<PlayerListItem>().SetUp(newPlayer);
-        UpdateRoomInfo();
 
+        playerItem.GetComponent<PlayerListItem>().SetUp(newPlayer);
+
+        UpdateRoomInfo();
         UpdateLobbyPlayerList();
         RemovePlayerFromFirebase(newPlayer);
     }
@@ -463,7 +432,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         UpdateRoomInfo();
 
         UpdateLobbyPlayerList();
-        AddPlayerToFirebase(otherPlayer, 1, playerData.characterId);
+        AddPlayerToFirebase(otherPlayer, 1, PlayerData.instance.characterId);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -622,7 +591,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void ListenForInvitations()
     {
-        databaseReference.Child("invitations").Child(playerData.username).ValueChanged += HandleInvitationReceived;
+        databaseReference.Child("invitations").Child(PlayerData.instance.username).ValueChanged += HandleInvitationReceived;
     }
 
     private void HandleInvitationReceived(object sender, ValueChangedEventArgs e)
@@ -703,13 +672,13 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinRoom(currentInvitation.RoomName);
         invitationPanel.SetActive(false);
-        DeleteInvitation(playerData.username);
+        DeleteInvitation(PlayerData.instance.username);
     }
 
     public void DeclineInvitation()
     {
         invitationPanel.SetActive(false);
-        DeleteInvitation(playerData.username);
+        DeleteInvitation(PlayerData.instance.username);
     }
 
     private void DeleteInvitation(string playerId)

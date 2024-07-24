@@ -4,8 +4,11 @@ using UnityEngine.UI;
 public class MainLobbyController : MonoBehaviour
 {
     public Text usernameText;
-    //public Text characterNameText;
-    public Transform avatarParent;
+    public Image avatarImage;
+    public Sprite c01AssassinAvatar;
+    public Sprite c02ArcherAvatar;
+    public Sprite c03WarriorAvatar;
+    public Sprite c04MagicanAvatar;
 
     void Start()
     {
@@ -19,7 +22,7 @@ public class MainLobbyController : MonoBehaviour
             Debug.Log("Login Time: " + PlayerData.instance.loginTime);
 
             // Tải và hiển thị avatar của nhân vật từ Resources
-            LoadCharacterAvatar(PlayerData.instance.characterAvatarPrefabName);
+            LoadCharacterAvatar(PlayerData.instance.characterId);
         }
         else
         {
@@ -27,24 +30,32 @@ public class MainLobbyController : MonoBehaviour
         }
     }
 
-    private void LoadCharacterAvatar(string avatarPrefabName)
+    private void LoadCharacterAvatar(string characterId)
     {
-        if (!string.IsNullOrEmpty(avatarPrefabName))
+        if (!string.IsNullOrEmpty(characterId))
         {
-            GameObject avatarPrefab = Resources.Load<GameObject>(avatarPrefabName);
-            if (avatarPrefab != null)
+            switch (characterId)
             {
-                GameObject avatarInstance = Instantiate(avatarPrefab, avatarParent);
-                Debug.Log("Character avatar loaded successfully: " + avatarPrefabName);
-            }
-            else
-            {
-                Debug.LogError("Failed to load character avatar: " + avatarPrefabName);
+                case "c01":
+                    avatarImage.sprite = c01AssassinAvatar;
+                    break;
+                case "c02":
+                    avatarImage.sprite = c02ArcherAvatar;
+                    break;
+                case "c03":
+                    avatarImage.sprite = c03WarriorAvatar;
+                    break;
+                case "c04":
+                    avatarImage.sprite = c04MagicanAvatar;
+                    break;
+                default:
+                    avatarImage.sprite = c02ArcherAvatar; // Or set a default avatar
+                    break;
             }
         }
         else
         {
-            Debug.LogError("Character avatar prefab name is null or empty.");
+            Debug.LogError("Character ID is null or empty.");
         }
     }
 }
