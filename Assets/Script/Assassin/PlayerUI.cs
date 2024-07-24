@@ -57,15 +57,15 @@ public class PlayerUI : MonoBehaviourPunCallbacks
                         float gold = float.Parse(snapshot.Child("gold").Value.ToString());
                         float gem = float.Parse(snapshot.Child("gem").Value.ToString());
                         float currentExp = float.Parse(snapshot.Child("exp").Value.ToString());
-
                         float expToNextLevel = CalculateExpToNextLevel(level);
+
+                        Debug.Log($"Level: {level}, Gold: {gold}, Gem: {gem}, CurrentExp: {currentExp}, ExpToNextLevel: {expToNextLevel}");
 
                         playerLevelText.text = "Level: " + level.ToString();
                         goldText.text = gold.ToString();
                         gemText.text = gem.ToString();
                         expBar.fillAmount = currentExp / expToNextLevel;
                         expText.text = $"{currentExp}/{expToNextLevel}";
-                        Debug.Log($"Level: {level}, Gold: {gold}, Gem: {gem}, CurrentExp: {currentExp}, ExpToNextLevel: {expToNextLevel}");
                         switch (characterId)
                         {
                             case "c01":
