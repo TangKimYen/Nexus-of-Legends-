@@ -145,7 +145,6 @@ public class LoginAction : MonoBehaviour
                         PlayerData.instance.passwordHash = snapshot.Child("passwordHash").Value?.ToString();
                         PlayerData.instance.characterId = snapshot.Child("characterId").Value?.ToString();
                         PlayerData.instance.characterName = snapshot.Child("characterName").Value?.ToString();
-                        PlayerData.instance.characterAvatarPrefabName = snapshot.Child("characterAvatarPrefabName").Value?.ToString();
                         PlayerData.instance.exp = snapshot.Child("exp").Value != null ? float.Parse(snapshot.Child("exp").Value.ToString()) : 0f;
                         PlayerData.instance.gold = snapshot.Child("gold").Value != null ? float.Parse(snapshot.Child("gold").Value.ToString()) : 0f;
                         PlayerData.instance.gem = snapshot.Child("gem").Value != null ? float.Parse(snapshot.Child("gem").Value.ToString()) : 0f;
