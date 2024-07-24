@@ -1,38 +1,28 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SelectChar : MonoBehaviour
 {
     public GameObject confirmationPopup;
     public TextMeshProUGUI confirmationText;
 
-    private string characterId;
-    private string characterName;
-    private string characterAvatarPrefabName;
-    public CharSelectManager charSelectManager;
+    private string characterId; // ID của nhân vật
+    private string characterName; // Tên của nhân vật
+    public CharSelectManager charSelectManager; // Gán trực tiếp qua Inspector
 
     void Start()
     {
         if (charSelectManager == null)
         {
-            charSelectManager = FindObjectOfType<CharSelectManager>();
-            if (charSelectManager == null)
-            {
-                Debug.LogError("CharSelectManager not assigned and not found in the scene.");
-            }
-            else
-            {
-                Debug.Log("CharSelectManager found and assigned automatically.");
-            }
+            Debug.LogError("CharSelectManager not assigned.");
         }
-        confirmationPopup.SetActive(false);
     }
 
     public void SelectFireKnight()
     {
-        characterId = "c01";
+        characterId = "c03";
         characterName = "Fire Knight";
-        characterAvatarPrefabName = "FireKnightPrefab"; // Tên prefab của Fire Knight
         ShowConfirmationPopup();
     }
 
@@ -40,23 +30,20 @@ public class SelectChar : MonoBehaviour
     {
         characterId = "c02";
         characterName = "Leaf Ranger";
-        characterAvatarPrefabName = "LeafRangerPrefab"; // Tên prefab của Leaf Ranger
         ShowConfirmationPopup();
     }
 
     public void SelectWaterPriestess()
     {
-        characterId = "c03";
+        characterId = "c04";
         characterName = "Water Priestess";
-        characterAvatarPrefabName = "WaterPriestessPrefab"; // Tên prefab của Water Priestess
         ShowConfirmationPopup();
     }
 
     public void SelectWindAssassin()
     {
-        characterId = "c04";
+        characterId = "c01";
         characterName = "Wind Assassin";
-        characterAvatarPrefabName = "WindAssassinPrefab"; // Tên prefab của Wind Assassin
         ShowConfirmationPopup();
     }
 
@@ -95,11 +82,14 @@ public class SelectChar : MonoBehaviour
 
         if (charSelectManager != null)
         {
-            charSelectManager.SelectCharacter(characterId, characterName, characterAvatarPrefabName);
+            // Gọi hàm SelectCharacter của CharSelectManager với 2 đối số
+            charSelectManager.SelectCharacter(characterId, characterName);
+            // Chuyển sang scene TitleScreen sau khi chọn nhân vật
+            SceneManager.LoadScene("TitleScreen");
         }
         else
         {
-            Debug.LogError("CharSelectManager is null.");
+            Debug.LogError("charSelectManager is null.");
         }
     }
 
