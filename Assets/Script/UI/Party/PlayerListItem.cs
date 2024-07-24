@@ -86,8 +86,8 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     [PunRPC]
     void KickPlayer()
     {
-        MenuManager.Instance.OpenMenu("Kick");
         PhotonNetwork.LeaveRoom();
+        ConnectToServer.Instance.kickLayout.SetActive(true);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)

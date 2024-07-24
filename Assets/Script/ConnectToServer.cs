@@ -67,6 +67,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public GameObject invitationLayout;
     public GameObject inviteButton;
     public GameObject invitationPanel;
+    public GameObject kickLayout;
     public TextMeshProUGUI invitationText;
 
     public RoomInfo roomInfo;
@@ -151,7 +152,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("Title");  
         PhotonNetwork.NickName = PlayerData.instance.username;
 
-        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, 1, PlayerData.instance.characterId);
+        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, PlayerData.instance.level, PlayerData.instance.characterId);
         // Clear the current lobby players list
         lobbyPlayers.Clear();
 
@@ -296,10 +297,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         selectedLevelRequire = levelRequire;
         selectedMapBGName = mapBG.name;
         dungeonDisplay.text = floor; 
-        levelRequireDisplay.text = levelRequire;
+        levelRequireDisplay.text = "Level " + levelRequire + "+";
         mapBGDisplay.sprite = mapBG;
         floorDisplay.text = selectedFloor;
-        levelRequireMapDisplay.text = selectedLevelRequire; 
+        levelRequireMapDisplay.text = "Level " + selectedLevelRequire + "+"; 
         currentMemberDisplay.text = currentMember.ToString();
         maxMemberDisplay.text = maxPlayers.ToString();
         photonView.RPC("SetSelectedMap", RpcTarget.AllBuffered, selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName);
@@ -373,7 +374,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         Debug.Log("Joined room successfully");
         roomNameText.text = selectedFloor;
         dungeonRoomDisplay.text = selectedFloor;
-        levelRequireRoomDisplay.text = selectedLevelRequire; 
+        levelRequireRoomDisplay.text = "Level " + selectedLevelRequire + "+"; 
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
         MenuManager.Instance.OpenMenu("Room");
         selectedFloor = PhotonNetwork.CurrentRoom.Name;
@@ -408,7 +409,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         dungeonRoomDisplay.text = selectedFloor;
-        levelRequireRoomDisplay.text = selectedLevelRequire;
+        levelRequireRoomDisplay.text = "Level " + selectedLevelRequire + "+";
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
         Debug.Log("Floor: " + selectedFloor + ", Level Require: " + selectedLevelRequire + "MapBG: " + selectedMapBGName);
         currentMemberDisplay.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
@@ -457,7 +458,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         currentMemberDisplay.text = currentMember.ToString();
         maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
         dungeonRoomDisplay.text = selectedFloor;
-        levelRequireRoomDisplay.text = selectedLevelRequire;
+        levelRequireRoomDisplay.text = "Level " + selectedLevelRequire + "+";
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
 
         roomNameText.text = selectedFloor;
@@ -500,11 +501,37 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public void ReturnLobby()
     {
         RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
+        PhotonNetwork.LeaveLobby();
         PhotonNetwork.LoadLevel("MainLobby");
     }
 
     public void JoinRoom(RoomInfo info)
     {
+        // Get the level requirement from the room's custom properties
+        if (info.CustomProperties.ContainsKey("SelectedLevelRequire"))
+        {
+            string levelRequire = (string)info.CustomProperties["SelectedLevelRequire"];
+            int requiredLevel;
+
+            if (!int.TryParse(levelRequire, out requiredLevel))
+            {
+                Debug.LogError("Failed to parse level requirement from room properties.");
+                return;
+            }
+
+            // Get the player's level (assuming it's stored in PlayerData.instance.level)
+            int playerLevel = PlayerData.instance.level;
+
+            // Check if the player's level meets the requirement
+            if (playerLevel < requiredLevel)
+            {
+                // Notify the player that their level is too low
+                errorText.text = "Your level is too low to join this room.";
+                MenuManager.Instance.OpenMenu("Error");
+                return;
+            }
+        }
+
         if (info.PlayerCount >= info.MaxPlayers)
         {
             // Notify the player that the room is full
@@ -638,7 +665,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         invitationPanel.SetActive(true);
 
         dungeonInvitationDisplay.text = invitation.Floor;
-        levelRequireInvitationDisplay.text = invitation.LevelRequirement;
+        levelRequireInvitationDisplay.text = "Level " + invitation.LevelRequirement + "+";
         mapBGInvitationDisplay.sprite = Resources.Load<Sprite>(invitation.MapBackgroundName);
 
         currentInvitation = invitation;
