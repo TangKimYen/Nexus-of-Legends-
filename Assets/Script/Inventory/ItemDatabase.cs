@@ -5,7 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemDatabase", menuName = "Inventory/ItemDatabase")]
 public class ItemDatabase : ScriptableObject
 {
-    [SerializeField] private List<Item> items = new List<Item>(); // Đảm bảo danh sách không rỗng
+    [SerializeField] public List<Item> items = new List<Item>();
+    // Đảm bảo danh sách không rỗng
 
     public Item GetItemById(string id)
     {

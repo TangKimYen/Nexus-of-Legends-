@@ -1,12 +1,14 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EquipmentPanel : MonoBehaviour
 {
+    public Character character; // Thêm thuộc tính này
+    public ItemDatabase itemDatabase;
     [SerializeField] Transform equipmentSlotsParent;
-    [SerializeField] EquipmentSlot[] equipmentSlots;
+    [SerializeField] public EquipmentSlot[] equipmentSlots;
     [SerializeField] ItemTooltip tooltip;
     public event Action<Item> OnItemRightClickedEvent;
 

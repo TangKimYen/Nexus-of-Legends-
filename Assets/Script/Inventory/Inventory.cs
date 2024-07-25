@@ -2,26 +2,28 @@
 using Firebase.Database;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class Inventory : MonoBehaviour
 {
     [SerializeField] public ItemDatabase itemDatabase;
-    [SerializeField] private List<Item> items = new List<Item>();
+    [SerializeField] public List<Item> items = new List<Item>();
     [SerializeField] private Transform itemsParent;
     [SerializeField] private ItemSlot[] itemSlots;
+    private Dictionary<string, bool> itemActiveStates = new Dictionary<string, bool>();
 
-    public string userName; // ID của người dùng để lấy dữ liệu từ Firebase
-    private DataInventorySaver dataSaver; // Thêm tham chiếu đến DataInventorySaver
+    public string userName;
+    private DataInventorySaver dataSaver;
     private DatabaseReference dbRef;
 
-    public event System.Action<Item> OnItemRightClickedEvent;
+    public event Action<Item> OnItemRightClickedEvent;
 
     private void Start()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
         dataSaver = GetComponent<DataInventorySaver>();
         LoadItemsFromFirebase();
-        AddFirebaseListeners(); // Thêm listener để lắng nghe thay đổi từ Firebase
+        AddFirebaseListeners();
     }
 
     private void OnValidate()
@@ -42,7 +44,7 @@ public class Inventory : MonoBehaviour
     public void ClearItems()
     {
         items.Clear();
-        RefreshUI(); // Cập nhật giao diện người dùng sau khi xóa các item
+        RefreshUI();
     }
 
     private void RefreshUI()
@@ -51,13 +53,13 @@ public class Inventory : MonoBehaviour
         for (; i < items.Count && i < itemSlots.Length; i++)
         {
             itemSlots[i].Item = items[i];
-            itemSlots[i].OnRightClickEvent += HandleRightClick; // Kết nối sự kiện nhấp chuột phải
+            itemSlots[i].OnRightClickEvent += HandleRightClick;
         }
 
         for (; i < itemSlots.Length; i++)
         {
             itemSlots[i].Item = null;
-            itemSlots[i].OnRightClickEvent -= HandleRightClick; // Ngắt kết nối sự kiện nhấp chuột phải
+            itemSlots[i].OnRightClickEvent -= HandleRightClick;
         }
     }
 
@@ -65,6 +67,7 @@ public class Inventory : MonoBehaviour
     {
         if (IsFull())
             return false;
+
         items.Add(item);
         RefreshUI();
         return true;
@@ -92,7 +95,13 @@ public class Inventory : MonoBehaviour
 
     private IEnumerator LoadItemsFromFirebaseCoroutine()
     {
-        Debug.Log("Starting data load from Firebase...");
+        Debug.Log("Loading data from Firebase...");
+        if (dbRef == null || string.IsNullOrEmpty(userName))
+        {
+            Debug.LogError("Database reference or username is null.");
+            yield break;
+        }
+
         var serverData = dbRef.Child("Inventory").Child(userName).GetValueAsync();
         yield return new WaitUntil(() => serverData.IsCompleted);
 
@@ -101,24 +110,37 @@ public class Inventory : MonoBehaviour
             DataSnapshot snapshot = serverData.Result;
             Debug.Log("Data loaded from Firebase.");
 
-            items.Clear(); // Xóa danh sách hiện tại
+            items.Clear();
+            itemActiveStates.Clear();
 
-            // Kiểm tra nếu snapshot chứa dữ liệu itemIds
-            if (snapshot.HasChild("itemIds"))
+            if (snapshot.HasChild("items"))
             {
-                List<string> itemIds = new List<string>();
-                foreach (DataSnapshot itemSnapshot in snapshot.Child("itemIds").Children)
+                foreach (DataSnapshot itemSnapshot in snapshot.Child("items").Children)
                 {
-                    string itemId = itemSnapshot.Value.ToString();
-                    itemIds.Add(itemId);
-                }
+                    if (itemSnapshot.Child("itemId").Value == null || itemSnapshot.Child("isActive").Value == null)
+                    {
+                        Debug.LogWarning("Item snapshot has null value for itemId or isActive.");
+                        continue; // Bỏ qua mục này nếu thiếu giá trị
+                    }
 
-                LoadItemsFromDatabase(itemIds); // Gọi hàm tại đây
+                    string itemId = itemSnapshot.Child("itemId").Value.ToString();
+                    bool isActive = (bool)itemSnapshot.Child("isActive").Value;
+
+                    Item item = itemDatabase?.GetItemById(itemId);
+                    if (item != null)
+                    {
+                        if (isActive)
+                        {
+                            AddItem(item);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Item with ID {itemId} not found in item database.");
+                    }
+                }
             }
-            else
-            {
-                Debug.LogWarning("No itemIds found in Firebase.");
-            }
+            RefreshUI();
         }
         else
         {
@@ -126,52 +148,112 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void LoadItemsFromDatabase(List<string> itemIds)
+
+
+
+
+
+    private void AddFirebaseListeners()
     {
-        Debug.Log($"Loading items for IDs: {string.Join(", ", itemIds)}");
-        foreach (string itemId in itemIds)
+        dbRef.Child("Inventory").Child(userName).Child("items").ChildChanged += HandleItemChanged;
+        dbRef.Child("Inventory").Child(userName).Child("items").ChildAdded += HandleItemAdded;
+        dbRef.Child("Inventory").Child(userName).Child("items").ChildRemoved += HandleItemRemoved;
+    }
+
+    private void HandleItemChanged(object sender, ChildChangedEventArgs e)
+    {
+        string itemId = e.Snapshot.Child("itemId").Value.ToString();
+        bool isActive = (bool)e.Snapshot.Child("isActive").Value;
+
+        Item item = itemDatabase.GetItemById(itemId);
+        if (item != null)
+        {
+            if (isActive && !items.Contains(item))
+            {
+                AddItem(item);
+            }
+            else if (!isActive && items.Contains(item))
+            {
+                RemoveItem(item);
+            }
+            RefreshUI();
+        }
+    }
+
+    private void HandleItemAdded(object sender, ChildChangedEventArgs e)
+    {
+        if (e.Snapshot == null || itemDatabase == null) return;
+
+        string itemId = e.Snapshot.Child("itemId").Value?.ToString();
+        bool isActive = e.Snapshot.Child("isActive").Value != null && (bool)e.Snapshot.Child("isActive").Value;
+
+        if (isActive)
         {
             Item item = itemDatabase.GetItemById(itemId);
             if (item != null)
             {
-                Debug.Log("Item found in database: " + item.itemName);
                 AddItem(item);
-            }
-            else
-            {
-                Debug.LogWarning("Item ID " + itemId + " not found in ItemDatabase.");
+                RefreshUI();
             }
         }
     }
 
-    private void AddFirebaseListeners()
-    {
-        dbRef.Child("Inventory").Child(userName).Child("itemIds").ChildAdded += HandleChildAdded;
-        dbRef.Child("Inventory").Child(userName).Child("itemIds").ChildRemoved += HandleChildRemoved;
-    }
 
-    private void HandleChildAdded(object sender, ChildChangedEventArgs e)
-    {
-        string itemId = e.Snapshot.Value.ToString();
-        Item item = itemDatabase.GetItemById(itemId);
-        if (item != null)
-        {
-            AddItem(item);
-        }
-    }
 
-    private void HandleChildRemoved(object sender, ChildChangedEventArgs e)
+    private void HandleItemRemoved(object sender, ChildChangedEventArgs e)
     {
-        string itemId = e.Snapshot.Value.ToString();
+        string itemId = e.Snapshot.Child("itemId").Value.ToString();
+
         Item item = itemDatabase.GetItemById(itemId);
         if (item != null)
         {
             RemoveItem(item);
+            RefreshUI();
         }
     }
 
     private void HandleRightClick(Item item)
     {
         OnItemRightClickedEvent?.Invoke(item);
+    }
+
+    public void SaveItemsToFirebase()
+    {
+        Dictionary<string, object> updates = new Dictionary<string, object>();
+        foreach (Item item in items)
+        {
+            if (itemActiveStates.TryGetValue(item.itemId, out bool isActive))
+            {
+                updates[$"items/{item.itemId}/isActive"] = isActive;
+            }
+        }
+
+        dbRef.Child("Inventory").Child(userName).UpdateChildrenAsync(updates).ContinueWith(task => {
+            if (task.IsCompleted)
+            {
+                Debug.Log("Items saved to Firebase successfully.");
+            }
+            else
+            {
+                Debug.LogError("Failed to save items to Firebase: " + task.Exception);
+            }
+        });
+    }
+
+
+    [Serializable]
+    public class InventoryData
+    {
+        public List<string> itemIds;
+
+        public InventoryData(List<string> itemIds)
+        {
+            this.itemIds = itemIds;
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveItemsToFirebase();
     }
 }
