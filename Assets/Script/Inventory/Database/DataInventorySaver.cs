@@ -3,22 +3,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using static UnityEditor.Progress;
 
 [Serializable]
 public class ItemData
 {
     public string itemId;
-    public bool isActive;  // Add this field
+    public bool isActive;
 }
 
 [Serializable]
 public class dataToSaveInventory
 {
-    public List<ItemData> items;  // Thay đổi từ một mục đơn lẻ sang danh sách các mục
+    public List<ItemData> items;
 }
-
-
 
 public class DataInventorySaver : MonoBehaviour
 {
@@ -33,10 +30,12 @@ public class DataInventorySaver : MonoBehaviour
 
     public void SaveDataFn()
     {
-        string json = JsonUtility.ToJson(dts);
-        dbRef.Child("Inventory").Child(userName).SetRawJsonValueAsync(json);
+        foreach (var item in dts.items)
+        {
+            string json = JsonUtility.ToJson(item);
+            dbRef.Child("Inventory").Child(userName).Child(item.itemId).SetRawJsonValueAsync(json);
+        }
     }
-
 
     public void LoadDataFn()
     {
@@ -51,17 +50,22 @@ public class DataInventorySaver : MonoBehaviour
         print("Process is complete");
 
         DataSnapshot snapshot = serverData.Result;
-        string jsonData = snapshot.GetRawJsonValue();
 
-        if (jsonData != null)
+        if (snapshot.Exists)
         {
             print("Server data found");
-            dts = JsonUtility.FromJson<dataToSaveInventory>(jsonData);
+
+            dts.items.Clear();
+            foreach (DataSnapshot itemSnapshot in snapshot.Children)
+            {
+                string json = itemSnapshot.GetRawJsonValue();
+                ItemData item = JsonUtility.FromJson<ItemData>(json);
+                dts.items.Add(item);
+            }
         }
         else
         {
             print("Server no data found");
         }
     }
-
 }

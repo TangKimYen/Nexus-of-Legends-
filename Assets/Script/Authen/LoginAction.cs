@@ -15,7 +15,6 @@ public class LoginAction : MonoBehaviour
     public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng nhập thành công
     public GameObject loadingScreen;  // Hiển thị khi đang xử lý
     public GameObject loginPopup; // Popup đăng nhập
-    public Inventory inventory; // Thêm tham chiếu đến Inventory
 
     private Color successColor;
     private Color errorColor;
@@ -164,13 +163,6 @@ public class LoginAction : MonoBehaviour
 
                         // Xóa các trường nhập liệu sau khi đăng nhập thành công
                         ResetInputFields();
-
-                        // Thiết lập userName và tải mục từ Firebase cho Inventory
-                        if (inventory != null)
-                        {
-                            inventory.userName = username;
-                            inventory.LoadItemsFromFirebase(); // Tải các mục từ Firebase
-                        }
 
                         // Ẩn màn hình loading sau khi đăng nhập thành công
                         loadingScreen.SetActive(false);
