@@ -3,6 +3,7 @@ using NOL.CharacterStats;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class Character : MonoBehaviour
 {
@@ -23,7 +24,13 @@ public class Character : MonoBehaviour
     void Start()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-        LoadCharacterData();
+        if (PlayerData.instance != null && !string.IsNullOrEmpty(PlayerData.instance.username))
+        {
+            string username = PlayerData.instance.username;
+            userName = username;
+
+            LoadCharacterData();
+        }
     }
 
     public void LoadCharacterData()
