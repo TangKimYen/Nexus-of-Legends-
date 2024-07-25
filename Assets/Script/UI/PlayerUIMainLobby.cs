@@ -1,24 +1,19 @@
 ﻿using Firebase.Database;
 using Firebase.Extensions;
-using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using WebSocketSharp;
 
-public class PlayerUI : MonoBehaviourPunCallbacks
+public class PlayerUIMainLobby : MonoBehaviour
 {
-    public Text nameText;
     public TMP_Text playerNameText;
     public TMP_Text playerLevelText;
     public TMP_Text gemText;
     public TMP_Text goldText;
     public Image avatarImage;
-    public Image arrowImage;
     public Image expBar;
     public TMP_Text expText;
 
@@ -27,7 +22,6 @@ public class PlayerUI : MonoBehaviourPunCallbacks
     public Sprite c03WarriorAvatar;
     public Sprite c04MagicanAvatar;
 
-    private PhotonView photonView;
     public int baseExp = 100;
     public float growthFactor = 1.5f;
     public int level;
@@ -42,36 +36,12 @@ public class PlayerUI : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        photonView = GetComponent<PhotonView>();
-
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        if (photonView.IsMine)
-        {
-            nameText.text = PlayerData.instance.username;
-            playerNameText.text = PlayerData.instance.username;
-            arrowImage.enabled = true;
-            LoadPlayerData();
-        }
-        else
-        {
-            nameText.text = PhotonNetwork.NickName;
-            arrowImage.enabled = false;
-        }
-    }
-
-    private void Update()
-    {
-        SavePlayerData();
+        playerNameText.text = PlayerData.instance.username;
+        LoadPlayerData();
     }
 
     void LoadPlayerData()
@@ -147,7 +117,7 @@ public class PlayerUI : MonoBehaviourPunCallbacks
 
     public void SavePlayerData()
     {
-        reference.Child("level").SetValueAsync(level);
-        reference.Child("exp").SetValueAsync(currentExp);
+        reference.Child("players").Child(PlayerData.instance.username).Child("level").SetValueAsync(level);
+        reference.Child("players").Child(PlayerData.instance.username).Child("exp").SetValueAsync(currentExp);
     }
 }
