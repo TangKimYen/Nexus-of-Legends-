@@ -31,8 +31,8 @@ public class ItemTooltip : MonoBehaviour
             Vector2 mousePosition = Input.mousePosition;
 
             // Directly set the position based on mouse position with an offset
-            float xOffset = 2;  // Adjust this value to be closer
-            float yOffset = -100; // Adjust this value to be closer
+            float xOffset = -30;  // Adjust this value to be closer
+            float yOffset = -200; // Adjust this value to be closer
 
             rectTransform.position = new Vector2(mousePosition.x + xOffset, mousePosition.y + yOffset);
         }
