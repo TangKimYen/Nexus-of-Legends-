@@ -21,8 +21,16 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+        if (PlayerData.instance != null && !string.IsNullOrEmpty(PlayerData.instance.username))
+        {
+            string username = PlayerData.instance.username;
+            userName = username;
+
+            LoadItemsFromFirebase();
+        }
+
         dataSaver = GetComponent<DataInventorySaver>();
-        LoadItemsFromFirebase();
         AddFirebaseListeners();
     }
 
