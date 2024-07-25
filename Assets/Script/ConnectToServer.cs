@@ -16,17 +16,17 @@ using Photon.Pun.Demo.PunBasics;
 using System;
 using Newtonsoft.Json;
 
-[Serializable]
-public class PlayerInformation
-{
-    public string characterId;
-    public string emailInfo;
-    public int exp;
-    public float gem;
-    public float gold;
-    public string passwordHash;
-    public string usernameInfo;
-}
+//[Serializable]
+//public class PlayerInformation
+//{
+//    public string characterId;
+//    public string emailInfo;
+//    public int exp;
+//    public float gem;
+//    public float gold;
+//    public string passwordHash;
+//    public string usernameInfo;
+//}
 
 [System.Serializable]
 public class PlayerLobbyData
@@ -67,6 +67,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public GameObject invitationLayout;
     public GameObject inviteButton;
     public GameObject invitationPanel;
+    public GameObject kickLayout;
     public TextMeshProUGUI invitationText;
 
     public RoomInfo roomInfo;
@@ -96,12 +97,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     [SerializeField] Transform lobbyPlayerListContain;
     [SerializeField] GameObject lobbyPlayerItemPrefab;
     private List<PlayerLobbyData> lobbyPlayers = new List<PlayerLobbyData>();
-    public PlayerLobbyData playerLobbyData;
+    public PlayerData playerData = PlayerData.instance;
     private DatabaseReference databaseReference;
-
-    private string[] playerIds = new string[] { "thanhdat123", "nhuquynh", "Tlinh", "kimyen24" };
-    private string playerId;
-    public PlayerInformation playerInfo;
 
     private List<RoomInfo> availableRooms = new List<RoomInfo>();
     private Invitation currentInvitation; // Store the current invitation
@@ -124,13 +121,12 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        playerId = playerIds[UnityEngine.Random.Range(0, playerIds.Length)];
+        //playerId = playerIds[UnityEngine.Random.Range(0, playerIds.Length)];
         if (!PhotonNetwork.IsConnected)
         {
             Debug.Log("Connecting to server.");
             PhotonNetwork.ConnectUsingSettings();
         }
-        LoadPlayerData();
         listMapLayout.SetActive(false);
 
         toggle1.onValueChanged.AddListener(delegate { OnToggleValueChanged(); });
@@ -140,33 +136,6 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
         StartCoroutine(UpdateLobbyPlayerListCoroutine());
         ListenForInvitations();
-        //TestDeserialization();
-    }
-
-    public void LoadPlayerData()
-    {
-        StartCoroutine(LoadPlayerDataEnum());
-    }
-
-    IEnumerator LoadPlayerDataEnum()
-    {
-        var serverData = databaseReference.Child("players").Child(playerId).GetValueAsync();
-        yield return new WaitUntil(predicate: () => serverData.IsCompleted);
-
-        print("Process is Complete!");
-
-        DataSnapshot snapshot = serverData.Result;
-        string jsonData = snapshot.GetRawJsonValue();
-
-        if (jsonData != null)
-        {
-            print("Player data is found.");
-            playerInfo = JsonUtility.FromJson<PlayerInformation>(jsonData);
-        }
-        else
-        {
-            print("Player data is not found.");
-        }
     }
 
     public override void OnConnectedToMaster()
@@ -181,9 +150,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         MenuManager.Instance.OpenMenu("Title");  
-        PhotonNetwork.NickName = playerInfo.usernameInfo;
+        PhotonNetwork.NickName = PlayerData.instance.username;
 
-        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, playerInfo.exp, playerInfo.characterId);
+        AddPlayerToFirebase(PhotonNetwork.LocalPlayer, PlayerData.instance.level, PlayerData.instance.characterId);
         // Clear the current lobby players list
         lobbyPlayers.Clear();
 
@@ -206,10 +175,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void AddPlayerToFirebase(Player player, int level, string characterId)
     {
-        string playerKey = player.UserId ?? player.NickName;
-        PlayerLobbyData playerData = new PlayerLobbyData(player.NickName, level, characterId);
-        string json = JsonUtility.ToJson(playerData);
-        databaseReference.Child("lobbyPlayers").Child(playerKey).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        PlayerLobbyData playerLobbyData = new PlayerLobbyData(player.NickName, level, characterId);
+        string json = JsonUtility.ToJson(playerLobbyData);
+        databaseReference.Child("lobbyPlayers").Child(player.NickName).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
@@ -220,8 +188,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void RemovePlayerFromFirebase(Player player)
     {
-        string playerKey = player.UserId ?? player.NickName;
-        databaseReference.Child("lobbyPlayers").Child(playerKey).RemoveValueAsync();
+        databaseReference.Child("lobbyPlayers").Child(player.NickName).RemoveValueAsync();
     }
 
     private void GetLobbyPlayersFromFirebase()
@@ -330,10 +297,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         selectedLevelRequire = levelRequire;
         selectedMapBGName = mapBG.name;
         dungeonDisplay.text = floor; 
-        levelRequireDisplay.text = levelRequire;
+        levelRequireDisplay.text = "Level " + levelRequire + "+";
         mapBGDisplay.sprite = mapBG;
         floorDisplay.text = selectedFloor;
-        levelRequireMapDisplay.text = selectedLevelRequire; 
+        levelRequireMapDisplay.text = "Level " + selectedLevelRequire + "+"; 
         currentMemberDisplay.text = currentMember.ToString();
         maxMemberDisplay.text = maxPlayers.ToString();
         photonView.RPC("SetSelectedMap", RpcTarget.AllBuffered, selectedMap, selectedFloor, selectedLevelRequire, selectedMapBGName);
@@ -407,7 +374,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         Debug.Log("Joined room successfully");
         roomNameText.text = selectedFloor;
         dungeonRoomDisplay.text = selectedFloor;
-        levelRequireRoomDisplay.text = selectedLevelRequire; 
+        levelRequireRoomDisplay.text = "Level " + selectedLevelRequire + "+"; 
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
         MenuManager.Instance.OpenMenu("Room");
         selectedFloor = PhotonNetwork.CurrentRoom.Name;
@@ -442,7 +409,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         dungeonRoomDisplay.text = selectedFloor;
-        levelRequireRoomDisplay.text = selectedLevelRequire;
+        levelRequireRoomDisplay.text = "Level " + selectedLevelRequire + "+";
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
         Debug.Log("Floor: " + selectedFloor + ", Level Require: " + selectedLevelRequire + "MapBG: " + selectedMapBGName);
         currentMemberDisplay.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
@@ -452,9 +419,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         RectTransform rectTransform = playerItem.GetComponent<RectTransform>();
         rectTransform.localScale = Vector3.one;
         rectTransform.anchoredPosition3D = Vector3.zero;
-        playerItem.GetComponent<PlayerListItem>().SetUp(newPlayer);
-        UpdateRoomInfo();
 
+        playerItem.GetComponent<PlayerListItem>().SetUp(newPlayer);
+
+        UpdateRoomInfo();
         UpdateLobbyPlayerList();
         RemovePlayerFromFirebase(newPlayer);
     }
@@ -465,7 +433,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         UpdateRoomInfo();
 
         UpdateLobbyPlayerList();
-        AddPlayerToFirebase(otherPlayer, playerInfo.exp, playerInfo.characterId);
+        AddPlayerToFirebase(otherPlayer, 1, PlayerData.instance.characterId);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -490,7 +458,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         currentMemberDisplay.text = currentMember.ToString();
         maxMemberDisplay.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
         dungeonRoomDisplay.text = selectedFloor;
-        levelRequireRoomDisplay.text = selectedLevelRequire;
+        levelRequireRoomDisplay.text = "Level " + selectedLevelRequire + "+";
         mapBGRoomDisplay.sprite = Resources.Load<Sprite>(selectedMapBGName);
 
         roomNameText.text = selectedFloor;
@@ -533,11 +501,37 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public void ReturnLobby()
     {
         RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
+        PhotonNetwork.LeaveLobby();
         PhotonNetwork.LoadLevel("MainLobby");
     }
 
     public void JoinRoom(RoomInfo info)
     {
+        // Get the level requirement from the room's custom properties
+        if (info.CustomProperties.ContainsKey("SelectedLevelRequire"))
+        {
+            string levelRequire = (string)info.CustomProperties["SelectedLevelRequire"];
+            int requiredLevel;
+
+            if (!int.TryParse(levelRequire, out requiredLevel))
+            {
+                Debug.LogError("Failed to parse level requirement from room properties.");
+                return;
+            }
+
+            // Get the player's level (assuming it's stored in PlayerData.instance.level)
+            int playerLevel = PlayerData.instance.level;
+
+            // Check if the player's level meets the requirement
+            if (playerLevel < requiredLevel)
+            {
+                // Notify the player that their level is too low
+                errorText.text = "Your level is too low to join this room.";
+                MenuManager.Instance.OpenMenu("Error");
+                return;
+            }
+        }
+
         if (info.PlayerCount >= info.MaxPlayers)
         {
             // Notify the player that the room is full
@@ -624,7 +618,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void ListenForInvitations()
     {
-        databaseReference.Child("invitations").Child(playerId).ValueChanged += HandleInvitationReceived;
+        databaseReference.Child("invitations").Child(PlayerData.instance.username).ValueChanged += HandleInvitationReceived;
     }
 
     private void HandleInvitationReceived(object sender, ValueChangedEventArgs e)
@@ -671,7 +665,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         invitationPanel.SetActive(true);
 
         dungeonInvitationDisplay.text = invitation.Floor;
-        levelRequireInvitationDisplay.text = invitation.LevelRequirement;
+        levelRequireInvitationDisplay.text = "Level " + invitation.LevelRequirement + "+";
         mapBGInvitationDisplay.sprite = Resources.Load<Sprite>(invitation.MapBackgroundName);
 
         currentInvitation = invitation;
@@ -705,13 +699,13 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinRoom(currentInvitation.RoomName);
         invitationPanel.SetActive(false);
-        DeleteInvitation(playerId);
+        DeleteInvitation(PlayerData.instance.username);
     }
 
     public void DeclineInvitation()
     {
         invitationPanel.SetActive(false);
-        DeleteInvitation(playerId);
+        DeleteInvitation(PlayerData.instance.username);
     }
 
     private void DeleteInvitation(string playerId)

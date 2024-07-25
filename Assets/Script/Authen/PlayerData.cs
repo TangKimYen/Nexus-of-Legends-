@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
@@ -10,15 +10,14 @@ public class PlayerData : MonoBehaviour
     public string passwordHash;
     public string characterId = "";
     public string characterName = "";
-    public string characterAvatarPrefabName = "";
     public float exp;
     public float gold;
     public float gem;
+    public int level; // Thêm thuộc tính level
     public string sessionId;
     public string loginTime;
     public string logoutTime;
-    public bool isLoggedIn = false;
-    public int level = 1;
+    public bool isLoggedIn;
 
     void Awake()
     {
@@ -34,4 +33,6 @@ public class PlayerData : MonoBehaviour
             Debug.LogWarning("Duplicate PlayerData instance destroyed.");
         }
     }
+
+    public PlayerData() { }
 }

@@ -28,6 +28,18 @@ public class LoginAction : MonoBehaviour
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            OnLoginButtonClicked();
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SelectNextInputField();
+        }
+    }
+
     public void OnLoginButtonClicked()
     {
         string username = usernameInput.text;
@@ -45,6 +57,17 @@ public class LoginAction : MonoBehaviour
                 messageText.text = "Invalid login information.";
                 messageText.gameObject.SetActive(true); // Hiển thị thông báo
             }
+        }
+    }
+    private void SelectNextInputField()
+    {
+        if (usernameInput.isFocused)
+        {
+            passwordInput.Select();
+        }
+        else if (passwordInput.isFocused)
+        {
+            usernameInput.Select();
         }
     }
 
@@ -122,14 +145,10 @@ public class LoginAction : MonoBehaviour
                         PlayerData.instance.passwordHash = snapshot.Child("passwordHash").Value?.ToString();
                         PlayerData.instance.characterId = snapshot.Child("characterId").Value?.ToString();
                         PlayerData.instance.characterName = snapshot.Child("characterName").Value?.ToString();
-                        PlayerData.instance.characterAvatarPrefabName = snapshot.Child("characterAvatarPrefabName").Value?.ToString();
                         PlayerData.instance.exp = snapshot.Child("exp").Value != null ? float.Parse(snapshot.Child("exp").Value.ToString()) : 0f;
                         PlayerData.instance.gold = snapshot.Child("gold").Value != null ? float.Parse(snapshot.Child("gold").Value.ToString()) : 0f;
                         PlayerData.instance.gem = snapshot.Child("gem").Value != null ? float.Parse(snapshot.Child("gem").Value.ToString()) : 0f;
                         PlayerData.instance.level = snapshot.Child("level").Value != null ? int.Parse(snapshot.Child("level").Value.ToString()) : 1;
-
-                        PlayerData.instance.sessionId = System.Guid.NewGuid().ToString();
-                        PlayerData.instance.loginTime = System.DateTime.UtcNow.ToString("o");
 
                         // Tạo session ID và thời gian đăng nhập
                         PlayerData.instance.sessionId = System.Guid.NewGuid().ToString();
@@ -150,6 +169,12 @@ public class LoginAction : MonoBehaviour
 
                         // Đợi 1 giây trước khi tắt popup đăng nhập
                         yield return new WaitForSeconds(1);
+                        // Xóa thông báo sau khi tắt popup đăng nhập
+                        if (messageText != null)
+                        {
+                            messageText.text = "";
+                            messageText.gameObject.SetActive(false);
+                        }
 
                         // Hiển thị username sau khi đăng nhập thành công
                         if (usernameDisplayText != null)
