@@ -6,10 +6,19 @@ using UnityEngine;
 //using static UnityEditor.Progress;
 
 [Serializable]
+public class ItemData
+{
+    public string itemId;
+    public bool isActive;  // Add this field
+}
+
+[Serializable]
 public class dataToSaveInventory
 {
-    public List<string> itemIds;  // Thay đổi từ một mục đơn lẻ sang danh sách các mục
+    public List<ItemData> items;  // Thay đổi từ một mục đơn lẻ sang danh sách các mục
 }
+
+
 
 public class DataInventorySaver : MonoBehaviour
 {
@@ -27,6 +36,7 @@ public class DataInventorySaver : MonoBehaviour
         string json = JsonUtility.ToJson(dts);
         dbRef.Child("Inventory").Child(userName).SetRawJsonValueAsync(json);
     }
+
 
     public void LoadDataFn()
     {
@@ -53,4 +63,5 @@ public class DataInventorySaver : MonoBehaviour
             print("Server no data found");
         }
     }
+
 }

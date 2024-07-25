@@ -6731,7 +6731,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &269691684
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6862,9 +6862,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1683113311}
-        m_TargetAssemblyTypeName: DataEnemiesSaver, Assembly-CSharp
-        m_MethodName: SaveMonsterData
+      - m_Target: {fileID: 1811509436}
+        m_TargetAssemblyTypeName: DataInventorySaver, Assembly-CSharp
+        m_MethodName: SaveDataFn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -35801,6 +35801,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214627206843092498807fd72cc28476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 1984975351}
+  itemDatabase: {fileID: 11400000, guid: ec23ce292d218a6478cb863ef5729158, type: 2}
   equipmentSlotsParent: {fileID: 1541876563}
   equipmentSlots:
   - {fileID: 1086657781}
@@ -43289,8 +43291,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dts:
-    itemIds: []
-  userName: 
+    items:
+    - itemId: ARMOR_1
+      isActive: 0
+    - itemId: ARMOR_2
+      isActive: 1
+    - itemId: ARMOR_3
+      isActive: 0
+    - itemId: ARMOR_5
+      isActive: 0
+  userName: yentk
 --- !u!4 &1811509437
 Transform:
   m_ObjectHideFlags: 0
@@ -45291,7 +45301,7 @@ MonoBehaviour:
   - {fileID: 1559189788}
   - {fileID: 63787581}
   - {fileID: 330116892}
-  userName: Tlinh
+  userName: yentk
 --- !u!1 &1891819566
 GameObject:
   m_ObjectHideFlags: 0
@@ -47422,6 +47432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterId: c03
+  userName: yentk
   Strength:
     BaseValue: 0
   Intellect:

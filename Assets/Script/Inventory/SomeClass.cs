@@ -10,7 +10,7 @@ public class SomeClass : MonoBehaviour
     private void Start()
     {
         // Thiết lập userId tại đây, ví dụ: từ một hệ thống đăng nhập
-        inventory.userName = "Tlinh";
+        inventory.userName = "yentk";
         inventory.LoadItemsFromFirebase();
     }
 }
