@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -84,13 +85,14 @@ public class SelectChar : MonoBehaviour
         {
             // Gọi hàm SelectCharacter của CharSelectManager với 2 đối số
             charSelectManager.SelectCharacter(characterId, characterName);
-            // Chuyển sang scene TitleScreen sau khi chọn nhân vật
             SceneManager.LoadScene("TitleScreen");
+
         }
         else
         {
             Debug.LogError("charSelectManager is null.");
         }
+        
     }
 
     public void CancelSelection()
@@ -104,4 +106,5 @@ public class SelectChar : MonoBehaviour
             Debug.LogError("Confirmation popup is not assigned.");
         }
     }
+   
 }
