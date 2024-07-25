@@ -4,6 +4,9 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using UnityEngine.UI;
+using Firebase.Database;
+using TMPro;
 
 public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -12,13 +15,18 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     public bool chase = false;
     public Transform staringPoint;
     [SerializeField] private float distanceFrontOf;
-
     [SerializeField] private int pointBoss;
 
     private Animator anim;
-    [SerializeField] private int maxHealth;
-    //[SerializeField] private AudioSource deathSoundEffect;
-    //[SerializeField] private AudioSource hurtSoundEffect;
+    public int currentHealth;
+    public int maxHealth;
+
+    [SerializeField] private int expReward;
+
+    [SerializeField] private Image healthBar;
+    [SerializeField] private TMP_Text healthText;
+    [SerializeField] private Canvas healthCanvas;
+    private DataEnemiesSaver dataSaver;
 
     private enum MovementState { idle, running }
 
@@ -26,6 +34,9 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     {
         player = GameObject.FindGameObjectWithTag("Character");
         anim = GetComponent<Animator>();
+        dataSaver = GetComponent<DataEnemiesSaver>();
+        //SetEventCamera();
+        LoadMaxHealthFromFirebase();
     }
 
     void Update()
@@ -50,7 +61,53 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
         }
         UpdateAnimationUpdate();
         Flip();
+        //UpdateHealthUI();
     }
+
+    void LoadMaxHealthFromFirebase()
+    {
+        dataSaver.LoadMonsterData(); // Load data from Firebase
+        StartCoroutine(WaitForDataLoad());
+    }
+
+    IEnumerator WaitForDataLoad()
+    {
+        yield return new WaitUntil(() => dataSaver.monsterStats != null);
+
+        if (dataSaver.monsterStats != null && dataSaver.monsterStats.health > 0)
+        {
+            maxHealth = (int)dataSaver.monsterStats.health;
+            currentHealth = maxHealth; // Init currentHealth equal maxHealth
+        }
+        else
+        {
+            maxHealth = 100; // Set default max health
+            currentHealth = maxHealth;
+        }
+
+        //if (healthBar != null)
+        //{
+        //    healthBar.fillAmount = 1;
+        //}
+        //UpdateHealthText();
+    }
+
+    //private void UpdateHealthUI()
+    //{
+    //    if (healthBar != null)
+    //    {
+    //        healthBar.fillAmount = (float)currentHealth / maxHealth;
+    //    }
+    //    UpdateHealthText();
+    //}
+
+    //private void UpdateHealthText()
+    //{
+    //    if (healthText != null)
+    //    {
+    //        healthText.text = currentHealth + "/" + maxHealth;
+    //    }
+    //}
 
     private void UpdateAnimationUpdate()
     {
@@ -114,11 +171,25 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     {
         //deathSoundEffect.Play();
         anim.SetTrigger("death");
+        photonView.RPC("RPC_RewardExp", RpcTarget.All, expReward);
     }
     public void Hurt()
     {
         //hurtSoundEffect.Play();
         anim.SetTrigger("hurt");
+    }
+
+    [PunRPC]
+    void RPC_RewardExp(int exp)
+    {
+        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Character"))
+        {
+            PlayerStats playerStats = player.GetComponent<PlayerStats>();
+            if (playerStats != null)
+            {
+                playerStats.AddExp(exp);
+            }
+        }
     }
 
     public void Deactive()
@@ -129,9 +200,9 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (collision.gameObject.CompareTag("Attack"))
         {
-            maxHealth = maxHealth - 1;
-            photonView.RPC("RPC_UpdateHealth", RpcTarget.OthersBuffered, maxHealth);
-            if (maxHealth > 0)
+            currentHealth = currentHealth - 30;
+            photonView.RPC("RPC_UpdateHealth", RpcTarget.OthersBuffered, currentHealth);
+            if (currentHealth > 0)
             {
                 Hurt();
                 photonView.RPC("RPC_Hurt", RpcTarget.OthersBuffered);
@@ -141,13 +212,15 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
                 Death();
                 photonView.RPC("RPC_Death", RpcTarget.OthersBuffered);
             }
+            //UpdateHealthUI();
         }
     }
 
     [PunRPC]
     void RPC_UpdateHealth(int newHealth)
     {
-        maxHealth = newHealth;
+        currentHealth = newHealth;
+        //UpdateHealthUI();
     }
 
     [PunRPC]
@@ -169,6 +242,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
             // Send data to others
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
+            stream.SendNext(currentHealth);
             stream.SendNext(maxHealth);
         }
         else
@@ -176,7 +250,9 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
             // Receive data
             transform.position = (Vector3)stream.ReceiveNext();
             transform.rotation = (Quaternion)stream.ReceiveNext();
+            currentHealth = (int)stream.ReceiveNext();
             maxHealth = (int)stream.ReceiveNext();
+            //UpdateHealthUI();
         }
     }
 }

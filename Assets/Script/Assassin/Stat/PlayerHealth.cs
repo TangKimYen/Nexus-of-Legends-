@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using TMPro;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviourPunCallbacks
 {
     private Rigidbody2D rb;
     private Animator anim;
-    //public Image[] hearts;
-    //[SerializeField] private Sprite FullHeart;
-    //[SerializeField] private Sprite EmptyHeart;
-    [SerializeField] private int health;
-    [SerializeField] private int maxHealth;
+    [SerializeField] private Image healthBar;
+    [SerializeField] private TMP_Text healthText;
+    public int health;
+    public int maxHealth;
     [SerializeField] private Transform healPoint;
     [SerializeField] private GameObject[] HealEffect;
 
@@ -27,19 +28,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     }
     void Start()
     {
-        //health = PlayerPrefs.GetInt("health", 5);
-        //Physics2D.IgnoreLayerCollision(7, 8, false);
+        UpdateHealthUI();
     }
     private void Update()
     {
-        //foreach (Image img in hearts)
-        //{
-        //    img.sprite = EmptyHeart;
-        //}
-        //for (int i = 0; i < health; i++)
-        //{
-        //    hearts[i].sprite = FullHeart;
-        //}
+        UpdateHealthUI();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -71,6 +64,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
             {
                 photonView.RPC("HurtRPC", RpcTarget.All);
             }
+            UpdateHealthUI();
         }
     }
 
@@ -91,6 +85,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         }
         Heal();
         photonView.RPC("HealEffectRPC", RpcTarget.All, healPoint.position, transform.localScale.x);
+        UpdateHealthUI();
     }
 
     [PunRPC]
@@ -105,6 +100,12 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
         // You might want to add additional code here for handling the death (e.g., respawn, game over)
+    }
+
+    private void UpdateHealthUI()
+    {
+        healthBar.fillAmount = (float)health / maxHealth;
+        healthText.text = health + " / " + maxHealth;
     }
 
     [PunRPC]
