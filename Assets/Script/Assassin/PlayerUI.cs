@@ -5,8 +5,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using WebSocketSharp;
 
 public class PlayerUI : MonoBehaviourPunCallbacks
 {
@@ -26,12 +28,29 @@ public class PlayerUI : MonoBehaviourPunCallbacks
     public Sprite c04MagicanAvatar;
 
     private PhotonView photonView;
-    private int baseExp = 100;
-    private float growthFactor = 1.5f;
+    public int baseExp = 100;
+    public float growthFactor = 1.5f;
+    public int level;
+    public string characterId;
+    public float gold;
+    public float gem;
+    public float currentExp;
+    public float expToNextLevel;
+
+    public static PlayerUI Instance { get; private set; }
+    private DatabaseReference reference;
 
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -41,31 +60,48 @@ public class PlayerUI : MonoBehaviourPunCallbacks
             nameText.text = PlayerData.instance.username;
             playerNameText.text = PlayerData.instance.username;
             arrowImage.enabled = true;
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("players").Child(PlayerData.instance.username);
-            reference.GetValueAsync().ContinueWithOnMainThread(task => {
-                if (task.IsFaulted)
+            LoadPlayerData();
+        }
+        else
+        {
+            nameText.text = PhotonNetwork.NickName;
+            arrowImage.enabled = false;
+        }
+    }
+
+    private void Update()
+    {
+        SavePlayerData();
+    }
+
+    void LoadPlayerData()
+    {
+        reference = FirebaseDatabase.DefaultInstance.GetReference("players").Child(PlayerData.instance.username);
+        reference.GetValueAsync().ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Unable to retrieve player data from Firebase: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot.Exists)
                 {
-                    Debug.LogError("Failed to retrieve player data from Firebase: " + task.Exception);
-                }
-                else if (task.IsCompleted)
-                {
-                    DataSnapshot snapshot = task.Result;
-                    if (snapshot.Exists)
+                    try
                     {
-                        int level = int.Parse(snapshot.Child("level").Value.ToString());
-                        string characterId = snapshot.Child("characterId").Value.ToString();
-                        float gold = float.Parse(snapshot.Child("gold").Value.ToString());
-                        float gem = float.Parse(snapshot.Child("gem").Value.ToString());
-                        float currentExp = float.Parse(snapshot.Child("exp").Value.ToString());
-                        float expToNextLevel = CalculateExpToNextLevel(level);
+                        level = int.Parse(snapshot.Child("level").Value.ToString());
+                        characterId = snapshot.Child("characterId").Value.ToString();
+                        gold = float.Parse(snapshot.Child("gold").Value.ToString());
+                        gem = float.Parse(snapshot.Child("gem").Value.ToString());
+                        currentExp = float.Parse(snapshot.Child("exp").Value.ToString());
+                        expToNextLevel = CalculateExpToNextLevel(level);
 
                         Debug.Log($"Level: {level}, Gold: {gold}, Gem: {gem}, CurrentExp: {currentExp}, ExpToNextLevel: {expToNextLevel}");
 
                         playerLevelText.text = "Level: " + level.ToString();
                         goldText.text = gold.ToString();
                         gemText.text = gem.ToString();
-                        expBar.fillAmount = currentExp / expToNextLevel;
-                        expText.text = $"{currentExp}/{expToNextLevel}";
+                        UpdateExpUI(currentExp, expToNextLevel);
                         switch (characterId)
                         {
                             case "c01":
@@ -81,24 +117,24 @@ public class PlayerUI : MonoBehaviourPunCallbacks
                                 avatarImage.sprite = c04MagicanAvatar;
                                 break;
                             default:
-                                avatarImage.sprite = c02ArcherAvatar; // Or set a default avatar
+                                avatarImage.sprite = c02ArcherAvatar; // Hoặc đặt avatar mặc định
                                 break;
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Debug.LogWarning("Player data does not exist in Firebase.");
+                        Debug.LogError("Error processing player data: " + ex.Message);
                     }
                 }
-            });
-        }
-        else
-        {
-            nameText.text = PhotonNetwork.NickName;
-            arrowImage.enabled = false;
-        }
+                else
+                {
+                    Debug.LogWarning("Player data does not exist in Firebase.");
+                }
+            }
+        });
     }
-    float CalculateExpToNextLevel(int level)
+
+    public float CalculateExpToNextLevel(int level)
     {
         return Mathf.FloorToInt(baseExp * Mathf.Pow(level, growthFactor));
     }
@@ -107,5 +143,11 @@ public class PlayerUI : MonoBehaviourPunCallbacks
     {
         expBar.fillAmount = currentExp / expToNextLevel;
         expText.text = $"{currentExp}/{expToNextLevel}";
+    }
+
+    public void SavePlayerData()
+    {
+        reference.Child("level").SetValueAsync(level);
+        reference.Child("exp").SetValueAsync(currentExp);
     }
 }
