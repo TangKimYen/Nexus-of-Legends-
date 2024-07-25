@@ -9,8 +9,18 @@ public class SomeClass : MonoBehaviour
 
     private void Start()
     {
-        // Thiết lập userId tại đây, ví dụ: từ một hệ thống đăng nhập
-        inventory.userName = "yentk";
-        inventory.LoadItemsFromFirebase();
+        if (PlayerData.instance != null && !string.IsNullOrEmpty(PlayerData.instance.username))
+        {
+            string username = PlayerData.instance.username;
+            inventory.userName = username;
+            character.userName = username;
+
+            inventory.LoadItemsFromFirebase();
+            character.LoadCharacterData();
+        }
+        else
+        {
+            Debug.LogWarning("Unable to set userName for Inventory or Character.");
+        }
     }
 }
