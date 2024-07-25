@@ -10,7 +10,6 @@ public class PlayerData : MonoBehaviour
     public string passwordHash;
     public string characterId = "";
     public string characterName = "";
-    public string characterAvatarPrefabName = "";
     public float exp;
     public float gold;
     public float gem;

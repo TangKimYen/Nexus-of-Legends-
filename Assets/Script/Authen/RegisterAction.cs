@@ -52,13 +52,17 @@ public class RegisterAction : MonoBehaviour
     private Color errorColor;
 
     DatabaseReference dbRef;
+    private EmailVerifier emailVerifier;
 
     void Start()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        emailVerifier = GetComponent<EmailVerifier>();
         // Chuyển đổi mã màu hex sang Color
         ColorUtility.TryParseHtmlString("#007213", out successColor); // Màu xanh lục
         ColorUtility.TryParseHtmlString("#C02E31", out errorColor);   // Màu đỏ
+
+
     }
 
     void Update()
@@ -70,28 +74,6 @@ public class RegisterAction : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             SelectNextInputField();
-        }
-    }
-    public void OnRegisterButtonClicked()
-    {
-        string username = usernameInput.text;
-        string password = passwordInput.text;
-        string confirmPassword = confirmPasswordInput.text;
-        string email = emailInput.text;
-
-        string errorMessage;
-        if (ValidateRegister(username, password, confirmPassword, email, out errorMessage))
-        {
-            StartCoroutine(CheckUsernameAndRegister(username, email, password));
-        }
-        else
-        {
-            if (messageText != null)
-            {
-                messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
-                messageText.text = errorMessage; // Hiển thị thông báo lỗi cụ thể
-                messageText.gameObject.SetActive(true); // Hiển thị thông báo
-            }
         }
     }
     private void SelectNextInputField()
@@ -113,6 +95,58 @@ public class RegisterAction : MonoBehaviour
             usernameInput.Select();
         }
     }
+    public void OnRegisterButtonClicked()
+    {
+        // Thêm các dòng Debug.Log để kiểm tra giá trị của các biến
+        Debug.Log("OnRegisterButtonClicked called");
+        Debug.Log("usernameInput: " + usernameInput);
+        Debug.Log("passwordInput: " + passwordInput);
+        Debug.Log("confirmPasswordInput: " + confirmPasswordInput);
+        Debug.Log("emailInput: " + emailInput);
+        Debug.Log("messageText: " + messageText);
+        Debug.Log("emailVerifier: " + emailVerifier);
+
+        if (emailVerifier == null)
+        {
+            Debug.LogError("EmailVerifier is not assigned.");
+            return;
+        }
+        string username = usernameInput.text;
+        string password = passwordInput.text;
+        string confirmPassword = confirmPasswordInput.text;
+        string email = emailInput.text;
+
+        string errorMessage;
+        if (ValidateRegister(username, password, confirmPassword, email, out errorMessage))
+        {
+            // Kiểm tra email trước khi tiếp tục
+            StartCoroutine(emailVerifier.VerifyEmail(email, OnEmailVerified));
+        }
+        else
+        {
+            if (messageText != null)
+            {
+                messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
+                messageText.text = errorMessage; // Hiển thị thông báo lỗi cụ thể
+                messageText.gameObject.SetActive(true); // Hiển thị thông báo
+            }
+        }
+    }
+    private void OnEmailVerified(bool isValid)
+    {
+        if (isValid)
+        {
+            StartCoroutine(CheckUsernameAndRegister(usernameInput.text, emailInput.text, passwordInput.text));
+        }
+        else
+        {
+            messageText.color = errorColor;
+            messageText.text = "Your email does not exist, please enter your real email!";
+            messageText.gameObject.SetActive(true);
+        }
+    }
+
+    
 
     private bool ValidateRegister(string username, string password, string confirmPassword, string email, out string errorMessage)
     {

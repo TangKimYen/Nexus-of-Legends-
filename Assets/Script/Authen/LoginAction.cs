@@ -15,6 +15,7 @@ public class LoginAction : MonoBehaviour
     public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng nhập thành công
     public GameObject loadingScreen;  // Hiển thị khi đang xử lý
     public GameObject loginPopup; // Popup đăng nhập
+    public Inventory inventory; // Thêm tham chiếu đến Inventory
 
     private Color successColor;
     private Color errorColor;
@@ -145,7 +146,6 @@ public class LoginAction : MonoBehaviour
                         PlayerData.instance.passwordHash = snapshot.Child("passwordHash").Value?.ToString();
                         PlayerData.instance.characterId = snapshot.Child("characterId").Value?.ToString();
                         PlayerData.instance.characterName = snapshot.Child("characterName").Value?.ToString();
-                        PlayerData.instance.characterAvatarPrefabName = snapshot.Child("characterAvatarPrefabName").Value?.ToString();
                         PlayerData.instance.exp = snapshot.Child("exp").Value != null ? float.Parse(snapshot.Child("exp").Value.ToString()) : 0f;
                         PlayerData.instance.gold = snapshot.Child("gold").Value != null ? float.Parse(snapshot.Child("gold").Value.ToString()) : 0f;
                         PlayerData.instance.gem = snapshot.Child("gem").Value != null ? float.Parse(snapshot.Child("gem").Value.ToString()) : 0f;
@@ -164,6 +164,13 @@ public class LoginAction : MonoBehaviour
 
                         // Xóa các trường nhập liệu sau khi đăng nhập thành công
                         ResetInputFields();
+
+                        // Thiết lập userName và tải mục từ Firebase cho Inventory
+                        if (inventory != null)
+                        {
+                            inventory.userName = username;
+                            inventory.LoadItemsFromFirebase(); // Tải các mục từ Firebase
+                        }
 
                         // Ẩn màn hình loading sau khi đăng nhập thành công
                         loadingScreen.SetActive(false);

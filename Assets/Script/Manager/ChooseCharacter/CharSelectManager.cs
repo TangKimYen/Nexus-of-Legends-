@@ -1,4 +1,7 @@
 ﻿using Firebase.Database;
+using System.Collections;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -49,9 +52,8 @@ public class CharSelectManager : MonoBehaviour
                             Debug.Log("Character selected successfully");
                             PlayerData.instance.characterId = characterId;
                             PlayerData.instance.characterName = characterName;
+              
 
-                            // Chuyển sang scene TitleScreen sau khi chọn nhân vật
-                            SceneManager.LoadScene("TitleScreen");
                         });
                     }
                     else
@@ -72,4 +74,5 @@ public class CharSelectManager : MonoBehaviour
             }
         });
     }
+  
 }
