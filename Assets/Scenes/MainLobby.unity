@@ -1769,7 +1769,6 @@ GameObject:
   - component: {fileID: 70917451}
   - component: {fileID: 70917450}
   - component: {fileID: 70917449}
-  - component: {fileID: 70917454}
   - component: {fileID: 70917453}
   m_Layer: 5
   m_Name: Canvas
@@ -1887,44 +1886,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 70917448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 920f85a6c60c1014d9cb6b5deeae558d, type: 3}
+  m_Script: {fileID: 11500000, guid: 3cb4387ac6b88e6499efeb71bdefa0a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 67238606}
   playerNameText: {fileID: 2006297155}
   playerLevelText: {fileID: 2006297156}
   gemText: {fileID: 2006297153}
   goldText: {fileID: 2006297154}
   avatarImage: {fileID: 2006297157}
-  arrowImage: {fileID: 2001734882}
   expBar: {fileID: 2006297152}
   expText: {fileID: 2006297151}
   c01AssassinAvatar: {fileID: 21300000, guid: 1db27cefbe5e5a5489308e0f901131a6, type: 3}
   c02ArcherAvatar: {fileID: 21300000, guid: 5e2481d9a37087f4f9856bb984934ce0, type: 3}
   c03WarriorAvatar: {fileID: 21300000, guid: abebbad4c703d6c4e8ca26fded3ae3e8, type: 3}
   c04MagicanAvatar: {fileID: 21300000, guid: e0d651f317fb6f84b83d7c1c87c027f4, type: 3}
---- !u!114 &70917454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 70917448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  baseExp: 100
+  growthFactor: 1.5
+  level: 0
+  characterId: 
+  gold: 0
+  gem: 0
+  currentExp: 0
+  expToNextLevel: 0
 --- !u!1 &86800131
 GameObject:
   m_ObjectHideFlags: 0
@@ -47421,7 +47404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9b72f8cd3b43ee4b9683f138e333d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterId: c03
   Strength:
     BaseValue: 0
   Intellect:

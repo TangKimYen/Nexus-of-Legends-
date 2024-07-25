@@ -2128,6 +2128,14 @@ MonoBehaviour:
   c02ArcherAvatar: {fileID: 21300000, guid: 5e2481d9a37087f4f9856bb984934ce0, type: 3}
   c03WarriorAvatar: {fileID: 21300000, guid: abebbad4c703d6c4e8ca26fded3ae3e8, type: 3}
   c04MagicanAvatar: {fileID: 21300000, guid: e0d651f317fb6f84b83d7c1c87c027f4, type: 3}
+  baseExp: 100
+  growthFactor: 1.5
+  level: 0
+  characterId: 
+  gold: 0
+  gem: 0
+  currentExp: 0
+  expToNextLevel: 0
 --- !u!114 &3266553093634058939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2140,8 +2148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87945da446997f1448a7065a0cec04da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 0
-  exp: 0
 --- !u!1 &7619503710900009037
 GameObject:
   m_ObjectHideFlags: 0

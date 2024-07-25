@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public string characterId;
     DatabaseReference dbRef;
     public CharacterStat Strength;
     public CharacterStat Intellect;
@@ -32,7 +31,7 @@ public class Character : MonoBehaviour
 
     IEnumerator LoadCharacterDataEnum()
     {
-        var serverData = dbRef.Child("characters").Child(characterId).GetValueAsync();
+        var serverData = dbRef.Child("characters").Child(PlayerData.instance.characterId).GetValueAsync();
         yield return new WaitUntil(predicate: () => serverData.IsCompleted);
 
         print("Process is Complete!");
