@@ -40,8 +40,7 @@ public class Character : MonoBehaviour
 
     IEnumerator LoadCharacterDataEnum()
     {
-        // Tải dữ liệu nhân vật từ Firebase
-        var serverData = dbRef.Child("characters").Child(characterId).GetValueAsync();
+        var serverData = dbRef.Child("characters").Child(PlayerData.instance.characterId).GetValueAsync();
         yield return new WaitUntil(predicate: () => serverData.IsCompleted);
 
         print("Process is Complete!");

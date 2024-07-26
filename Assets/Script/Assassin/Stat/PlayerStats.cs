@@ -8,75 +8,47 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviourPunCallbacks
 {
-    public int level;
-    public float exp;
-    private int expToNextLevel;
-    private int baseExp = 100;
-    private float growthFactor = 1.5f;
-
     private PlayerUI playerUI;
 
     private DatabaseReference databaseReference;
 
-    private void Awake()
-    {
-        FirebaseApp app = FirebaseApp.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-    }
     void Start()
     {
         playerUI = GetComponent<PlayerUI>();
-        LoadPlayerData();
-        UpdateExpToNextLevel();
-        playerUI.UpdateExpUI(exp, expToNextLevel);
-    }
-
-    private void Update()
-    {
-        SavePlayerData();
-    }
-
-    void UpdateExpToNextLevel()
-    {
-        expToNextLevel = Mathf.FloorToInt(baseExp * Mathf.Pow(level, growthFactor));
+        if (playerUI == null)
+        {
+            Debug.LogError("PlayerUI component is not found on this GameObject.");
+            return;
+        }
     }
 
     public void AddExp(int amount)
     {
-        exp += amount;
-        if (exp >= expToNextLevel)
+        if (PlayerUI.Instance == null)
+        {
+            Debug.LogError("PlayerUI.Instance is null. Ensure that PlayerUI is initialized.");
+            return;
+        }
+        PlayerUI.Instance.currentExp += amount;
+        if (PlayerUI.Instance.currentExp >= PlayerUI.Instance.expToNextLevel)
         {
             LevelUp();
         }
-        playerUI.UpdateExpUI(exp, expToNextLevel);
+        playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel);
     }
 
     void LevelUp()
     {
-        exp -= expToNextLevel;
-        level++;
-        UpdateExpToNextLevel();
-        SavePlayerData();
-        playerUI.UpdateExpUI(exp, expToNextLevel);
-    }
-
-    void LoadPlayerData()
-    {
-        // Load data from Firebase
-        databaseReference.Child("players").GetValueAsync().ContinueWithOnMainThread(task => 
+        if (PlayerUI.Instance == null)
         {
-            if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                level = int.Parse(snapshot.Child("level").Value.ToString());
-                exp = float.Parse(snapshot.Child("exp").Value.ToString());
-            }
-        });
-    }
+            Debug.LogError("PlayerUI.Instance is null. Ensure that PlayerUI is initialized.");
+            return;
+        }
 
-    void SavePlayerData()
-    {
-        databaseReference.Child("players").Child(PlayerData.instance.username).Child("level").SetValueAsync(level);
-        databaseReference.Child("players").Child(PlayerData.instance.username).Child("exp").SetValueAsync(exp);
+        PlayerUI.Instance.currentExp -= PlayerUI.Instance.expToNextLevel;
+        PlayerUI.Instance.level++;
+        PlayerUI.Instance.CalculateExpToNextLevel(PlayerUI.Instance.level);
+        PlayerUI.Instance.SavePlayerData();
+        playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel);
     }
 }
