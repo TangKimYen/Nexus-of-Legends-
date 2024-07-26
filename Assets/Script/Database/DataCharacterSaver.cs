@@ -7,7 +7,6 @@ using System;
 [Serializable]
 public class CharacterBaseStats
 {
-    public string characterName;
     public float baseStrength;
     public float baseIntellect;
     public float baseDefense;
