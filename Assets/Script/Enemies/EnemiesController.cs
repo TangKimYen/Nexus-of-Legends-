@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using UnityEngine.UI;
 using Firebase.Database;
 using TMPro;
+using Firebase.Extensions;
+using System;
 
 public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 {
+    public string monsterId;
     private GameObject player;
     public float speed = 3f;
     public bool chase = false;
@@ -22,11 +24,9 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     public int maxHealth;
 
     [SerializeField] private int expReward;
-
     [SerializeField] private Image healthBar;
     [SerializeField] private TMP_Text healthText;
-    [SerializeField] private Canvas healthCanvas;
-    private DataEnemiesSaver dataSaver;
+    private DatabaseReference databaseReference;
 
     private enum MovementState { idle, running }
 
@@ -34,8 +34,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     {
         player = GameObject.FindGameObjectWithTag("Character");
         anim = GetComponent<Animator>();
-        dataSaver = GetComponent<DataEnemiesSaver>();
-        //SetEventCamera();
+        databaseReference = FirebaseDatabase.DefaultInstance.GetReference("monsters");
         LoadMaxHealthFromFirebase();
     }
 
@@ -61,53 +60,71 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
         }
         UpdateAnimationUpdate();
         Flip();
-        //UpdateHealthUI();
+        UpdateHealthUI();
     }
 
     void LoadMaxHealthFromFirebase()
     {
-        dataSaver.LoadMonsterData(); // Load data from Firebase
-        StartCoroutine(WaitForDataLoad());
+        databaseReference.Child(monsterId).GetValueAsync().ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Unable to retrieve monster data from Firebase: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    try
+                    {
+                        maxHealth = int.Parse(snapshot.Child("health").Value.ToString());
+                        currentHealth = maxHealth; // Initialize currentHealth equal to maxHealth
+                        Debug.Log("Max health loaded from Firebase: " + maxHealth);
+
+                        // Uncomment the following lines to update health bar and text immediately
+                        if (healthBar != null)
+                        {
+                            healthBar.fillAmount = 1;
+                        }
+                        UpdateHealthText();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError("Error processing monster data: " + ex.Message);
+                        SetDefaultHealth();
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Monster data does not exist in Firebase.");
+                    SetDefaultHealth();
+                }
+            }
+        });
     }
 
-    IEnumerator WaitForDataLoad()
+    void SetDefaultHealth()
     {
-        yield return new WaitUntil(() => dataSaver.monsterStats != null);
-
-        if (dataSaver.monsterStats != null && dataSaver.monsterStats.health > 0)
-        {
-            maxHealth = (int)dataSaver.monsterStats.health;
-            currentHealth = maxHealth; // Init currentHealth equal maxHealth
-        }
-        else
-        {
-            maxHealth = 100; // Set default max health
-            currentHealth = maxHealth;
-        }
-
-        //if (healthBar != null)
-        //{
-        //    healthBar.fillAmount = 1;
-        //}
-        //UpdateHealthText();
+        maxHealth = 100; // Set default max health
+        currentHealth = maxHealth;
     }
 
-    //private void UpdateHealthUI()
-    //{
-    //    if (healthBar != null)
-    //    {
-    //        healthBar.fillAmount = (float)currentHealth / maxHealth;
-    //    }
-    //    UpdateHealthText();
-    //}
+    private void UpdateHealthUI()
+    {
+        if (healthBar != null)
+        {
+            healthBar.fillAmount = (float)currentHealth / maxHealth;
+        }
+        UpdateHealthText();
+    }
 
-    //private void UpdateHealthText()
-    //{
-    //    if (healthText != null)
-    //    {
-    //        healthText.text = currentHealth + "/" + maxHealth;
-    //    }
-    //}
+    private void UpdateHealthText()
+    {
+        if (healthText != null)
+        {
+            healthText.text = currentHealth + "/" + maxHealth;
+        }
+    }
 
     private void UpdateAnimationUpdate()
     {
@@ -212,7 +229,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
                 Death();
                 photonView.RPC("RPC_Death", RpcTarget.OthersBuffered);
             }
-            //UpdateHealthUI();
+            UpdateHealthUI();
         }
     }
 
@@ -220,7 +237,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     void RPC_UpdateHealth(int newHealth)
     {
         currentHealth = newHealth;
-        //UpdateHealthUI();
+        UpdateHealthUI();
     }
 
     [PunRPC]
@@ -252,7 +269,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
             transform.rotation = (Quaternion)stream.ReceiveNext();
             currentHealth = (int)stream.ReceiveNext();
             maxHealth = (int)stream.ReceiveNext();
-            //UpdateHealthUI();
+            UpdateHealthUI();
         }
     }
 }

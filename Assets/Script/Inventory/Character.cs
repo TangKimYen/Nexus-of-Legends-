@@ -28,7 +28,7 @@ public class Character : MonoBehaviour
         {
             string username = PlayerData.instance.username;
             userName = username;
-
+            characterId = PlayerData.instance.characterId;
             LoadCharacterData();
         }
     }
