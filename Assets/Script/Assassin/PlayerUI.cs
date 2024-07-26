@@ -12,7 +12,7 @@ using WebSocketSharp;
 
 public class PlayerUI : MonoBehaviourPunCallbacks
 {
-    public Text nameText;
+    public TMP_Text nameText;
     public TMP_Text playerNameText;
     public TMP_Text playerLevelText;
     public TMP_Text gemText;
@@ -69,11 +69,6 @@ public class PlayerUI : MonoBehaviourPunCallbacks
         }
     }
 
-    private void Update()
-    {
-        SavePlayerData();
-    }
-
     void LoadPlayerData()
     {
         reference = FirebaseDatabase.DefaultInstance.GetReference("players").Child(PlayerData.instance.username);
@@ -117,7 +112,7 @@ public class PlayerUI : MonoBehaviourPunCallbacks
                                 avatarImage.sprite = c04MagicanAvatar;
                                 break;
                             default:
-                                avatarImage.sprite = c02ArcherAvatar; // Hoặc đặt avatar mặc định
+                                avatarImage.sprite = c02ArcherAvatar;
                                 break;
                         }
                     }

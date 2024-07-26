@@ -15,7 +15,10 @@ public class LoginAction : MonoBehaviour
     public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng nhập thành công
     public GameObject loadingScreen;  // Hiển thị khi đang xử lý
     public GameObject loginPopup; // Popup đăng nhập
-    public Inventory inventory; // Thêm tham chiếu đến Inventory
+    public GameObject loginButton; // Nút đăng nhập
+    public GameObject registerButton; // Nút đăng ký
+    public GameObject logoutButton; // Nút đăng xuất
+    //public GameObject inventory;
 
     private Color successColor;
     private Color errorColor;
@@ -27,6 +30,8 @@ public class LoginAction : MonoBehaviour
         ColorUtility.TryParseHtmlString("#007213", out successColor); // Màu xanh lục
         ColorUtility.TryParseHtmlString("#C02E31", out errorColor);   // Màu đỏ
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        // Ẩn nút đăng xuất ban đầu
+        logoutButton.SetActive(false);
     }
 
     void Update()
@@ -166,11 +171,11 @@ public class LoginAction : MonoBehaviour
                         ResetInputFields();
 
                         // Thiết lập userName và tải mục từ Firebase cho Inventory
-                        if (inventory != null)
-                        {
-                            inventory.userName = username;
-                            inventory.LoadItemsFromFirebase(); // Tải các mục từ Firebase
-                        }
+                        //if (inventory != null)
+                        //{
+                        //    inventory.userName = username;
+                        //    inventory.LoadItemsFromFirebase(); // Tải các mục từ Firebase
+                        //}
 
                         // Ẩn màn hình loading sau khi đăng nhập thành công
                         loadingScreen.SetActive(false);
@@ -195,6 +200,12 @@ public class LoginAction : MonoBehaviour
                         {
                             loginPopup.SetActive(false);
                         }
+                        // Ẩn các nút đăng nhập và đăng ký
+                        loginButton.SetActive(false);
+                        registerButton.SetActive(false);
+
+                        // Hiển thị nút đăng xuất
+                        logoutButton.SetActive(true);
                     }
                     else
                     {

@@ -114,10 +114,4 @@ public class PlayerUIMainLobby : MonoBehaviour
         expBar.fillAmount = currentExp / expToNextLevel;
         expText.text = $"{currentExp}/{expToNextLevel}";
     }
-
-    public void SavePlayerData()
-    {
-        reference.Child("players").Child(PlayerData.instance.username).Child("level").SetValueAsync(level);
-        reference.Child("players").Child(PlayerData.instance.username).Child("exp").SetValueAsync(currentExp);
-    }
 }

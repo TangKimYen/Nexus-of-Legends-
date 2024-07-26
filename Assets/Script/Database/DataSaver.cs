@@ -6,13 +6,8 @@ using System.Security.Cryptography;
 using System;
 
 [Serializable]
-public class dataToSave
+public class PlayerBaseStat
 {
-    public string userName;
-    public int totalGold;
-    public int totalGem;
-    public int level;
-    public float exp;
     public float baseStrength;
     public float baseIntellect;
     public float baseDefense;
@@ -20,10 +15,22 @@ public class dataToSave
     public float baseMovement;
     public float baseAttackSpeed;
 }
+
+[System.Serializable]
+public class PlayerCurrentStats
+{
+    public float currentStrength;
+    public float currentIntellect;
+    public float currentDefense;
+    public float currentBlood;
+    public float currentMovement;
+    public float currentAttackSpeed;
+}
+
 public class DataSaver : MonoBehaviour
 {
-    public dataToSave dts;
-    public string userId;
+    public PlayerBaseStat playerBaseStat;
+    public PlayerCurrentStats playerCurrentStat;
     DatabaseReference dbRef;
     // Start is called before the first frame update
     void Start()
@@ -33,8 +40,10 @@ public class DataSaver : MonoBehaviour
 
     public void SaveData()
     {
-        string json = JsonUtility.ToJson(dts);
-        dbRef.Child("users").Child(userId).SetRawJsonValueAsync(json);
+        string json = JsonUtility.ToJson(playerBaseStat);
+        dbRef.Child("PlayerBaseStat").Child(PlayerData.instance.username).SetRawJsonValueAsync(json);
+        string jsonCurrent = JsonUtility.ToJson(playerCurrentStat);
+        dbRef.Child("PlayerCurrentStat").Child(PlayerData.instance.username).SetRawJsonValueAsync(jsonCurrent);
     }
 
     public void LoadData() 
@@ -44,7 +53,7 @@ public class DataSaver : MonoBehaviour
 
     IEnumerator LoadDataEnum() 
     {
-        var serverData = dbRef.Child("users").Child(userId).GetValueAsync();
+        var serverData = dbRef.Child("PlayerBaseStat").Child(PlayerData.instance.username).GetValueAsync();
         yield return new WaitUntil(predicate:  () => serverData.IsCompleted);
 
         print("Process is Complete!");
@@ -55,7 +64,7 @@ public class DataSaver : MonoBehaviour
         if(jsonData != null)
         {
             print("Server data is found.");
-            dts = JsonUtility.FromJson<dataToSave>(jsonData);
+            playerBaseStat = JsonUtility.FromJson<PlayerBaseStat>(jsonData);
         }
         else
         {
