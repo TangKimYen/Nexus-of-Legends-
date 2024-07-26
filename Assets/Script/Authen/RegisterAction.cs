@@ -146,7 +146,7 @@ public class RegisterAction : MonoBehaviour
         }
     }
 
-    
+
 
     private bool ValidateRegister(string username, string password, string confirmPassword, string email, out string errorMessage)
     {
