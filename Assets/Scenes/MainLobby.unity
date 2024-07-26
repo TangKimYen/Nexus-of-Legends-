@@ -6856,7 +6856,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &269691684
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6987,9 +6987,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1683113311}
-        m_TargetAssemblyTypeName: DataEnemiesSaver, Assembly-CSharp
-        m_MethodName: SaveMonsterData
+      - m_Target: {fileID: 840443472}
+        m_TargetAssemblyTypeName: DataSaver, Assembly-CSharp
+        m_MethodName: SaveData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19840,7 +19840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -19907,18 +19907,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 840443469}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 395a2b5b07dd23847b44e88fdaa77df9, type: 3}
+  m_Script: {fileID: 11500000, guid: 6e7ea984efb4e0a42add542be60c1671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBaseStats:
-    characterName: 
+  dts:
     baseStrength: 0
     baseIntellect: 0
     baseDefense: 0
     baseBlood: 0
     baseMovement: 0
     baseAttackSpeed: 0
-  characterId: 
+  userId: 
 --- !u!1 &848790009
 GameObject:
   m_ObjectHideFlags: 0
@@ -21054,10 +21053,10 @@ RectTransform:
   m_Children:
   - {fileID: 1324231024}
   - {fileID: 1811346550}
-  - {fileID: 1242670726}
   - {fileID: 1564709453}
   - {fileID: 672245130}
   - {fileID: 1541876563}
+  - {fileID: 1242670726}
   m_Father: {fileID: 1984975348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -22156,7 +22155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -35250,7 +35249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -45160,7 +45159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -51118,7 +51117,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2073613874
 RectTransform:
   m_ObjectHideFlags: 0
@@ -51249,9 +51248,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1683113311}
-        m_TargetAssemblyTypeName: DataEnemiesSaver, Assembly-CSharp
-        m_MethodName: LoadMonsterData
+      - m_Target: {fileID: 840443472}
+        m_TargetAssemblyTypeName: DataSaver, Assembly-CSharp
+        m_MethodName: LoadData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
