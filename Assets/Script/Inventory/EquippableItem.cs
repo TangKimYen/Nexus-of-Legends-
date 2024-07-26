@@ -17,6 +17,7 @@ public enum EquippableType
 [CreateAssetMenu]
 public class EquippableItem : Item
 {
+    public int price;
     public int itemStrengthStat;
     public int itemBloodStat;
     public int itemMovementStat;
