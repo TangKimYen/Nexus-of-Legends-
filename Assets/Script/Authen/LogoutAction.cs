@@ -1,13 +1,16 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using Firebase.Auth;
-using System.Collections;
 
 public class LogoutAction : MonoBehaviour
 {
     public TextMeshProUGUI messageText;  // Dùng để hiển thị thông báo, nếu cần
     public TextMeshProUGUI usernameDisplayText; // Text để hiển thị username sau khi đăng xuất thành công
-    public GameObject logoutPopup; // Popup đăng xuất
+    public GameObject loginButton; // Nút đăng nhập
+    public GameObject registerButton; // Nút đăng ký
+    public GameObject logoutButton; // Nút đăng xuất
+    public GameObject logoutConfirmationPopup; // Popup xác nhận đăng xuất
 
     private Color successColor;
     private Color errorColor;
@@ -17,9 +20,27 @@ public class LogoutAction : MonoBehaviour
         // Chuyển đổi mã màu hex sang Color
         ColorUtility.TryParseHtmlString("#007213", out successColor); // Màu xanh lục
         ColorUtility.TryParseHtmlString("#C02E31", out errorColor);   // Màu đỏ
+
+        // Ẩn nút đăng xuất ban đầu
+        logoutButton.SetActive(false);
+
+        // Ẩn popup xác nhận đăng xuất ban đầu
+        if (logoutConfirmationPopup != null)
+        {
+            logoutConfirmationPopup.SetActive(false);
+        }
     }
 
     public void OnLogoutButtonClicked()
+    {
+        // Hiển thị popup xác nhận đăng xuất
+        if (logoutConfirmationPopup != null)
+        {
+            logoutConfirmationPopup.SetActive(true);
+        }
+    }
+
+    public void ConfirmLogout()
     {
         StartCoroutine(LogoutUser());
     }
@@ -33,6 +54,14 @@ public class LogoutAction : MonoBehaviour
 
             // Xóa thông tin người dùng lưu trữ
             PlayerPrefs.DeleteKey("username");
+            PlayerPrefs.DeleteKey("email");
+            PlayerPrefs.DeleteKey("passwordHash");
+            PlayerPrefs.DeleteKey("characterId");
+            PlayerPrefs.DeleteKey("characterName");
+            PlayerPrefs.DeleteKey("exp");
+            PlayerPrefs.DeleteKey("gold");
+            PlayerPrefs.DeleteKey("gem");
+            PlayerPrefs.DeleteKey("level");
             PlayerPrefs.Save();
 
             // Hiển thị thông báo đăng xuất thành công
@@ -50,17 +79,20 @@ public class LogoutAction : MonoBehaviour
                 usernameDisplayText.gameObject.SetActive(false);
             }
 
-            // Cập nhật giao diện người dùng để phản ánh trạng thái đăng xuất
-            // Ví dụ: quay lại màn hình đăng nhập hoặc tắt các chức năng của người dùng đã đăng nhập
-
-            // Đợi 5 giây trước khi tắt popup
+            // Đợi 1 giây trước khi tắt popup
             yield return new WaitForSeconds(1);
 
             // Ẩn popup đăng xuất
-            if (logoutPopup != null)
+            if (logoutConfirmationPopup != null)
             {
-                logoutPopup.SetActive(false);
+                logoutConfirmationPopup.SetActive(false);
             }
+            // Hiển thị lại các nút đăng nhập và đăng ký
+            loginButton.SetActive(true);
+            registerButton.SetActive(true);
+
+            // Ẩn nút đăng xuất
+            logoutButton.SetActive(false);
         }
         else
         {
@@ -74,5 +106,14 @@ public class LogoutAction : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    public void CancelLogout()
+    {
+        // Ẩn popup xác nhận đăng xuất khi người dùng hủy bỏ đăng xuất
+        if (logoutConfirmationPopup != null)
+        {
+            logoutConfirmationPopup.SetActive(false);
+        }
     }
 }
