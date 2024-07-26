@@ -11,6 +11,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     private Animator anim;
     [SerializeField] private Image healthBar;
     [SerializeField] private TMP_Text healthText;
+    [SerializeField] private Image healthBarUp;
+    [SerializeField] private TMP_Text healthTextUp;
     public int health;
     public int maxHealth;
     [SerializeField] private Transform healPoint;
@@ -106,6 +108,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     {
         healthBar.fillAmount = (float)health / maxHealth;
         healthText.text = health + " / " + maxHealth;
+        healthBarUp.fillAmount = (float)health / maxHealth;
+        healthTextUp.text = health + " / " + maxHealth;
     }
 
     [PunRPC]

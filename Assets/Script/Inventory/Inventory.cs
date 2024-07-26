@@ -3,6 +3,7 @@ using Firebase.Database;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Firebase.Extensions;
 
 public class Inventory : MonoBehaviour
 {
@@ -121,33 +122,31 @@ public class Inventory : MonoBehaviour
             items.Clear();
             itemActiveStates.Clear();
 
-            if (snapshot.HasChild("items"))
+            foreach (DataSnapshot itemSnapshot in snapshot.Children)
             {
-                foreach (DataSnapshot itemSnapshot in snapshot.Child("items").Children)
+                if (itemSnapshot.Child("itemId").Value == null || itemSnapshot.Child("isActive").Value == null)
                 {
-                    if (itemSnapshot.Child("itemId").Value == null || itemSnapshot.Child("isActive").Value == null)
-                    {
-                        Debug.LogWarning("Item snapshot has null value for itemId or isActive.");
-                        continue; // Bỏ qua mục này nếu thiếu giá trị
-                    }
+                    Debug.LogWarning("Item snapshot has null value for itemId or isActive.");
+                    continue; // Bỏ qua mục này nếu thiếu giá trị
+                }
 
-                    string itemId = itemSnapshot.Child("itemId").Value.ToString();
-                    bool isActive = (bool)itemSnapshot.Child("isActive").Value;
+                string itemId = itemSnapshot.Child("itemId").Value.ToString();
+                bool isActive = (bool)itemSnapshot.Child("isActive").Value;
 
-                    Item item = itemDatabase?.GetItemById(itemId);
-                    if (item != null)
+                Item item = itemDatabase?.GetItemById(itemId);
+                if (item != null)
+                {
+                    if (isActive)
                     {
-                        if (isActive)
-                        {
-                            AddItem(item);
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Item with ID {itemId} not found in item database.");
+                        AddItem(item);
                     }
                 }
+                else
+                {
+                    Debug.LogWarning($"Item with ID {itemId} not found in item database.");
+                }
             }
+
             RefreshUI();
         }
         else
@@ -155,10 +154,6 @@ public class Inventory : MonoBehaviour
             Debug.LogError("Error loading items from Firebase: " + serverData.Exception);
         }
     }
-
-
-
-
 
 
     private void AddFirebaseListeners()
@@ -223,7 +218,61 @@ public class Inventory : MonoBehaviour
     private void HandleRightClick(Item item)
     {
         OnItemRightClickedEvent?.Invoke(item);
+        EquipItem(item);
     }
+
+    private void EquipItem(Item item)
+    {
+        StartCoroutine(UpdateItemStatusCoroutine(item));
+    }
+
+    private IEnumerator UpdateItemStatusCoroutine(Item item)
+    {
+        string itemPath = $"Inventory/{userName}/{item.itemId}";
+
+        // Lấy dữ liệu hiện tại của item
+        var ipath = dbRef.Child(itemPath).GetValueAsync();
+        yield return new WaitUntil(() => ipath.IsCompleted);
+
+        if (ipath.Exception == null)
+        {
+            DataSnapshot snapshot = ipath.Result;
+
+            // Kiểm tra nếu item có tồn tại
+            if (snapshot.Exists)
+            {
+                Debug.Log("Item exists, updating isActive.");
+
+                var updates = new Dictionary<string, object>
+            {
+                { "isActive", false }
+            };
+
+                // Cập nhật dữ liệu
+                dbRef.Child(itemPath).UpdateChildrenAsync(updates)
+                    .ContinueWithOnMainThread(task => {
+                        if (task.IsFaulted)
+                        {
+                            Debug.LogError("Error updating value: " + task.Exception);
+                        }
+                        else
+                        {
+                            Debug.Log("Update succeeded.");
+                            Debug.Log($"Updated path: {itemPath}, Updates: {JsonUtility.ToJson(updates)}");
+                        }
+                    });
+            }
+            else
+            {
+                Debug.LogWarning("Item not found.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Error retrieving item data: " + ipath.Exception);
+        }
+    }
+
 
     public void SaveItemsToFirebase()
     {

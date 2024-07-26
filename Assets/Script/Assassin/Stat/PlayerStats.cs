@@ -34,6 +34,7 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         {
             LevelUp();
         }
+        PlayerUI.Instance.SavePlayerData();
         playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel);
     }
 

@@ -28,7 +28,7 @@ public class Character : MonoBehaviour
         {
             string username = PlayerData.instance.username;
             userName = username;
-
+            characterId = PlayerData.instance.characterId;
             LoadCharacterData();
         }
     }
@@ -54,29 +54,35 @@ public class Character : MonoBehaviour
             CharacterBaseStats characterBaseStats = JsonUtility.FromJson<CharacterBaseStats>(jsonData);
             SetCharacterStats(characterBaseStats);
 
-            // Lấy dữ liệu inventory từ Firebase
+            // Tải dữ liệu inventory từ Firebase
             var inventoryData = dbRef.Child("Inventory").Child(userName).GetValueAsync();
             yield return new WaitUntil(predicate: () => inventoryData.IsCompleted);
 
             DataSnapshot inventorySnapshot = inventoryData.Result;
-            string inventoryJson = inventorySnapshot.GetRawJsonValue();
-
-            if (inventoryJson != null)
+            if (inventorySnapshot.Exists)
             {
-                dataToSaveInventory inventoryFromDB = JsonUtility.FromJson<dataToSaveInventory>(inventoryJson);
-                foreach (var itemData in inventoryFromDB.items)
+                foreach (DataSnapshot itemSnapshot in inventorySnapshot.Children)
                 {
-                    if (!itemData.isActive)
+                    string itemJson = itemSnapshot.GetRawJsonValue();
+                    if (!string.IsNullOrEmpty(itemJson))
                     {
-                        Item item = inventory.itemDatabase.GetItemById(itemData.itemId);
-                        if (item != null && item is EquippableItem equippableItem)
+                        ItemData itemData = JsonUtility.FromJson<ItemData>(itemJson);
+                        if (!itemData.isActive)
                         {
-                            // Thêm item vào equipment panel và trang bị
-                            equipmentPanel.AddItem(equippableItem, out _);
-                            equippableItem.Equip(this);
+                            Item item = inventory.itemDatabase.GetItemById(itemData.itemId);
+                            if (item != null && item is EquippableItem equippableItem)
+                            {
+                                // Thêm item vào equipment panel và trang bị
+                                equipmentPanel.AddItem(equippableItem, out _);
+                                equippableItem.Equip(this);
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                print("Inventory data is not found.");
             }
 
             statPanel.UpdateStatValues();
@@ -86,8 +92,6 @@ public class Character : MonoBehaviour
             print("Character data is not found.");
         }
     }
-
-
 
     private void SetCharacterStats(CharacterBaseStats stats)
     {
@@ -127,33 +131,52 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void Equip(EquippableItem item)
+    public void Equip(EquippableItem newItem)
     {
-        Debug.Log("Equip được gọi với item: " + item);
-        if (inventory.RemoveItem(item))
+        Debug.Log("Equip được gọi với item: " + newItem);
+
+        // Kiểm tra xem item mới có thể trang bị được không
+        if (inventory.RemoveItem(newItem))
         {
             Debug.Log("Item đã được gỡ khỏi inventory");
-            EquippableItem previousItem;
-            if (equipmentPanel.AddItem(item, out previousItem))
+
+            // Tìm item hiện tại đang trang bị cùng loại
+            EquippableItem currentItem = null;
+            foreach (var slot in equipmentPanel.equipmentSlots)
             {
-                Debug.Log("Item đã được thêm vào equipment panel");
-                if (previousItem != null)
+                if (slot.EquippableType == newItem.equippableType && slot.Item != null)
                 {
-                    Debug.Log("Previous item: " + previousItem);
-                    inventory.AddItem(previousItem);
-                    previousItem.Unequip(this);
-                    statPanel.UpdateStatValues();
+                    currentItem = (EquippableItem)slot.Item;
+                    break;
                 }
-                item.Equip(this);
+            }
+
+            // Gỡ bỏ item hiện tại nếu có
+            if (currentItem != null)
+            {
+                Debug.Log("Item hiện tại: " + currentItem);
+                equipmentPanel.RemoveItem(currentItem);
+                currentItem.Unequip(this);
+                inventory.AddItem(currentItem);
+                StartCoroutine(UpdateItemStatusCoroutine(currentItem, true)); // Cập nhật trạng thái là true
+            }
+
+            // Thêm item mới vào equipment panel và trang bị
+            if (equipmentPanel.AddItem(newItem, out _))
+            {
+                Debug.Log("Item mới đã được thêm vào equipment panel");
+                newItem.Equip(this);
                 statPanel.UpdateStatValues();
+                StartCoroutine(UpdateItemStatusCoroutine(newItem, false)); // Cập nhật trạng thái là false
             }
             else
             {
                 Debug.Log("Không thể thêm item vào equipment panel");
-                inventory.AddItem(item);
+                inventory.AddItem(newItem);
             }
         }
     }
+
 
     public void Unequip(EquippableItem item)
     {
@@ -162,8 +185,59 @@ public class Character : MonoBehaviour
             item.Unequip(this);
             statPanel.UpdateStatValues();
             inventory.AddItem(item);
+            StartCoroutine(UpdateItemStatusCoroutine(item, true));
         }
     }
+
+    private IEnumerator UpdateItemStatusCoroutine(Item item, bool isActive)
+    {
+        string itemPath = $"Inventory/{userName}/{item.itemId}";
+
+        Debug.Log($"Updating item status for: {item.itemId} at path: {itemPath}");
+
+        // Lấy dữ liệu hiện tại của item
+        var ipath = dbRef.Child(itemPath).GetValueAsync();
+        yield return new WaitUntil(() => ipath.IsCompleted);
+
+        if (ipath.Exception == null)
+        {
+            DataSnapshot snapshot = ipath.Result;
+
+            // Kiểm tra nếu item có tồn tại
+            if (snapshot.Exists)
+            {
+                Debug.Log("Item exists, updating isActive.");
+
+                var updates = new Dictionary<string, object>
+            {
+                { "isActive", isActive }
+            };
+
+                // Cập nhật dữ liệu
+                var updateTask = dbRef.Child(itemPath).UpdateChildrenAsync(updates);
+                yield return new WaitUntil(() => updateTask.IsCompleted);
+
+                if (updateTask.Exception != null)
+                {
+                    Debug.LogError("Error updating value: " + updateTask.Exception);
+                }
+                else
+                {
+                    Debug.Log("Update succeeded.");
+                    Debug.Log($"Updated path: {itemPath}, Updates: {JsonUtility.ToJson(updates)}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Item not found.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Error retrieving item data: " + ipath.Exception);
+        }
+    }
+
 
     public void SaveCharacterData()
     {
@@ -174,17 +248,8 @@ public class Character : MonoBehaviour
             baseDefense = Defense.BaseValue,
             baseBlood = Blood.BaseValue,
             baseMovement = Movement.BaseValue,
-            baseAttackSpeed = AttackSpeed.BaseValue,
-            equippedItemIds = new List<string>()
+            baseAttackSpeed = AttackSpeed.BaseValue
         };
-
-        foreach (var slot in equipmentPanel.equipmentSlots)
-        {
-            if (slot.Item != null)
-            {
-                stats.equippedItemIds.Add(slot.Item.itemId); // Lưu ID của item đã trang bị
-            }
-        }
 
         string json = JsonUtility.ToJson(stats);
         dbRef.Child("characters").Child(characterId).SetRawJsonValueAsync(json).ContinueWith(task =>
@@ -210,7 +275,6 @@ public class Character : MonoBehaviour
         public float baseBlood;
         public float baseMovement;
         public float baseAttackSpeed;
-        public List<string> equippedItemIds;
     }
 
     void OnApplicationQuit()
