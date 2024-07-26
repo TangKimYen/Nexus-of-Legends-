@@ -407,7 +407,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterBaseStats:
-    characterName: 
     baseStrength: 0
     baseIntellect: 0
     baseDefense: 0
@@ -427,13 +426,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 920f85a6c60c1014d9cb6b5deeae558d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 0}
+  nameText: {fileID: 1050927157865597501}
   playerNameText: {fileID: 5599821373953163102}
   playerLevelText: {fileID: 4457041926705288377}
   gemText: {fileID: 8539489462895093757}
   goldText: {fileID: 495551623078424448}
   avatarImage: {fileID: 6191811044776086297}
-  arrowImage: {fileID: 0}
+  arrowImage: {fileID: 4665823917002771666}
   expBar: {fileID: 4748919098900032049}
   expText: {fileID: 1992373971375153508}
   c01AssassinAvatar: {fileID: 21300000, guid: 1db27cefbe5e5a5489308e0f901131a6, type: 3}
@@ -2851,11 +2850,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1050927157865597501 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4742771346566092367, guid: 011a7cea6786b9c4a96acc859f32554f, type: 3}
+  m_PrefabInstance: {fileID: 5711709777224719474}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1668748134861849723 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6371613058893322249, guid: 011a7cea6786b9c4a96acc859f32554f, type: 3}
   m_PrefabInstance: {fileID: 5711709777224719474}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4665823917002771666 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1118097660912472224, guid: 011a7cea6786b9c4a96acc859f32554f, type: 3}
+  m_PrefabInstance: {fileID: 5711709777224719474}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6432419522381200598 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1585437211519312036, guid: 011a7cea6786b9c4a96acc859f32554f, type: 3}

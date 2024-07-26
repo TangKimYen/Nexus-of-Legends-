@@ -18,6 +18,11 @@ public class StatPanel : MonoBehaviour
         UpdateStatNames();
     }
 
+    private void Awake()
+    {
+        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+    }
+
     public void SetStat(params CharacterStat[] charStats)
     {
         stats = charStats;
@@ -41,6 +46,13 @@ public class StatPanel : MonoBehaviour
             float roundedValue = Mathf.Round(stats[i].Value);
             statDisplays[i].ValueText.text = roundedValue.ToString();
         }
+        StartCoroutine(SavePlayerCurrentStatsCoroutine());
+    }
+
+    private IEnumerator SavePlayerCurrentStatsCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
         SavePlayerCurrentStats();
     }
 
@@ -54,17 +66,35 @@ public class StatPanel : MonoBehaviour
 
     private void SavePlayerCurrentStats()
     {
+        if (dbRef == null)
+        {
+            Debug.LogError("dbRef is null. Ensure that dbRef is initialized.");
+            return;
+        }
+
+        if (stats == null || stats.Length < 6)
+        {
+            Debug.LogError("Stats array is null or does not contain enough elements.");
+            return;
+        }
+
+        if (PlayerData.instance == null || string.IsNullOrEmpty(PlayerData.instance.username))
+        {
+            Debug.LogError("PlayerData.instance is null or username is empty.");
+            return;
+        }
+
         if (PlayerData.instance != null && !string.IsNullOrEmpty(PlayerData.instance.username))
         {
             string username = PlayerData.instance.username;
             PlayerCurrentStats currentStats = new PlayerCurrentStats
             {
-                currentStrength = stats[0].Value,
-                currentIntellect = stats[1].Value,
-                currentDefense = stats[2].Value,
-                currentBlood = stats[3].Value,
-                currentMovement = stats[4].Value,
-                currentAttackSpeed = stats[5].Value
+                currentStrength = Mathf.Round(stats[0].Value),
+                currentIntellect = Mathf.Round(stats[1].Value),
+                currentDefense = Mathf.Round(stats[2].Value),
+                currentBlood = Mathf.Round(stats[3].Value),
+                currentMovement = Mathf.Round(stats[4].Value),
+                currentAttackSpeed = Mathf.Round(stats[5].Value)
             };
 
             string json = JsonUtility.ToJson(currentStats);

@@ -30,7 +30,7 @@ public class PlayerCurrentStats
 public class DataSaver : MonoBehaviour
 {
     public PlayerBaseStat playerBaseStat;
-    public string userId;
+    public PlayerCurrentStats playerCurrentStat;
     DatabaseReference dbRef;
     // Start is called before the first frame update
     void Start()
@@ -42,6 +42,8 @@ public class DataSaver : MonoBehaviour
     {
         string json = JsonUtility.ToJson(playerBaseStat);
         dbRef.Child("PlayerBaseStat").Child(PlayerData.instance.username).SetRawJsonValueAsync(json);
+        string jsonCurrent = JsonUtility.ToJson(playerCurrentStat);
+        dbRef.Child("PlayerCurrentStat").Child(PlayerData.instance.username).SetRawJsonValueAsync(jsonCurrent);
     }
 
     public void LoadData() 
