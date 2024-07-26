@@ -41,7 +41,7 @@ public class AssassinMovements : MonoBehaviour
 
             if ((Input.GetButtonDown("Vertical") || Input.GetButtonDown("Jump")) && IsGrounded())
             {
-                //jumpSoundEffect.Play();
+                jumpSoundEffect.Play();
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             }
             UpdateAnimationUpdate();

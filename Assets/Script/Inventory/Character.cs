@@ -82,14 +82,14 @@ public class Character : MonoBehaviour
             }
             else
             {
-                print("Inventory data is not found.");
+                Debug.LogError("Inventory data is not found.");
             }
 
             statPanel.UpdateStatValues();
         }
         else
         {
-            print("Character data is not found.");
+            Debug.LogError("Character data is not found.");
         }
     }
 
@@ -239,31 +239,31 @@ public class Character : MonoBehaviour
     }
 
 
-    //public void SavePlayerBaseStat()
-    //{
-    //    CharacterBaseStats stats = new CharacterBaseStats()
-    //    {
-    //        baseStrength = Strength.BaseValue,
-    //        baseIntellect = Intellect.BaseValue,
-    //        baseDefense = Defense.BaseValue,
-    //        baseBlood = Blood.BaseValue,
-    //        baseMovement = Movement.BaseValue,
-    //        baseAttackSpeed = AttackSpeed.BaseValue
-    //    };
+    public void SavePlayerBaseStat()
+    {
+        CharacterBaseStats stats = new CharacterBaseStats()
+        {
+            baseStrength = Strength.BaseValue,
+            baseIntellect = Intellect.BaseValue,
+            baseDefense = Defense.BaseValue,
+            baseBlood = Blood.BaseValue,
+            baseMovement = Movement.BaseValue,
+            baseAttackSpeed = AttackSpeed.BaseValue
+        };
 
-    //    string json = JsonUtility.ToJson(stats);
-    //    dbRef.Child("PlayerBaseStat").Child(PlayerData.instance.username).SetRawJsonValueAsync(json).ContinueWith(task =>
-    //    {
-    //        if (task.IsCompleted)
-    //        {
-    //            Debug.Log("Character data saved to Firebase successfully.");
-    //        }
-    //        else
-    //        {
-    //            Debug.LogError("Failed to save character data to Firebase: " + task.Exception);
-    //        }
-    //    });
-    //}
+        string json = JsonUtility.ToJson(stats);
+        dbRef.Child("PlayerBaseStat").Child(PlayerData.instance.username).SetRawJsonValueAsync(json).ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            {
+                Debug.Log("Character data saved to Firebase successfully.");
+            }
+            else
+            {
+                Debug.LogError("Failed to save character data to Firebase: " + task.Exception);
+            }
+        });
+    }
 
 
     [System.Serializable]
@@ -282,6 +282,4 @@ public class Character : MonoBehaviour
         //SavePlayerBaseStat();
         inventory.SaveItemsToFirebase();
     }
-
-
 }
