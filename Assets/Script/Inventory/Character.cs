@@ -40,7 +40,7 @@ public class Character : MonoBehaviour
 
     IEnumerator LoadCharacterDataEnum()
     {
-        var serverData = dbRef.Child("characters").Child(PlayerData.instance.characterId).GetValueAsync();
+        var serverData = dbRef.Child("PlayerBaseStat").Child(PlayerData.instance.username).GetValueAsync();
         yield return new WaitUntil(predicate: () => serverData.IsCompleted);
 
         print("Process is Complete!");
@@ -82,14 +82,14 @@ public class Character : MonoBehaviour
             }
             else
             {
-                print("Inventory data is not found.");
+                Debug.LogError("Inventory data is not found.");
             }
 
             statPanel.UpdateStatValues();
         }
         else
         {
-            print("Character data is not found.");
+            Debug.LogError("Character data is not found.");
         }
     }
 
@@ -239,7 +239,7 @@ public class Character : MonoBehaviour
     }
 
 
-    public void SaveCharacterData()
+    public void SavePlayerBaseStat()
     {
         CharacterBaseStats stats = new CharacterBaseStats()
         {
@@ -252,7 +252,7 @@ public class Character : MonoBehaviour
         };
 
         string json = JsonUtility.ToJson(stats);
-        dbRef.Child("characters").Child(characterId).SetRawJsonValueAsync(json).ContinueWith(task =>
+        dbRef.Child("PlayerBaseStat").Child(PlayerData.instance.username).SetRawJsonValueAsync(json).ContinueWith(task =>
         {
             if (task.IsCompleted)
             {
@@ -279,9 +279,7 @@ public class Character : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        SaveCharacterData();
+        //SavePlayerBaseStat();
         inventory.SaveItemsToFirebase();
     }
-
-
 }

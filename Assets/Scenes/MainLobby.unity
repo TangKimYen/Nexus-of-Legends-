@@ -1711,7 +1711,7 @@ GameObject:
   - component: {fileID: 70917450}
   - component: {fileID: 70917449}
   - component: {fileID: 70917454}
-  - component: {fileID: 70917453}
+  - component: {fileID: 70917455}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1820,39 +1820,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &70917453
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 70917448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 920f85a6c60c1014d9cb6b5deeae558d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameText: {fileID: 0}
-  playerNameText: {fileID: 2006297155}
-  playerLevelText: {fileID: 2006297156}
-  gemText: {fileID: 2006297153}
-  goldText: {fileID: 2006297154}
-  avatarImage: {fileID: 2006297157}
-  arrowImage: {fileID: 2001734882}
-  expBar: {fileID: 2006297152}
-  expText: {fileID: 2006297151}
-  c01AssassinAvatar: {fileID: 21300000, guid: 1db27cefbe5e5a5489308e0f901131a6, type: 3}
-  c02ArcherAvatar: {fileID: 21300000, guid: 5e2481d9a37087f4f9856bb984934ce0, type: 3}
-  c03WarriorAvatar: {fileID: 21300000, guid: abebbad4c703d6c4e8ca26fded3ae3e8, type: 3}
-  c04MagicanAvatar: {fileID: 21300000, guid: e0d651f317fb6f84b83d7c1c87c027f4, type: 3}
-  baseExp: 100
-  growthFactor: 1.5
-  level: 0
-  characterId: 
-  gold: 0
-  gem: 0
-  currentExp: 0
-  expToNextLevel: 0
 --- !u!114 &70917454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1875,6 +1842,37 @@ MonoBehaviour:
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &70917455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70917448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb4387ac6b88e6499efeb71bdefa0a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNameText: {fileID: 2006297155}
+  playerLevelText: {fileID: 2006297156}
+  gemText: {fileID: 2006297153}
+  goldText: {fileID: 2006297154}
+  avatarImage: {fileID: 2006297157}
+  expBar: {fileID: 2006297152}
+  expText: {fileID: 2006297151}
+  c01AssassinAvatar: {fileID: 21300000, guid: 1db27cefbe5e5a5489308e0f901131a6, type: 3}
+  c02ArcherAvatar: {fileID: 21300000, guid: 5e2481d9a37087f4f9856bb984934ce0, type: 3}
+  c03WarriorAvatar: {fileID: 21300000, guid: abebbad4c703d6c4e8ca26fded3ae3e8, type: 3}
+  c04MagicanAvatar: {fileID: 21300000, guid: e0d651f317fb6f84b83d7c1c87c027f4, type: 3}
+  baseExp: 100
+  growthFactor: 1.5
+  level: 0
+  characterId: 
+  gold: 0
+  gem: 0
+  currentExp: 0
+  expToNextLevel: 0
 --- !u!1 &86800131
 GameObject:
   m_ObjectHideFlags: 0
@@ -5272,7 +5270,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0cd2a36004c6d9d4895fcf65cef3dc17, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f7bf2764b031e7145a30431f6497036a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -6856,7 +6854,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &269691684
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6987,9 +6985,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1683113311}
-        m_TargetAssemblyTypeName: DataEnemiesSaver, Assembly-CSharp
-        m_MethodName: SaveMonsterData
+      - m_Target: {fileID: 840443472}
+        m_TargetAssemblyTypeName: DataSaver, Assembly-CSharp
+        m_MethodName: SaveData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16017,7 +16015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214627206843092498807fd72cc28476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 1984975351}
+  character: {fileID: 0}
   itemDatabase: {fileID: 11400000, guid: ec23ce292d218a6478cb863ef5729158, type: 2}
   equipmentSlotsParent: {fileID: 662811628}
   equipmentSlots:
@@ -19840,7 +19838,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -19907,18 +19905,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 840443469}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 395a2b5b07dd23847b44e88fdaa77df9, type: 3}
+  m_Script: {fileID: 11500000, guid: 6e7ea984efb4e0a42add542be60c1671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBaseStats:
-    characterName: 
+  playerBaseStat:
     baseStrength: 0
     baseIntellect: 0
     baseDefense: 0
     baseBlood: 0
     baseMovement: 0
     baseAttackSpeed: 0
-  characterId: 
+  playerCurrentStat:
+    currentStrength: 0
+    currentIntellect: 0
+    currentDefense: 0
+    currentBlood: 0
+    currentMovement: 0
+    currentAttackSpeed: 0
 --- !u!1 &848790009
 GameObject:
   m_ObjectHideFlags: 0
@@ -21054,10 +21057,10 @@ RectTransform:
   m_Children:
   - {fileID: 1324231024}
   - {fileID: 1811346550}
-  - {fileID: 1242670726}
   - {fileID: 1564709453}
   - {fileID: 672245130}
   - {fileID: 1541876563}
+  - {fileID: 1242670726}
   m_Father: {fileID: 1984975348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -22008,81 +22011,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 954760104}
   m_CullTransparentMesh: 1
---- !u!1 &955143955
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 955143956}
-  - component: {fileID: 955143958}
-  - component: {fileID: 955143957}
-  m_Layer: 5
-  m_Name: item (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &955143956
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955143955}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 49.999886, y: -161}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &955143957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955143955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c458062fa1c22b1408e47549b7b20298, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &955143958
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955143955}
-  m_CullTransparentMesh: 1
 --- !u!1 &958651840
 GameObject:
   m_ObjectHideFlags: 0
@@ -22156,7 +22084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -32434,81 +32362,6 @@ MonoBehaviour:
   - Blood
   - Movement
   - Attack speed
---- !u!1 &1353667079
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1353667080}
-  - component: {fileID: 1353667082}
-  - component: {fileID: 1353667081}
-  m_Layer: 5
-  m_Name: Title
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1353667080
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1353667079}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000011444, y: 242}
-  m_SizeDelta: {x: 725.104, y: 234.822}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1353667081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1353667079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 402c7d790a411ea41b1e22cd39b4dc2a, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1353667082
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1353667079}
-  m_CullTransparentMesh: 1
 --- !u!1 &1360535365
 GameObject:
   m_ObjectHideFlags: 0
@@ -35250,7 +35103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -36543,7 +36396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 0}
-  itemDatabase: {fileID: 0}
+  itemDatabase: {fileID: 11400000, guid: ec23ce292d218a6478cb863ef5729158, type: 2}
   equipmentSlotsParent: {fileID: 1541876563}
   equipmentSlots:
   - {fileID: 1086657781}
@@ -36554,7 +36407,7 @@ MonoBehaviour:
   - {fileID: 827548206}
   - {fileID: 628607103}
   - {fileID: 1360535370}
-  tooltip: {fileID: 0}
+  tooltip: {fileID: 1723896990}
 --- !u!1 &1551276384
 GameObject:
   m_ObjectHideFlags: 0
@@ -45160,7 +45013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -51118,7 +50971,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2073613874
 RectTransform:
   m_ObjectHideFlags: 0
@@ -51249,9 +51102,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1683113311}
-        m_TargetAssemblyTypeName: DataEnemiesSaver, Assembly-CSharp
-        m_MethodName: LoadMonsterData
+      - m_Target: {fileID: 840443472}
+        m_TargetAssemblyTypeName: DataSaver, Assembly-CSharp
+        m_MethodName: LoadData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -52760,5 +52613,3 @@ SceneRoots:
   - {fileID: 1683113312}
   - {fileID: 789620272}
   - {fileID: 1811509437}
-  - {fileID: 955143956}
-  - {fileID: 1353667080}
