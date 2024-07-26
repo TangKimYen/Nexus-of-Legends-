@@ -18,6 +18,7 @@ public class LoginAction : MonoBehaviour
     public GameObject loginButton; // Nút đăng nhập
     public GameObject registerButton; // Nút đăng ký
     public GameObject logoutButton; // Nút đăng xuất
+    //public GameObject inventory;
 
     private Color successColor;
     private Color errorColor;
@@ -170,11 +171,11 @@ public class LoginAction : MonoBehaviour
                         ResetInputFields();
 
                         // Thiết lập userName và tải mục từ Firebase cho Inventory
-                        if (inventory != null)
-                        {
-                            inventory.userName = username;
-                            inventory.LoadItemsFromFirebase(); // Tải các mục từ Firebase
-                        }
+                        //if (inventory != null)
+                        //{
+                        //    inventory.userName = username;
+                        //    inventory.LoadItemsFromFirebase(); // Tải các mục từ Firebase
+                        //}
 
                         // Ẩn màn hình loading sau khi đăng nhập thành công
                         loadingScreen.SetActive(false);
