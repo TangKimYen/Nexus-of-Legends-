@@ -201,8 +201,8 @@ Transform:
   m_GameObject: {fileID: 31642945}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.07950769, y: -1.0534769, z: -8944.616}
-  m_LocalScale: {x: 87.019745, y: 60.597576, z: 99.38462}
+  m_LocalPosition: {x: -0.23, y: -1.51, z: -8944.616}
+  m_LocalScale: {x: 80.197395, y: 65.542336, z: 99.38462}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 394732055}
@@ -241,8 +241,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -54}
-  m_SizeDelta: {x: 2000, y: 650}
+  m_AnchoredPosition: {x: 0, y: -27}
+  m_SizeDelta: {x: 1791.78, y: 681.61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &275477837
 MonoBehaviour:
@@ -264,30 +264,24 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '"In ancient times, there existed a quest to conquer the Demon Lord''s
+  m_text: "\t\"In ancient times, there existed a quest to conquer the Demon Lord's
     dungeon by a legendary team of heroes known as the Nexus of Legends, signifying
     the Linkage of Mythologies. The legendary hero team realized that conquering
     the dungeon and sealing the Demon Lord would only bring about a temporary future
     of peace and goodness, as after a certain period, the seal would weaken and unleash
-    the Demon Lord''s power once again, leading to a vision of the world being invaded
+    the Demon Lord's power once again, leading to a vision of the world being invaded
     by monsters pouring out from the dungeon. The hero team hoped that their will,
     aspirations, and fervor would be passed down to future generations, to the mythical
     heroes of the future, who would inherit and carry on their legacy to maintain
     a peaceful world through the name Nexus of Legends, the great connection of hero
-    generations from ancient times to the future.
-
-
-    On top of a mystical hill
-    stands an ancient castle, where the Demon Lord''s dungeon has been sealed since
+    generations from ancient times to the future.\n\n\tOn top of a mystical hill
+    stands an ancient castle, where the Demon Lord's dungeon has been sealed since
     ancient times. Legend tells of the journey of the Nexus of Legends - the legendary
     team of mythic heroes, brave warriors from different lineages, who sacrificed
-    everything to seal this ultimate power.
-
-
-    But as time passed, the seal began
+    everything to seal this ultimate power.\n\n\tBut as time passed, the seal began
     to weaken. Nightmares started to arise as monsters from the dungeon began to
     spill out into the world. To protect peace, the young heroes continued to inherit
-    the legacy of the team, rising up against the resurgence of the Demon Lord."'
+    the legacy of the team, rising up against the resurgence of the Demon Lord.\""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 40408e77e80f2434da598740f7cdd488, type: 2}
   m_sharedMaterial: {fileID: -5025602530117463689, guid: 40408e77e80f2434da598740f7cdd488, type: 2}
@@ -321,7 +315,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -401,8 +395,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 825, y: -413.78}
-  m_SizeDelta: {x: 350, y: 150}
+  m_AnchoredPosition: {x: -0.000061035, y: -457}
+  m_SizeDelta: {x: 350, y: 126.78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &353583187
 MonoBehaviour:
@@ -480,7 +474,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f5d0eaf312382b64692964d082c5e438, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 19c8bbfe15c63284ba7ddb10e855200f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -563,7 +557,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0.5
+  m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -672,10 +666,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: Back
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
+  m_sharedMaterial: {fileID: 3005861670212803318, guid: d7a161cc2d2fd6040917661e5b59b2e4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -699,8 +693,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 65
+  m_fontSizeBase: 65
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1029,7 +1023,7 @@ Transform:
   m_GameObject: {fileID: 1599171131}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.9938462, y: 395.55078, z: -8944.616}
+  m_LocalPosition: {x: -0.9938462, y: 425, z: -8944.616}
   m_LocalScale: {x: 278.27695, y: 198.76924, z: 99.38462}
   m_ConstrainProportionsScale: 0
   m_Children:
