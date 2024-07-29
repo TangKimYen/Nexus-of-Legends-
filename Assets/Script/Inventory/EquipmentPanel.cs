@@ -9,7 +9,6 @@ public class EquipmentPanel : MonoBehaviour
     public ItemDatabase itemDatabase;
     [SerializeField] Transform equipmentSlotsParent;
     [SerializeField] public EquipmentSlot[] equipmentSlots;
-    [SerializeField] ItemTooltip tooltip;
     public event Action<Item> OnItemRightClickedEvent;
 
     private void Start()
@@ -53,18 +52,6 @@ public class EquipmentPanel : MonoBehaviour
         return false;
     }
 
-    private void ShowTooltip(Item item)
-    {
-        if (item != null && item is EquippableItem equippableItem)
-        {
-            tooltip.ShowTooltip(equippableItem);
-        }
-    }
-
-    private void HideTooltip(Item item)
-    {
-        tooltip.HideTooltip();
-    }
-
+    
 
 }
