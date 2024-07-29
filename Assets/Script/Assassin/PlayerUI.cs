@@ -96,7 +96,7 @@ public class PlayerUI : MonoBehaviourPunCallbacks
                         playerLevelText.text = "Level: " + level.ToString();
                         goldText.text = gold.ToString();
                         gemText.text = gem.ToString();
-                        UpdateExpUI(currentExp, expToNextLevel);
+                        UpdateExpUI(currentExp, expToNextLevel, level);
                         switch (characterId)
                         {
                             case "c01":
@@ -134,10 +134,11 @@ public class PlayerUI : MonoBehaviourPunCallbacks
         return Mathf.FloorToInt(baseExp * Mathf.Pow(level, growthFactor));
     }
 
-    public void UpdateExpUI(float currentExp, float expToNextLevel)
+    public void UpdateExpUI(float currentExp, float expToNextLevel, int level)
     {
         expBar.fillAmount = currentExp / expToNextLevel;
         expText.text = $"{currentExp}/{expToNextLevel}";
+        playerLevelText.text = "Level: " + level.ToString();
     }
 
     public void SavePlayerData()
