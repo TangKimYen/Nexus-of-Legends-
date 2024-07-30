@@ -20,6 +20,7 @@ public class PlayerAttack : MonoBehaviour
     private Animator anim;
     private float dirX = 0f;
     PhotonView view;
+    private ShowSkillUI skillCooldownUI;
 
     private AssassinMovements playerMovement;
     private float cooldownAttack = Mathf.Infinity;
@@ -36,6 +37,7 @@ public class PlayerAttack : MonoBehaviour
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<AssassinMovements>();
         view = GetComponent<PhotonView>();
+        skillCooldownUI = FindObjectOfType<ShowSkillUI>();
     }
 
     private void Update()
@@ -90,6 +92,7 @@ public class PlayerAttack : MonoBehaviour
         skill1[FindSkill1()].transform.position = skill1Point.position;
         skill1[FindSkill1()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
         cooldownSkill1 = 0;
+        skillCooldownUI.UseSkill(0);
     }
     private void Skill2()
     {
@@ -98,6 +101,7 @@ public class PlayerAttack : MonoBehaviour
         skill2[FindSkill2()].transform.position = skill2Point.position;
         skill2[FindSkill2()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
         cooldownSkill2 = 0;
+        skillCooldownUI.UseSkill(1);
     }
     private void Skill3()
     {
@@ -106,6 +110,7 @@ public class PlayerAttack : MonoBehaviour
         skill3[FindSkill3()].transform.position = skill3Point.position;
         skill3[FindSkill3()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
         cooldownSkill3 = 0;
+        skillCooldownUI.UseSkill(2);
     }
 
     private void DashInSkill3() 
