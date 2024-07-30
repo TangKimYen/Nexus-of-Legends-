@@ -1,6 +1,7 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class DeleteAccountAction : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class DeleteAccountAction : MonoBehaviour
         if (PlayerData.instance != null)
         {
             PlayerData.instance.DeleteAccount();
+            SceneManager.LoadScene("TitleScreen");
         }
         else
         {

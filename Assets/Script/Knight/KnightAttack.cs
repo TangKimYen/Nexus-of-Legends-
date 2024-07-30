@@ -26,7 +26,10 @@ public class KnightAttack : MonoBehaviour
     private float cooldownSkill1 = Mathf.Infinity;
     private float cooldownSkill2 = Mathf.Infinity;
     private float cooldownSkill3 = Mathf.Infinity;
-    //[SerializeField] private AudioSource attackSoundEffect;
+    [SerializeField] private AudioSource attackSound;
+    [SerializeField] private AudioSource skill1Sound;
+    [SerializeField] private AudioSource skill2Sound;
+    [SerializeField] private AudioSource skill3Sound;
 
     private void Awake()
     {
@@ -72,7 +75,7 @@ public class KnightAttack : MonoBehaviour
     }
     private void Attack()
     {
-        //attackSoundEffect.Play();
+        attackSound.Play();
         anim.SetTrigger("attack");
         cooldownAttack = 0;
 
@@ -82,7 +85,7 @@ public class KnightAttack : MonoBehaviour
 
     private void Skill1()
     {
-        //attackSoundEffect.Play();
+        skill1Sound.Play();
         anim.SetTrigger("skill1");
         skill1[FindSkill1()].transform.position = skill1Point.position;
         skill1[FindSkill1()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
@@ -90,7 +93,7 @@ public class KnightAttack : MonoBehaviour
     }
     private void Skill2()
     {
-        //attackSoundEffect.Play();
+        skill2Sound.Play();
         anim.SetTrigger("skill2");
         skill2[FindSkill2()].transform.position = skill2Point.position;
         skill2[FindSkill2()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
@@ -98,7 +101,7 @@ public class KnightAttack : MonoBehaviour
     }
     private void Skill3()
     {
-        //attackSoundEffect.Play();
+        skill3Sound.Play();
         anim.SetTrigger("skill3");
         skill3[FindSkill3()].transform.position = skill3Point.position;
         skill3[FindSkill3()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
