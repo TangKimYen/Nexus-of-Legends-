@@ -40,6 +40,7 @@ public class PlayerData : MonoBehaviour
     void Start()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        auth = FirebaseAuth.DefaultInstance;
     }
 
     public PlayerData() { }
@@ -48,24 +49,37 @@ public class PlayerData : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(username))
         {
+            // Xóa thông tin người dùng trong Realtime Database
             dbRef.Child("players").Child(username).RemoveValueAsync().ContinueWith(task => {
                 if (task.IsCompleted)
                 {
-                    Debug.Log("Account deleted successfully.");
-                    Logout();
-                    SceneManager.LoadScene("TitleScreen");
+                    Debug.Log("Account deleted from Realtime Database successfully.");
+
+                    // Xóa tài khoản người dùng khỏi Firebase Auth
+                    if (auth.CurrentUser != null)
+                    {
+                        auth.CurrentUser.DeleteAsync().ContinueWith(deleteTask => {
+                            if (deleteTask.IsCompleted)
+                            {
+                                Debug.Log("Account deleted from Firebase Auth successfully.");
+                                
+                            }
+                            else
+                            {
+                                Debug.LogError("Error deleting account from Firebase Auth: " + deleteTask.Exception);
+                            }
+                        });
+                    }
                 }
                 else
                 {
-                    Debug.LogError("Error deleting account: " + task.Exception);
+                    Debug.LogError("Error deleting account from Realtime Database: " + task.Exception);
                 }
             });
         }
     }
-
     public void Logout()
     {
-        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
         if (auth.CurrentUser != null)
         {
             auth.SignOut();
@@ -85,5 +99,10 @@ public class PlayerData : MonoBehaviour
         loginTime = "";
         logoutTime = "";
         isLoggedIn = false;
+    }
+
+    public void LogoutAndReturnToTitleScreen()
+    {
+        Logout();
     }
 }
