@@ -26,7 +26,10 @@ public class ArcherAttack : MonoBehaviour
     private float cooldownSkill1 = Mathf.Infinity;
     private float cooldownSkill2 = Mathf.Infinity;
     private float cooldownSkill3 = Mathf.Infinity;
-    //[SerializeField] private AudioSource attackSoundEffect;
+    [SerializeField] private AudioSource attackSound;
+    [SerializeField] private AudioSource skill1Sound;
+    [SerializeField] private AudioSource skill2Sound;
+    [SerializeField] private AudioSource skill3Sound;
 
     private void Awake()
     {
@@ -72,14 +75,14 @@ public class ArcherAttack : MonoBehaviour
     }
     private void Attack()
     {
-        //attackSoundEffect.Play();
+        attackSound.Play();
         anim.SetTrigger("attack");
         cooldownAttack = 0;
     }
 
     private void Skill1()
     {
-        //attackSoundEffect.Play();
+        skill1Sound.Play();
         anim.SetTrigger("skill1");
         skill1[FindSkill1()].transform.position = skill1Point.position;
         skill1[FindSkill1()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
@@ -87,7 +90,7 @@ public class ArcherAttack : MonoBehaviour
     }
     private void Skill2()
     {
-        //attackSoundEffect.Play();
+        skill2Sound.Play();
         anim.SetTrigger("skill2");
         cooldownSkill2 = 0;
     }
@@ -98,7 +101,7 @@ public class ArcherAttack : MonoBehaviour
     }
     private void Skill3()
     {
-        //attackSoundEffect.Play();
+        skill3Sound.Play();
         anim.SetTrigger("skill3");
         cooldownSkill3 = 0;
     }
