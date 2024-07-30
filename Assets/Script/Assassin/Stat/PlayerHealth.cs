@@ -19,8 +19,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     [SerializeField] private Transform healPoint;
     [SerializeField] private GameObject[] HealEffect;
 
-    //[SerializeField] private AudioSource deathSoundEffect;
-    //[SerializeField] private AudioSource restartSoundEffect;
+    [SerializeField] private AudioSource deathSound;
+    [SerializeField] private AudioSource hurtSound;
 
     // Start is called before the first frame update
     private void Awake()
@@ -94,12 +94,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     [PunRPC]
     private void HurtRPC()
     {
+        hurtSound.Play();
         anim.SetTrigger("hurt");
     }
 
     [PunRPC]
     private void DieRPC()
     {
+        deathSound.Play();
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
         InGameManager.instance.PlayerDied();
