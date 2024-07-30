@@ -97,6 +97,7 @@ public class PlayerUI : MonoBehaviourPunCallbacks
                         goldText.text = gold.ToString();
                         gemText.text = gem.ToString();
                         UpdateExpUI(currentExp, expToNextLevel, level);
+                        UpdateGoldUI();
                         switch (characterId)
                         {
                             case "c01":
@@ -141,9 +142,18 @@ public class PlayerUI : MonoBehaviourPunCallbacks
         playerLevelText.text = "Level: " + level.ToString();
     }
 
+    public void UpdateGoldUI()
+    {
+        if (goldText != null)
+        {
+            goldText.text = gold.ToString();
+        }
+    }
+
     public void SavePlayerData()
     {
         reference.Child("level").SetValueAsync(level);
         reference.Child("exp").SetValueAsync(currentExp);
+        reference.Child("gold").SetValueAsync(gold);
     }
 }
