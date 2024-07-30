@@ -8,6 +8,7 @@ using Firebase.Database;
 using TMPro;
 using Firebase.Extensions;
 using System;
+using Photon.Pun.Demo.PunBasics;
 
 public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -22,8 +23,10 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     private Animator anim;
     public int currentHealth;
     public int maxHealth;
+    private bool isDead = false;
 
     [SerializeField] private int expReward;
+    [SerializeField] private int goldReward;
     [SerializeField] private Image healthBar;
     [SerializeField] private TMP_Text healthText;
     private DatabaseReference databaseReference;
@@ -188,8 +191,12 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     public void Death()
     {
         deathSound.Play();
+        if (isDead) return; // Check if the enemy is already dead
+        isDead = true; // Set the flag to true
+
+        //deathSoundEffect.Play();
         anim.SetTrigger("death");
-        photonView.RPC("RPC_RewardExp", RpcTarget.All, expReward);
+        photonView.RPC("RPC_RewardExpAndGold", RpcTarget.All, expReward, goldReward);
     }
     public void Hurt()
     {
@@ -198,7 +205,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    void RPC_RewardExp(int exp)
+    void RPC_RewardExpAndGold(int exp, int gold)
     {
         foreach (GameObject player in GameObject.FindGameObjectsWithTag("Character"))
         {
@@ -206,8 +213,11 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
             if (playerStats != null)
             {
                 playerStats.AddExp(exp);
+                playerStats.AddGold(gold);
             }
         }
+
+        InGameManager.instance.EnemyDefeated(gold, exp); // Notify GameManager
     }
 
     public void Deactive()
@@ -218,7 +228,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (collision.gameObject.CompareTag("Attack"))
         {
-            currentHealth = currentHealth - 30;
+            currentHealth = currentHealth - 100;
             photonView.RPC("RPC_UpdateHealth", RpcTarget.OthersBuffered, currentHealth);
             if (currentHealth > 0)
             {

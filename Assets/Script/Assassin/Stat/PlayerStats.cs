@@ -40,6 +40,19 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel, PlayerUI.Instance.level);
     }
 
+    public void AddGold(int amount)
+    {
+        if (PlayerUI.Instance == null)
+        {
+            Debug.LogError("PlayerUI.Instance is null. Ensure that PlayerUI is initialized.");
+            return;
+        }
+
+        PlayerUI.Instance.gold += amount;
+        playerUI.UpdateGoldUI();
+        PlayerUI.Instance.SavePlayerData();
+    }
+
     void LevelUp()
     {
         if (PlayerUI.Instance == null)
