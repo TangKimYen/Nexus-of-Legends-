@@ -309,56 +309,6 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void SellItem(string itemId, float itemPrice)
-    {
-        Item itemToRemove = items.Find(item => item.itemId == itemId);
-        if (itemToRemove != null)
-        {
-            RemoveItem(itemToRemove);
-
-            // Cập nhật vàng của người chơi
-            int goldEarned = Mathf.FloorToInt(itemPrice * 0.2f); // Sử dụng giá trị float và chuyển đổi thành int
-            PlayerData.instance.gold += goldEarned;
-            SavePlayerGoldToFirebase(PlayerData.instance.gold);
-
-            // Xóa item khỏi Firebase
-            dbRef.Child("Inventory").Child(userName).Child(itemId).RemoveValueAsync()
-                .ContinueWithOnMainThread(task =>
-                {
-                    if (task.IsCompleted)
-                    {
-                        Debug.Log($"Item {itemId} đã được xóa khỏi Firebase.");
-                    }
-                    else
-                    {
-                        Debug.LogError($"Lỗi khi xóa item {itemId} khỏi Firebase: {task.Exception}");
-                    }
-                });
-
-            RefreshUI();
-        }
-        else
-        {
-            Debug.LogError($"Không tìm thấy item với ID: {itemId} trong Inventory.");
-        }
-    }
-
-    private void SavePlayerGoldToFirebase(float newGold)
-    {
-        dbRef.Child("players").Child(userName).Child("gold").SetValueAsync(newGold)
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCompleted)
-                {
-                    Debug.Log("Số vàng đã được cập nhật trên Firebase.");
-                }
-                else
-                {
-                    Debug.LogError("Lỗi khi cập nhật số vàng trên Firebase: " + task.Exception);
-                }
-            });
-    }
-
     void OnApplicationQuit()
     {
         SaveItemsToFirebase();

@@ -26,10 +26,7 @@ public class ArcherAttack : MonoBehaviour
     private float cooldownSkill1 = Mathf.Infinity;
     private float cooldownSkill2 = Mathf.Infinity;
     private float cooldownSkill3 = Mathf.Infinity;
-    [SerializeField] private AudioSource attackSound;
-    [SerializeField] private AudioSource skill1Sound;
-    [SerializeField] private AudioSource skill2Sound;
-    [SerializeField] private AudioSource skill3Sound;
+    //[SerializeField] private AudioSource attackSoundEffect;
 
     private void Awake()
     {
@@ -45,22 +42,18 @@ public class ArcherAttack : MonoBehaviour
             dirX = Input.GetAxisRaw("Horizontal");
             if (Input.GetMouseButton(0) && cooldownAttack > attackCooldown && playerMovement.canAttack())
             {
-                attackSound.Play();
                 Attack();
             }
             else if (Input.GetButtonDown("Fire1") && cooldownSkill1 > skill1Cooldown && playerMovement.canAttack())
             {
-                skill1Sound.Play();
                 Skill1();
             }
             else if (Input.GetButtonDown("Fire2") && cooldownSkill2 > skill2Cooldown && playerMovement.canAttack())
             {
-                skill2Sound.Play();
                 Skill2();
             }
             else if (Input.GetButtonDown("Fire3") && cooldownSkill3 > skill3Cooldown && playerMovement.canAttack())
             {
-                skill3Sound.Play();
                 Skill3();
             }
             cooldownAttack += Time.deltaTime;

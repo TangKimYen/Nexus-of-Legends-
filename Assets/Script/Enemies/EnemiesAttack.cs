@@ -19,7 +19,6 @@ public class EnemiesAttack : MonoBehaviourPunCallbacks
     private Animator anim;
     private int randomAttack = 0;
     //private PlayerLife playerLife;
-    [SerializeField] private AudioSource attackSound;
 
     private void Awake()
     {
@@ -57,7 +56,6 @@ public class EnemiesAttack : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_Attack(string attackType)
     {
-        attackSound.Play();
         anim.SetTrigger(attackType);
     }
 
