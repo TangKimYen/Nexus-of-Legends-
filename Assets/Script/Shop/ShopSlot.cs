@@ -66,7 +66,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (popupManager != null)
             {
                 Debug.Log($"Showing popup for item: {Item.itemName}, itemId: {Item.itemId}");
-                popupManager.ShowPopup(Item.itemName, Item.itemId);
+                popupManager.ShowPopup(Item.itemName, Item.itemId, Item.itemCoin);
             }
             else
             {
