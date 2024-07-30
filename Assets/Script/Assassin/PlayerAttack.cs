@@ -17,6 +17,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private GameObject[] skill2;
     [SerializeField] private float skill3Cooldown;
     [SerializeField] private GameObject[] skill3;
+    
     private Animator anim;
     private float dirX = 0f;
     PhotonView view;
@@ -26,7 +27,10 @@ public class PlayerAttack : MonoBehaviour
     private float cooldownSkill1 = Mathf.Infinity;
     private float cooldownSkill2 = Mathf.Infinity;
     private float cooldownSkill3 = Mathf.Infinity;
-    //[SerializeField] private AudioSource attackSoundEffect;
+    [SerializeField] private AudioSource attackSound;
+    [SerializeField] private AudioSource skill1Sound;
+    [SerializeField] private AudioSource skill2Sound;
+    [SerializeField] private AudioSource skill3Sound;
 
     private void Awake()
     {
@@ -42,18 +46,24 @@ public class PlayerAttack : MonoBehaviour
             dirX = Input.GetAxisRaw("Horizontal");
             if (Input.GetMouseButton(0) && cooldownAttack > attackCooldown && playerMovement.canAttack())
             {
+                attackSound.Play();
                 Attack();
+               
             }
             else if (Input.GetButtonDown("Fire1") && cooldownSkill1 > skill1Cooldown && playerMovement.canAttack())
             {
+                skill1Sound.Play();
                 Skill1();
+                
             }
             else if (Input.GetButtonDown("Fire2") && cooldownSkill2 > skill2Cooldown && playerMovement.canAttack())
             {
+                skill2Sound.Play();
                 Skill2();
             }
             else if (Input.GetButtonDown("Fire3") && cooldownSkill3 > skill3Cooldown && playerMovement.canAttack())
             {
+                skill3Sound.Play();
                 Skill3();
             }
             cooldownAttack += Time.deltaTime;
@@ -72,21 +82,20 @@ public class PlayerAttack : MonoBehaviour
     }
     private void Attack()
     {
-        //attackSoundEffect.Play();
         anim.SetTrigger("attack");
-        cooldownAttack = 0;
-
+        cooldownAttack = 0; 
         hits[FindHit()].transform.position = hitPoint.position;
         hits[FindHit()].GetComponent<MeleeHit>().SetDirection(Mathf.Sign(transform.localScale.x));
     }
 
     private void Skill1()
     {
-        //attackSoundEffect.Play();
+        
         anim.SetTrigger("skill1");
         skill1[FindSkill1()].transform.position = skill1Point.position;
         skill1[FindSkill1()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
         cooldownSkill1 = 0;
+
     }
     private void Skill2()
     {

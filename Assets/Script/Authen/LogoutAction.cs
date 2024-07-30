@@ -63,6 +63,8 @@ public class LogoutAction : MonoBehaviour
             PlayerPrefs.DeleteKey("gem");
             PlayerPrefs.DeleteKey("level");
             PlayerPrefs.Save();
+            // Cập nhật trạng thái đăng nhập
+            PlayerData.instance.isLoggedIn = false;
 
             // Hiển thị thông báo đăng xuất thành công
             if (messageText != null)
