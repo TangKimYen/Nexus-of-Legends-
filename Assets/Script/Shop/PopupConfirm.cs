@@ -58,10 +58,11 @@ public class PopupConfirm : MonoBehaviour
                 DataSnapshot snapshot = task.Result;
                 if (snapshot.Exists)
                 {
-                    int playerGold = int.Parse(snapshot.Value.ToString());
+                    float playerGold = float.Parse(snapshot.Value.ToString());
 
                     if (playerGold >= itemPrice)
                     {
+                        DeductPlayerGold(playerGold - itemPrice);
                         AddItemToInventory(currentItemId);
                         ClosePopup();
                     }
@@ -81,6 +82,18 @@ public class PopupConfirm : MonoBehaviour
                 Debug.LogError("Failed to retrieve player gold: " + task.Exception);
                 ShowInsufficientGoldPopup("Failed to retrieve player gold.");
             }
+        });
+    }
+
+    private void DeductPlayerGold(float newGoldAmount)
+    {
+        DatabaseReference reference = FirebaseDatabase.DefaultInstance
+            .GetReference("players")
+            .Child(PlayerData.instance.username)
+            .Child("gold");
+
+        reference.SetValueAsync(newGoldAmount).ContinueWithOnMainThread(task => {
+            
         });
     }
 
