@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-
+﻿using Firebase.Auth;
+using Firebase.Database;
+using UnityEngine;
+using UnityEngine.SceneManagement;  // Thêm dòng này
 public class PlayerData : MonoBehaviour
 {
     public static PlayerData instance;
@@ -18,6 +20,8 @@ public class PlayerData : MonoBehaviour
     public string loginTime;
     public string logoutTime;
     public bool isLoggedIn;
+    private DatabaseReference dbRef;
+    private FirebaseAuth auth;
 
     void Awake()
     {
@@ -33,6 +37,53 @@ public class PlayerData : MonoBehaviour
             Debug.LogWarning("Duplicate PlayerData instance destroyed.");
         }
     }
+    void Start()
+    {
+        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+    }
 
     public PlayerData() { }
+
+    public void DeleteAccount()
+    {
+        if (!string.IsNullOrEmpty(username))
+        {
+            dbRef.Child("players").Child(username).RemoveValueAsync().ContinueWith(task => {
+                if (task.IsCompleted)
+                {
+                    Debug.Log("Account deleted successfully.");
+                    Logout();
+                    SceneManager.LoadScene("TitleScreen");
+                }
+                else
+                {
+                    Debug.LogError("Error deleting account: " + task.Exception);
+                }
+            });
+        }
+    }
+
+    public void Logout()
+    {
+        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
+        if (auth.CurrentUser != null)
+        {
+            auth.SignOut();
+        }
+
+        playerId = "";
+        username = "";
+        email = "";
+        passwordHash = "";
+        characterId = "";
+        characterName = "";
+        exp = 0;
+        gold = 0;
+        gem = 0;
+        level = 0;
+        sessionId = "";
+        loginTime = "";
+        logoutTime = "";
+        isLoggedIn = false;
+    }
 }
