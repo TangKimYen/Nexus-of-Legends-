@@ -27,6 +27,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private Image healthBar;
     [SerializeField] private TMP_Text healthText;
     private DatabaseReference databaseReference;
+    [SerializeField] private AudioSource deathSound;
 
     private enum MovementState { idle, running }
 
@@ -186,7 +187,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Death()
     {
-        //deathSoundEffect.Play();
+        deathSound.Play();
         anim.SetTrigger("death");
         photonView.RPC("RPC_RewardExp", RpcTarget.All, expReward);
     }
