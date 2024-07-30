@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Pun.Demo.PunBasics;
 
 public class PlayerHealth : MonoBehaviourPunCallbacks
 {
@@ -101,7 +102,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     {
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
-        // You might want to add additional code here for handling the death (e.g., respawn, game over)
+        InGameManager.instance.PlayerDied();
     }
 
     private void UpdateHealthUI()
