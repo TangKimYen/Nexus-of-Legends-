@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +11,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     [SerializeField] ItemTooltip tooltip;
 
     public event Action<Item> OnRightClickEvent;
+    public event Action<Item> OnLeftDoubleClickEvent; // Thêm sự kiện cho double-click chuột trái
 
     private Item _item;
+    [SerializeField] private SellItemPopup popupManager;
     public Item Item
     {
         get { return _item; }
@@ -31,6 +33,18 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
+    private void Awake()
+    {
+        if (popupManager == null)
+        {
+            popupManager = FindObjectOfType<SellItemPopup>();
+            if (popupManager == null)
+            {
+                Debug.LogError("PopupManager không tìm thấy trong cảnh.");
+            }
+        }
+    }
+
     protected virtual void OnValidate()
     {
         if (image == null)
@@ -42,12 +56,28 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData != null && eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Right)
         {
             if (Item != null && OnRightClickEvent != null)
             {
                 OnRightClickEvent(Item);
             }
+        }
+        if (Item != null)
+        {
+            if (popupManager != null)
+            {
+                Debug.Log($"Showing popup for item: {Item.itemName}, itemId: {Item.itemId}");
+                popupManager.ShowPopup(Item.itemName, Item.itemId, Item.itemCoin);
+            }
+            else
+            {
+                Debug.LogError("PopupManager chưa được gán.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Item là null.");
         }
     }
 
