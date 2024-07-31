@@ -1847,13 +1847,13 @@ MonoBehaviour:
   hits:
   - {fileID: 7126746981531518135}
   - {fileID: 469136686143557981}
-  skill1Cooldown: 5
+  skill1Cooldown: 3
   skill1:
   - {fileID: 2472304646871735314}
-  skill2Cooldown: 7
+  skill2Cooldown: 4
   skill2:
   - {fileID: 1484187230461574954}
-  skill3Cooldown: 10
+  skill3Cooldown: 7
   skill3:
   - {fileID: 9174617481344583519}
   attackSound: {fileID: 3060858977945084723}
@@ -3164,6 +3164,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5553886507159233061}
     m_Modifications:
+    - target: {fileID: 667536905715456506, guid: f6de83a1d07851147bd2ce97579b8ab4, type: 3}
+      propertyPath: skills.Array.data[0].cooldownTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 667536905715456506, guid: f6de83a1d07851147bd2ce97579b8ab4, type: 3}
+      propertyPath: skills.Array.data[1].cooldownTime
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 667536905715456506, guid: f6de83a1d07851147bd2ce97579b8ab4, type: 3}
+      propertyPath: skills.Array.data[2].cooldownTime
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2078257471355822243, guid: f6de83a1d07851147bd2ce97579b8ab4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

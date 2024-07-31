@@ -57,8 +57,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public TextMeshProUGUI dungeonDisplay;
     public TextMeshProUGUI levelRequireDisplay;
-    public TextMeshProUGUI floorDisplay; 
-    public TextMeshProUGUI levelRequireMapDisplay; 
+    public TextMeshProUGUI floorDisplay;
+    public TextMeshProUGUI levelRequireMapDisplay;
     public TextMeshProUGUI currentMemberDisplay;
     public TextMeshProUGUI maxMemberDisplay;
     public Image mapBGDisplay;
@@ -69,6 +69,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public GameObject invitationPanel;
     public GameObject kickLayout;
     public TextMeshProUGUI invitationText;
+    public GameObject notificationPanel;
+    public TMP_Text notificationText;
 
     public RoomInfo roomInfo;
 
@@ -97,7 +99,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     [SerializeField] Transform lobbyPlayerListContain;
     [SerializeField] GameObject lobbyPlayerItemPrefab;
     private List<PlayerLobbyData> lobbyPlayers = new List<PlayerLobbyData>();
-    public PlayerData playerData = PlayerData.instance;
+    [HideInInspector] public PlayerData playerData = PlayerData.instance;
     private DatabaseReference databaseReference;
 
     private List<RoomInfo> availableRooms = new List<RoomInfo>();
@@ -396,7 +398,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
             rectTransform.anchoredPosition3D = Vector3.zero;
             playerItem.GetComponent<PlayerListItem>().SetUp(players[i]);
         }
-        inviteButton.SetActive(PhotonNetwork.IsMasterClient);
+        //inviteButton.SetActive(PhotonNetwork.IsMasterClient);
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         UpdateRoomInfo();
     }
@@ -656,7 +658,59 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public void OnInviteButtonClicked(string receiverId)
     {
-        SendInvitation(receiverId);
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.LogError("Not connected to Photon.");
+            return;
+        }
+
+        // Fetch the invited player's level from Firebase
+        databaseReference.Child("lobbyPlayers").Child(receiverId).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to retrieve player data: " + task.Exception);
+                return;
+            }
+
+            if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    int invitedPlayerLevel = int.Parse(snapshot.Child("Level").Value.ToString());
+                    int requiredLevel = int.Parse(selectedLevelRequire);
+
+                    // Check if the invited player meets the level requirement
+                    if (invitedPlayerLevel < requiredLevel)
+                    {
+                        // Notify the sender that the invited player does not meet the level requirement
+                        ShowNotification("The invited player does not meet the level requirement.");
+                        return;
+                    }
+
+                    SendInvitation(receiverId);
+                }
+                else
+                {
+                    Debug.LogError("Player data does not exist.");
+                }
+            }
+        });
+        
+    }
+
+    public void ShowNotification(string message)
+    {
+        notificationText.text = message;
+        notificationPanel.SetActive(true);
+        StartCoroutine(HideNotificationAfterDelay(3f));
+    }
+
+    private IEnumerator HideNotificationAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        notificationPanel.SetActive(false);
     }
 
     public void ShowInvitation(Invitation invitation)
