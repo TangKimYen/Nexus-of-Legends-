@@ -23,4 +23,9 @@ public class Menu : MonoBehaviour
     {
         SceneManager.LoadScene("PartyLobby");
     }
+
+    public void ShopButton()
+    {
+        SceneManager.LoadScene("Shop");
+    }
 }
