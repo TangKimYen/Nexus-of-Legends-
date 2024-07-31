@@ -20289,7 +20289,6 @@ GameObject:
   - component: {fileID: 935610488}
   - component: {fileID: 935610487}
   - component: {fileID: 935610486}
-  - component: {fileID: 935610485}
   - component: {fileID: 935610490}
   m_Layer: 5
   m_Name: Shop Button
@@ -20318,20 +20317,6 @@ RectTransform:
   m_AnchoredPosition: {x: 786.05, y: -339}
   m_SizeDelta: {x: 347.9051, y: 123.9225}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &935610485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935610483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd7091ba66899cc46bc79659e1f749d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuName: 
-  open: 0
 --- !u!212 &935610486
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -20428,7 +20413,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 935610485}
+      - m_Target: {fileID: 935610490}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: ShopButton
         m_Mode: 1

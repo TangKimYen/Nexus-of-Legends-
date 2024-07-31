@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553d5f02c51b7654db49e6f9ab309785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterId: 
+  monsterId: SpikeSkeleton
   speed: 2
   chase: 0
   staringPoint: {fileID: 3768196802860474613}
@@ -336,7 +336,8 @@ MonoBehaviour:
   pointBoss: 1
   currentHealth: 0
   maxHealth: 10
-  expReward: 0
+  expReward: 45
+  goldReward: 50
   healthBar: {fileID: 5728278465621516819}
   healthText: {fileID: 4246653254410166305}
   deathSound: {fileID: 1414965488901697534}
