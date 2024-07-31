@@ -30,6 +30,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private Image healthBar;
     [SerializeField] private TMP_Text healthText;
     private DatabaseReference databaseReference;
+    [SerializeField] AudioSource deathSound;
 
     private enum MovementState { idle, running }
 
@@ -189,6 +190,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Death()
     {
+        deathSound.Play();
         if (isDead) return; // Check if the enemy is already dead
         isDead = true; // Set the flag to true
 
