@@ -20,6 +20,7 @@ public class ArcherAttack : MonoBehaviour
     private Animator anim;
     private float dirX = 0f;
     PhotonView view;
+    private ShowSkillUI skillCooldownUI;
 
     private AssassinMovements playerMovement;
     private float cooldownAttack = Mathf.Infinity;
@@ -36,6 +37,7 @@ public class ArcherAttack : MonoBehaviour
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<AssassinMovements>();
         view = GetComponent<PhotonView>();
+        skillCooldownUI = FindObjectOfType<ShowSkillUI>();
     }
 
     private void Update()
@@ -87,12 +89,14 @@ public class ArcherAttack : MonoBehaviour
         skill1[FindSkill1()].transform.position = skill1Point.position;
         skill1[FindSkill1()].GetComponent<SkillHit>().SetDirection(Mathf.Sign(transform.localScale.x));
         cooldownSkill1 = 0;
+        skillCooldownUI.UseSkill(0);
     }
     private void Skill2()
     {
         skill2Sound.Play();
         anim.SetTrigger("skill2");
         cooldownSkill2 = 0;
+        skillCooldownUI.UseSkill(1);
     }
     private void SpamSkill2()
     {
@@ -104,6 +108,7 @@ public class ArcherAttack : MonoBehaviour
         skill3Sound.Play();
         anim.SetTrigger("skill3");
         cooldownSkill3 = 0;
+        skillCooldownUI.UseSkill(2);
     }
 
     private void SpamSkill3()
