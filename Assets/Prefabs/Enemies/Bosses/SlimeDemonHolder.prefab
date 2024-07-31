@@ -307,15 +307,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553d5f02c51b7654db49e6f9ab309785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterId: 
+  monsterId: SlimeDemon
   speed: 2
   chase: 0
   staringPoint: {fileID: 4086041801877988346}
   distanceFrontOf: 0.5
   pointBoss: 1
   currentHealth: 0
-  maxHealth: 10
-  expReward: 0
+  maxHealth: 0
+  expReward: 400
+  goldReward: 1000
   healthBar: {fileID: 1154242568935931049}
   healthText: {fileID: 7319892872423243419}
   deathSound: {fileID: 7329321272703499958}

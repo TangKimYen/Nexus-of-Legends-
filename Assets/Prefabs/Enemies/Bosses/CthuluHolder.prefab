@@ -338,15 +338,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553d5f02c51b7654db49e6f9ab309785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterId: 
+  monsterId: Cthulu
   speed: 2
   chase: 0
   staringPoint: {fileID: 3229551328534347019}
   distanceFrontOf: 1
   pointBoss: 1
   currentHealth: 0
-  maxHealth: 10
-  expReward: 0
+  maxHealth: 0
+  expReward: 750
+  goldReward: 1500
   healthBar: {fileID: 5826279639667744217}
   healthText: {fileID: 2687189093070184427}
   deathSound: {fileID: 6203353290023259853}

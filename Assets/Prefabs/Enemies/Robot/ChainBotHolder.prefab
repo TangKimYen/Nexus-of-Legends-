@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553d5f02c51b7654db49e6f9ab309785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterId: 
+  monsterId: ChainBot
   speed: 2
   chase: 0
   staringPoint: {fileID: 8918405756079475708}
@@ -314,8 +314,10 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 10
   expReward: 0
+  goldReward: 0
   healthBar: {fileID: 3924984595931805747}
   healthText: {fileID: 4893604070303545857}
+  deathSound: {fileID: 0}
 --- !u!114 &5811297209129920499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,6 +341,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   twoTypeAttack: 0
+  attackSound: {fileID: 0}
 --- !u!61 &810833492799745023
 BoxCollider2D:
   m_ObjectHideFlags: 0
