@@ -19,9 +19,9 @@ public class PasswordResetAction : MonoBehaviour
 
     void Start()
     {
-        // Chuyển đổi mã màu hex sang Color
-        ColorUtility.TryParseHtmlString("#007213", out successColor); // Màu xanh lục
+        // Chuyển đổi mã màu hex sang Color 
         ColorUtility.TryParseHtmlString("#C02E31", out errorColor);   // Màu đỏ
+        ColorUtility.TryParseHtmlString("#007213", out successColor); // Màu xanh lục
     }
 
     public void OnResetPasswordButtonClicked()
