@@ -19,7 +19,8 @@ public class Character : MonoBehaviour
 
     [SerializeField] private Inventory inventory;
     [SerializeField] private EquipmentPanel equipmentPanel;
-    public StatPanel statPanel; // Thay đổi mức độ truy cập thành public
+    public StatPanel statPanel;
+    [SerializeField] private ProfilePanel profilePanel;
 
     void Start()
     {
@@ -86,6 +87,7 @@ public class Character : MonoBehaviour
             }
 
             statPanel.UpdateStatValues();
+            profilePanel.UpdateProfilePanel(equipmentPanel.equipmentSlots);
         }
         else
         {
@@ -174,6 +176,8 @@ public class Character : MonoBehaviour
                 Debug.Log("Không thể thêm item vào equipment panel");
                 inventory.AddItem(newItem);
             }
+            statPanel.UpdateStatValues();
+            profilePanel.UpdateProfilePanel(equipmentPanel.equipmentSlots);
         }
     }
 
@@ -186,6 +190,8 @@ public class Character : MonoBehaviour
             statPanel.UpdateStatValues();
             inventory.AddItem(item);
             StartCoroutine(UpdateItemStatusCoroutine(item, true));
+
+            profilePanel.UpdateProfilePanel(equipmentPanel.equipmentSlots);
         }
     }
 

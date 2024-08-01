@@ -307,15 +307,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553d5f02c51b7654db49e6f9ab309785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterId: 
+  monsterId: Bringer
   speed: 2
   chase: 0
   staringPoint: {fileID: 6060821507789527960}
   distanceFrontOf: 0.5
   pointBoss: 1
   currentHealth: 0
-  maxHealth: 10
-  expReward: 0
+  maxHealth: 0
+  expReward: 500
+  goldReward: 1200
   healthBar: {fileID: 4611880200684747460}
   healthText: {fileID: 3860001402839677174}
   deathSound: {fileID: 2646836227910120598}

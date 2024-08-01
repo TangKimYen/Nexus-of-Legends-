@@ -21,7 +21,8 @@ public class ShowSkillUI : MonoBehaviour
     {
         foreach (var skill in skills)
         {
-            skill.cooldownText.text = "";
+            skill.cooldownText.text = ""; // Initialize text as empty
+            skill.skillImage.fillAmount = 0; // Ensure the skill icon starts full
         }
     }
 
@@ -38,7 +39,7 @@ public class ShowSkillUI : MonoBehaviour
             else
             {
                 skill.cooldownText.text = "";
-                skill.skillImage.fillAmount = 1;
+                skill.skillImage.fillAmount = 0;
             }
         }
     }

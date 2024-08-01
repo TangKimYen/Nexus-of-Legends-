@@ -667,15 +667,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553d5f02c51b7654db49e6f9ab309785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterId: 
+  monsterId: ArcherSkeleton
   speed: 0
   chase: 0
   staringPoint: {fileID: 2967914318426608601}
   distanceFrontOf: 0.5
   pointBoss: 1
   currentHealth: 0
-  maxHealth: 10
-  expReward: 0
+  maxHealth: 0
+  expReward: 25
+  goldReward: 35
   healthBar: {fileID: 5945664063456276113}
   healthText: {fileID: 2815585114298379427}
   deathSound: {fileID: 3606690451119470843}
