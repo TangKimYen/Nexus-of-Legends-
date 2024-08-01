@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Firebase.Database;
+using Firebase.Extensions;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,18 +11,69 @@ public class ShopManager : MonoBehaviour
 
     private ShopSlot[] shopSlots;
     private DateTime nextRefreshTime;
+    private DatabaseReference shopDatabaseReference;
 
     private void Start()
     {
         shopSlots = shopSlotsParent.GetComponentsInChildren<ShopSlot>();
+        shopDatabaseReference = FirebaseDatabase.DefaultInstance.GetReference("Shop");
+
         LoadNextRefreshTime();
-        LoadShopItems();
-        CheckAndRefreshShop();
     }
 
-    private void Update()
+    private void LoadNextRefreshTime()
     {
-        CheckAndRefreshShop();
+        shopDatabaseReference.Child("NextRefreshTime").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    string savedTime = snapshot.Value.ToString();
+                    if (DateTime.TryParse(savedTime, out nextRefreshTime))
+                    {
+                        CheckAndRefreshShop();
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Invalid saved time format on Firebase. Setting next refresh time to midnight.");
+                        SetNextRefreshTime();
+                        PopulateShopSlots();
+                    }
+                }
+                else
+                {
+                    SetNextRefreshTime();
+                    PopulateShopSlots();
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to load next refresh time from Firebase: " + task.Exception);
+            }
+        });
+    }
+
+    private void CheckAndRefreshShop()
+    {
+        if (DateTime.Now >= nextRefreshTime)
+        {
+            PopulateShopSlots();
+            SetNextRefreshTime();
+        }
+        else
+        {
+            LoadShopItems();
+        }
+    }
+
+    private void SetNextRefreshTime()
+    {
+        DateTime now = DateTime.Now;
+        nextRefreshTime = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0).AddDays(1);
+
+        shopDatabaseReference.Child("NextRefreshTime").SetValueAsync(nextRefreshTime.ToString("o"));
     }
 
     private void PopulateShopSlots()
@@ -42,107 +95,47 @@ public class ShopManager : MonoBehaviour
             if (randomItem != null)
             {
                 shopSlots[i].SetItem(randomItem);
+                shopDatabaseReference.Child($"Slot_{i}").SetValueAsync(randomItem.itemId);
             }
             else
             {
                 shopSlots[i].ClearSlot();
             }
         }
-
-        SaveShopItems();
-    }
-
-    private void LoadNextRefreshTime()
-    {
-        string savedTime = PlayerPrefs.GetString("NextRefreshTime", string.Empty);
-        if (!string.IsNullOrEmpty(savedTime))
-        {
-            if (DateTime.TryParse(savedTime, out DateTime parsedTime))
-            {
-                nextRefreshTime = parsedTime;
-            }
-            else
-            {
-                Debug.LogWarning("Invalid saved time format. Setting next refresh time to 7PM today.");
-                SetNextRefreshTime();
-            }
-        }
-        else
-        {
-            SetNextRefreshTime();
-        }
-    }
-
-    private void CheckAndRefreshShop()
-    {
-        if (DateTime.Now >= nextRefreshTime)
-        {
-            PopulateShopSlots();
-            SetNextRefreshTime();
-        }
-    }
-
-    private void SetNextRefreshTime()
-    {
-        DateTime now = DateTime.Now;
-        DateTime today12AM = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
-
-        if (now > today12AM)
-        {
-            nextRefreshTime = today12AM.AddDays(1); // 12PM ngày mai
-        }
-        else
-        {
-            nextRefreshTime = today12AM; // 12PM hôm nay
-        }
-
-        PlayerPrefs.SetString("NextRefreshTime", nextRefreshTime.ToString("o")); // Sử dụng định dạng round-trip cho DateTime
-        PlayerPrefs.Save(); // Đảm bảo PlayerPrefs được lưu ngay lập tức
-    }
-
-    private void SaveShopItems()
-    {
-        for (int i = 0; i < shopSlots.Length; i++)
-        {
-            if (shopSlots[i].Item != null)
-            {
-                PlayerPrefs.SetString($"ShopSlot_{i}", shopSlots[i].Item.itemId);
-            }
-            else
-            {
-                PlayerPrefs.DeleteKey($"ShopSlot_{i}");
-            }
-        }
-        PlayerPrefs.Save();
     }
 
     private void LoadShopItems()
     {
-        for (int i = 0; i < shopSlots.Length; i++)
+        shopDatabaseReference.GetValueAsync().ContinueWithOnMainThread(task =>
         {
-            string itemId = PlayerPrefs.GetString($"ShopSlot_{i}", string.Empty);
-            if (!string.IsNullOrEmpty(itemId))
+            if (task.IsCompleted)
             {
-                Item item = itemDatabase.GetItemById(itemId);
-                if (item != null)
+                DataSnapshot snapshot = task.Result;
+                for (int i = 0; i < shopSlots.Length; i++)
                 {
-                    shopSlots[i].SetItem(item);
-                }
-                else
-                {
-                    shopSlots[i].ClearSlot();
+                    string itemId = snapshot.Child($"Slot_{i}").Value as string;
+                    if (!string.IsNullOrEmpty(itemId))
+                    {
+                        Item item = itemDatabase.GetItemById(itemId);
+                        if (item != null)
+                        {
+                            shopSlots[i].SetItem(item);
+                        }
+                        else
+                        {
+                            shopSlots[i].ClearSlot();
+                        }
+                    }
+                    else
+                    {
+                        shopSlots[i].ClearSlot();
+                    }
                 }
             }
             else
             {
-                shopSlots[i].ClearSlot();
+                Debug.LogError("Failed to load shop items from Firebase: " + task.Exception);
             }
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.SetString("NextRefreshTime", nextRefreshTime.ToString("o")); // Sử dụng định dạng round-trip cho DateTime
-        PlayerPrefs.Save(); // Đảm bảo PlayerPrefs được lưu ngay lập tức
+        });
     }
 }
