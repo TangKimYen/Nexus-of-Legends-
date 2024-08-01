@@ -5,7 +5,7 @@ using TMPro;
 
 public class EmailVerifier : MonoBehaviour
 {
-    private string zeroBounceApiKey = "224f7b1016be4cc585ab861fb4cb78ee"; // Thay thế bằng API key của bạn
+    private string zeroBounceApiKey = "7c3eb8fc81bf4a7a9543d3cebe64f2d6"; // Thay thế bằng API key của bạn
     private string zeroBounceApiUrl = "https://api.zerobounce.net/v2/validate";
 
     public TMP_InputField emailInput;
