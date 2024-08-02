@@ -20,9 +20,17 @@ public class PlayerStats : MonoBehaviourPunCallbacks
 
     public static PlayerStats Instance;
     private void Awake()
+{
+    if (Instance == null)
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
+    else if (Instance != this)
+    {
+        Destroy(gameObject);
+    }
+}
     void Start()
     {
         playerUI = GetComponent<PlayerUI>();
@@ -138,8 +146,6 @@ public class PlayerStats : MonoBehaviourPunCallbacks
             playerCurrentStat = JsonUtility.FromJson<PlayerCurrentStats>(jsonCurrentData);
             strength = playerCurrentStat.currentStrength;
             intellect = playerCurrentStat.currentIntellect;
-            damage = Mathf.FloorToInt(strength + intellect * 2);
-            Debug.Log(damage);
         }
         else
         {
@@ -147,16 +153,16 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         }
     }
 
-    //public int CalculateDamage()
-    //{
-    //    if (playerCurrentStat == null)
-    //    {
-    //        Debug.LogError("PlayerCurrentStats chưa được tải.");
-    //        return 0;
-    //    }
+    public int CalculateDamage()
+    {
+        if (playerCurrentStat == null)
+        {
+            Debug.LogError("PlayerCurrentStats chưa được tải.");
+            return 0;
+        }
 
-    //    damage = Mathf.FloorToInt(strength + intellect * 2);
-    //    Debug.Log(damage);
-    //    return damage;
-    //}
+        damage = Mathf.FloorToInt(strength + intellect * 2);
+        Debug.Log(damage);
+        return damage;
+    }
 }
