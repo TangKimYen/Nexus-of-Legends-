@@ -19,7 +19,7 @@ public class AssassinMovements : MonoBehaviour
 
     private enum MovementState { idle, running, jumping, falling }
 
-    //[SerializeField] private AudioSource jumpSoundEffect;
+    [SerializeField] private AudioSource jumpSoundEffect;
 
     // Start is called before the first frame update
     private void Start()
@@ -41,7 +41,7 @@ public class AssassinMovements : MonoBehaviour
 
             if ((Input.GetButtonDown("Vertical") || Input.GetButtonDown("Jump")) && IsGrounded())
             {
-                //jumpSoundEffect.Play();
+                jumpSoundEffect.Play();
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             }
             UpdateAnimationUpdate();

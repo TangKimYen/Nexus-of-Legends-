@@ -25,6 +25,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     public int maxHealth;
     public int defenseEnemies;
     private bool isDead = false;
+    private bool rewardGiven = false;
 
     [SerializeField] private int expReward;
     [SerializeField] private int goldReward;
@@ -192,13 +193,17 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Death()
     {
-        
         if (isDead) return; // Check if the enemy is already dead
         isDead = true; // Set the flag to true
+        rewardGiven = false; // Reset rewardGiven flag
 
         deathSound.Play();
         anim.SetTrigger("death");
-        photonView.RPC("RPC_RewardExpAndGold", RpcTarget.All, expReward, goldReward);
+
+        if (PhotonNetwork.IsMasterClient && !rewardGiven)
+        {
+            photonView.RPC("RPC_RewardExpAndGold", RpcTarget.All, expReward, goldReward);
+        }
     }
     public void Hurt()
     {
@@ -209,14 +214,31 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void RPC_RewardExpAndGold(int exp, int gold)
     {
-        PlayerStats playerStats = player.GetComponent<PlayerStats>();
-        if (playerStats != null)
+        if (!rewardGiven)
         {
-            playerStats.AddExp(exp);
-            playerStats.AddGold(gold);
-        }
+            rewardGiven = true;
 
-        InGameManager.instance.EnemyDefeated(gold, exp); // Notify GameManager
+            if (player == null)
+            {
+                player = GameObject.FindGameObjectWithTag("Character");
+            }
+
+            if (player != null)
+            {
+                PlayerStats playerStats = player.GetComponent<PlayerStats>();
+                if (playerStats != null)
+                {
+                    playerStats.AddExp(exp);
+                    playerStats.AddGold(gold);
+                }
+
+                InGameManager.instance?.EnemyDefeated(gold, exp); // Notify GameManager
+            }
+            else
+            {
+                Debug.LogError("Player object is null.");
+            }
+        }
     }
 
     public void Deactive()
@@ -227,22 +249,27 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (collision.gameObject.CompareTag("Attack"))
         {
-            int dammageTaked = PlayerStats.Instance.damage - defenseEnemies;
-            Debug.Log("Calculate in EnemiesController: " + PlayerStats.Instance.damage);
-            currentHealth = currentHealth - dammageTaked;
-            Debug.Log("Take " + dammageTaked + " from Player: " + PlayerData.instance.username);
-            photonView.RPC("RPC_UpdateHealth", RpcTarget.OthersBuffered, currentHealth);
-            if (currentHealth > 0)
+            if (PlayerStats.Instance != null)
             {
-                Hurt();
-                photonView.RPC("RPC_Hurt", RpcTarget.OthersBuffered);
+                int damageTaken = PlayerStats.Instance.CalculateDamage() - defenseEnemies;
+                currentHealth -= damageTaken;
+                photonView.RPC("RPC_UpdateHealth", RpcTarget.OthersBuffered, currentHealth);
+                if (currentHealth > 0)
+                {
+                    Hurt();
+                    photonView.RPC("RPC_Hurt", RpcTarget.OthersBuffered);
+                }
+                else
+                {
+                    Death();
+                    photonView.RPC("RPC_Death", RpcTarget.OthersBuffered);
+                }
+                UpdateHealthUI();
             }
             else
             {
-                Death();
-                photonView.RPC("RPC_Death", RpcTarget.OthersBuffered);
+                Debug.LogError("PlayerStats.Instance is null.");
             }
-            UpdateHealthUI();
         }
     }
 
