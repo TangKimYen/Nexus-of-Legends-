@@ -1,7 +1,8 @@
 ﻿using Firebase.Auth;
 using Firebase.Database;
 using UnityEngine;
-using UnityEngine.SceneManagement;  // Thêm dòng này
+using UnityEngine.SceneManagement;
+
 public class PlayerData : MonoBehaviour
 {
     public static PlayerData instance;
@@ -37,6 +38,7 @@ public class PlayerData : MonoBehaviour
             Debug.LogWarning("Duplicate PlayerData instance destroyed.");
         }
     }
+
     void Start()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
@@ -55,6 +57,42 @@ public class PlayerData : MonoBehaviour
                 {
                     Debug.Log("Account deleted from Realtime Database successfully.");
 
+                    // Xóa thông tin từ playerBaseStat
+                    dbRef.Child("PlayerBaseStat").Child(username).RemoveValueAsync().ContinueWith(baseStatTask => {
+                        if (baseStatTask.IsCompleted)
+                        {
+                            Debug.Log("PlayerBaseStat deleted successfully.");
+                        }
+                        else
+                        {
+                            Debug.LogError("Error deleting PlayerBaseStat: " + baseStatTask.Exception);
+                        }
+                    });
+
+                    // Xóa thông tin từ playerCurrentStat
+                    dbRef.Child("PlayerCurrentStat").Child(username).RemoveValueAsync().ContinueWith(currentStatTask => {
+                        if (currentStatTask.IsCompleted)
+                        {
+                            Debug.Log("PlayerCurrentStat deleted successfully.");
+                        }
+                        else
+                        {
+                            Debug.LogError("Error deleting PlayerCurrentStat: " + currentStatTask.Exception);
+                        }
+                    });
+
+                    // Xóa thông tin từ Inventory
+                    dbRef.Child("Inventory").Child(username).RemoveValueAsync().ContinueWith(inventoryTask => {
+                        if (inventoryTask.IsCompleted)
+                        {
+                            Debug.Log("Inventory deleted successfully.");
+                        }
+                        else
+                        {
+                            Debug.LogError("Error deleting Inventory: " + inventoryTask.Exception);
+                        }
+                    });
+
                     // Xóa tài khoản người dùng khỏi Firebase Auth
                     if (auth.CurrentUser != null)
                     {
@@ -62,7 +100,8 @@ public class PlayerData : MonoBehaviour
                             if (deleteTask.IsCompleted)
                             {
                                 Debug.Log("Account deleted from Firebase Auth successfully.");
-                                
+                                // Sau khi xóa, chuyển đến màn hình đăng nhập
+                                SceneManager.LoadScene("TitleScreen");
                             }
                             else
                             {
@@ -78,6 +117,8 @@ public class PlayerData : MonoBehaviour
             });
         }
     }
+
+
     public void Logout()
     {
         if (auth.CurrentUser != null)
