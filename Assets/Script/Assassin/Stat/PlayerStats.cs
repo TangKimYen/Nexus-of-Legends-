@@ -11,6 +11,7 @@ public class PlayerStats : MonoBehaviourPunCallbacks
     private PlayerUI playerUI;
     [SerializeField] private Transform spamPoint;
     [SerializeField] private GameObject[] LevelUpEffect;
+    [SerializeField] private AudioSource levelUpSound;
 
     private DatabaseReference databaseReference;
 
@@ -67,6 +68,7 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         PlayerUI.Instance.SavePlayerData();
         playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel, PlayerUI.Instance.level);
 
+        levelUpSound.Play();
         LevelUpEffects();
         photonView.RPC("LevelUpEffectRPC", RpcTarget.All, spamPoint.position, transform.localScale.x);
     }
