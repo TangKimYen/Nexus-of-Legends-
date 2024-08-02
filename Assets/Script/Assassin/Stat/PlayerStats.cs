@@ -16,6 +16,7 @@ public class PlayerStats : MonoBehaviourPunCallbacks
     private float strength;
     private float intellect;
     public int damage;
+    [SerializeField] private AudioSource levelUpSound;
 
     public static PlayerStats Instance;
     private void Awake()
@@ -77,6 +78,7 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         PlayerUI.Instance.SavePlayerData();
         playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel, PlayerUI.Instance.level);
 
+        levelUpSound.Play();
         LevelUpEffects();
         photonView.RPC("LevelUpEffectRPC", RpcTarget.All, spamPoint.position, transform.localScale.x);
     }
