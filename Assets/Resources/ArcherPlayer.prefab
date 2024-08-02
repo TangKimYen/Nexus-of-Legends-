@@ -17,9 +17,6 @@ GameObject:
   - component: {fileID: 6876256917160163645}
   - component: {fileID: 2390694314185974364}
   - component: {fileID: 9089288249675588896}
-  - component: {fileID: 8923887820768660728}
-  - component: {fileID: 1218080280504732454}
-  - component: {fileID: 8993351453103284583}
   - component: {fileID: 6419600569427752675}
   - component: {fileID: 3102093026007666617}
   - component: {fileID: 2618184069248583279}
@@ -28,6 +25,9 @@ GameObject:
   - component: {fileID: 6884602221017378048}
   - component: {fileID: 1966661572764715903}
   - component: {fileID: 6924153825142412393}
+  - component: {fileID: 5664899459630547186}
+  - component: {fileID: 7802299861146849457}
+  - component: {fileID: 3062713760016939063}
   m_Layer: 6
   m_Name: Archer
   m_TagString: Character
@@ -171,9 +171,8 @@ MonoBehaviour:
   jumpableGround:
     serializedVersion: 2
     m_Bits: 256
-  moveSpeed: 5
+  moveSpeed: 7
   jumpForce: 14
-  jumpSoundEffect: {fileID: 0}
 --- !u!70 &2503470097658338117
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -309,102 +308,6 @@ MonoBehaviour:
   skill1Sound: {fileID: 1238665890958567808}
   skill2Sound: {fileID: 6884602221017378048}
   skill3Sound: {fileID: 1966661572764715903}
---- !u!114 &8923887820768660728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165104152958962085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 1
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1218080280504732454}
-  - {fileID: 8993351453103284583}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &1218080280504732454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165104152958962085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 1
-    Name: state
-  - Type: 9
-    SynchronizeType: 1
-    Name: death
-  - Type: 9
-    SynchronizeType: 1
-    Name: attack
-  - Type: 9
-    SynchronizeType: 1
-    Name: hurt
-  - Type: 9
-    SynchronizeType: 1
-    Name: skill1
-  - Type: 9
-    SynchronizeType: 1
-    Name: skill2
-  - Type: 9
-    SynchronizeType: 1
-    Name: skill3
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
---- !u!114 &8993351453103284583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165104152958962085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 3
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    ExtrapolateOption: 1
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-  m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateMoveTowardsSpeed: 100
-    InterpolateLerpSpeed: 0
 --- !u!114 &6419600569427752675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +376,13 @@ MonoBehaviour:
   spamPoint: {fileID: 5589510099193919664}
   LevelUpEffect:
   - {fileID: 8746793395755502929}
+  playerCurrentStat:
+    currentStrength: 0
+    currentIntellect: 0
+    currentDefense: 0
+    currentBlood: 0
+    currentMovement: 0
+    currentAttackSpeed: 0
 --- !u!82 &42387630170829052
 AudioSource:
   m_ObjectHideFlags: 0
@@ -580,7 +490,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 69704f4f6c7cec44581e15185bbb41f1, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -676,7 +586,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 559f28e36935f1d499639da966615ce1, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -772,7 +682,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 54b79b0b1dac03f469a369b061ae6b7d, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -953,6 +863,102 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5664899459630547186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165104152958962085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7802299861146849457}
+  - {fileID: 3062713760016939063}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7802299861146849457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165104152958962085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 3
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 1
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 1
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 1
+    InterpolateMoveTowardsSpeed: 100
+    InterpolateLerpSpeed: 0
+--- !u!114 &3062713760016939063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165104152958962085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 1
+    Name: state
+  - Type: 9
+    SynchronizeType: 1
+    Name: death
+  - Type: 9
+    SynchronizeType: 1
+    Name: attack
+  - Type: 9
+    SynchronizeType: 1
+    Name: hurt
+  - Type: 9
+    SynchronizeType: 1
+    Name: skill1
+  - Type: 9
+    SynchronizeType: 1
+    Name: skill2
+  - Type: 9
+    SynchronizeType: 1
+    Name: skill3
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &499836640446330884
 GameObject:
   m_ObjectHideFlags: 0
@@ -1397,7 +1403,7 @@ GameObject:
   - component: {fileID: 8345057794953909078}
   - component: {fileID: 5813921234256688237}
   - component: {fileID: 1222207341536692721}
-  - component: {fileID: 3114582679442324071}
+  - component: {fileID: 1402695422212431832}
   m_Layer: 6
   m_Name: Camera
   m_TagString: PlayerCamera
@@ -1510,7 +1516,7 @@ MonoBehaviour:
   positionOffSet: {x: 0, y: 0, z: -10}
   xLimit: {x: -100, y: 500}
   yLimit: {x: -100, y: 500}
---- !u!114 &3114582679442324071
+--- !u!114 &1402695422212431832
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3210,7 +3216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3655082105861215095, guid: 0c8c17ee49c32994ba5ee98cb0495521, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 400
+      value: 412.4
       objectReference: {fileID: 0}
     - target: {fileID: 8089651547551785116, guid: 0c8c17ee49c32994ba5ee98cb0495521, type: 3}
       propertyPath: m_Name

@@ -1164,7 +1164,7 @@ GameObject:
   - component: {fileID: 4615894674944286450}
   - component: {fileID: 3866609970782234689}
   - component: {fileID: 114156807271181648}
-  - component: {fileID: 2005090005362167415}
+  - component: {fileID: 1941725755827589717}
   m_Layer: 6
   m_Name: Camera
   m_TagString: PlayerCamera
@@ -1186,8 +1186,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4143877630124165816}
-  - {fileID: 1431254038852021109}
   - {fileID: 5553886507159233061}
+  - {fileID: 1431254038852021109}
   m_Father: {fileID: 745566812423084865}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &5798999149902643854
@@ -1277,7 +1277,7 @@ MonoBehaviour:
   positionOffSet: {x: 0, y: 0, z: -10}
   xLimit: {x: -500, y: 500}
   yLimit: {x: -500, y: 500}
---- !u!114 &2005090005362167415
+--- !u!114 &1941725755827589717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1611,9 +1611,6 @@ GameObject:
   - component: {fileID: 5021302508094723130}
   - component: {fileID: 5170015730104274109}
   - component: {fileID: 5528513282586230084}
-  - component: {fileID: 1179740696627422779}
-  - component: {fileID: 3504600769333527246}
-  - component: {fileID: 3829738491177087804}
   - component: {fileID: 8658751559297675874}
   - component: {fileID: 6284430406481399728}
   - component: {fileID: 3266553093634058939}
@@ -1622,6 +1619,9 @@ GameObject:
   - component: {fileID: 8565306803188721973}
   - component: {fileID: 446935634571288364}
   - component: {fileID: 7206464714298047609}
+  - component: {fileID: 2723078797377926143}
+  - component: {fileID: 6125948757754060532}
+  - component: {fileID: 2088184363887189121}
   m_Layer: 6
   m_Name: Assassin
   m_TagString: Character
@@ -1878,7 +1878,6 @@ MonoBehaviour:
     m_Bits: 256
   moveSpeed: 5
   jumpForce: 14
-  jumpSoundEffect: {fileID: 3060858977945084723}
 --- !u!114 &5528513282586230084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1902,102 +1901,6 @@ MonoBehaviour:
   - {fileID: 7619503710900009037}
   deathSound: {fileID: 7206464714298047609}
   hurtSound: {fileID: 7206464714298047609}
---- !u!114 &1179740696627422779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7596470770138430869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 1
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 3504600769333527246}
-  - {fileID: 3829738491177087804}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &3504600769333527246
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7596470770138430869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 3
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    ExtrapolateOption: 1
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-  m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateMoveTowardsSpeed: 100
-    InterpolateLerpSpeed: 0
---- !u!114 &3829738491177087804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7596470770138430869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 1
-    Name: state
-  - Type: 9
-    SynchronizeType: 1
-    Name: death
-  - Type: 9
-    SynchronizeType: 1
-    Name: hurt
-  - Type: 9
-    SynchronizeType: 1
-    Name: attack
-  - Type: 9
-    SynchronizeType: 1
-    Name: skill1
-  - Type: 9
-    SynchronizeType: 1
-    Name: skill2
-  - Type: 9
-    SynchronizeType: 1
-    Name: skill3
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
 --- !u!114 &8658751559297675874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2066,6 +1969,13 @@ MonoBehaviour:
   spamPoint: {fileID: 2248803829413609809}
   LevelUpEffect:
   - {fileID: 1671256808709051040}
+  playerCurrentStat:
+    currentStrength: 0
+    currentIntellect: 0
+    currentDefense: 0
+    currentBlood: 0
+    currentMovement: 0
+    currentAttackSpeed: 0
 --- !u!82 &3060858977945084723
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2546,6 +2456,102 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2723078797377926143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596470770138430869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 6125948757754060532}
+  - {fileID: 2088184363887189121}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &6125948757754060532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596470770138430869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 3
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 1
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 1
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 1
+    InterpolateMoveTowardsSpeed: 100
+    InterpolateLerpSpeed: 0
+--- !u!114 &2088184363887189121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596470770138430869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 1
+    Name: state
+  - Type: 9
+    SynchronizeType: 1
+    Name: death
+  - Type: 9
+    SynchronizeType: 1
+    Name: hurt
+  - Type: 9
+    SynchronizeType: 1
+    Name: attack
+  - Type: 9
+    SynchronizeType: 1
+    Name: skill1
+  - Type: 9
+    SynchronizeType: 1
+    Name: skill2
+  - Type: 9
+    SynchronizeType: 1
+    Name: skill3
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &7619503710900009037
 GameObject:
   m_ObjectHideFlags: 0
