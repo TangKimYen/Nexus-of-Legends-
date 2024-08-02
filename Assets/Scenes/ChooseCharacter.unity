@@ -6392,20 +6392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b827e8bd3673846b31f713a5ad1166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBaseStat:
-    baseStrength: 0
-    baseIntellect: 0
-    baseDefense: 0
-    baseBlood: 0
-    baseMovement: 0
-    baseAttackSpeed: 0
-  playerCurrentStats:
-    currentStrength: 0
-    currentIntellect: 0
-    currentDefense: 0
-    currentBlood: 0
-    currentMovement: 0
-    currentAttackSpeed: 0
 --- !u!4 &1556440310
 Transform:
   m_ObjectHideFlags: 0
@@ -6858,6 +6844,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1725490833}
   m_CullTransparentMesh: 1
+--- !u!1 &1740063859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1740063861}
+  - component: {fileID: 1740063860}
+  m_Layer: 0
+  m_Name: CoroutineRunner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1740063860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740063859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4deadba858dc49d4a8a446b5cb60c12c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1740063861
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740063859}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.9389223, y: -0.4434432, z: 93.588646}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1760698321
 GameObject:
   m_ObjectHideFlags: 0
@@ -8886,6 +8916,20 @@ MonoBehaviour:
   confirmationPopup: {fileID: 2067107642}
   confirmationText: {fileID: 1548007524}
   charSelectManager: {fileID: 1556440309}
+  playerBaseStat:
+    baseStrength: 0
+    baseIntellect: 0
+    baseDefense: 0
+    baseBlood: 0
+    baseMovement: 0
+    baseAttackSpeed: 0
+  playerCurrentStats:
+    currentStrength: 0
+    currentIntellect: 0
+    currentDefense: 0
+    currentBlood: 0
+    currentMovement: 0
+    currentAttackSpeed: 0
 --- !u!1 &2067672922
 GameObject:
   m_ObjectHideFlags: 0
@@ -9435,3 +9479,4 @@ SceneRoots:
   - {fileID: 1934015728}
   - {fileID: 1556440310}
   - {fileID: 851341057}
+  - {fileID: 1740063861}
