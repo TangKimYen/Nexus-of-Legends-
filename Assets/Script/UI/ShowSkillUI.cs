@@ -52,8 +52,6 @@ public class ShowSkillUI : MonoBehaviour
         if (skills[skillIndex].cooldownRemaining <= 0)
         {
             skills[skillIndex].cooldownRemaining = skills[skillIndex].cooldownTime;
-            // Add your skill logic here
-            Debug.Log("Skill " + (skillIndex + 1) + " used.");
         }
     }
 }

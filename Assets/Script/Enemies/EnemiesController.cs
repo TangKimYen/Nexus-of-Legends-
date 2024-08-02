@@ -23,6 +23,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     private Animator anim;
     public int currentHealth;
     public int maxHealth;
+    public int defenseEnemies;
     private bool isDead = false;
 
     [SerializeField] private int expReward;
@@ -82,6 +83,7 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
                     try
                     {
                         maxHealth = int.Parse(snapshot.Child("health").Value.ToString());
+                        defenseEnemies = int.Parse(snapshot.Child("defense").Value.ToString());
                         currentHealth = maxHealth; // Initialize currentHealth equal to maxHealth
                         Debug.Log("Max health loaded from Firebase: " + maxHealth);
 
@@ -190,11 +192,11 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Death()
     {
-        deathSound.Play();
+        
         if (isDead) return; // Check if the enemy is already dead
         isDead = true; // Set the flag to true
 
-        //deathSoundEffect.Play();
+        deathSound.Play();
         anim.SetTrigger("death");
         photonView.RPC("RPC_RewardExpAndGold", RpcTarget.All, expReward, goldReward);
     }
@@ -207,14 +209,11 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void RPC_RewardExpAndGold(int exp, int gold)
     {
-        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Character"))
+        PlayerStats playerStats = player.GetComponent<PlayerStats>();
+        if (playerStats != null)
         {
-            PlayerStats playerStats = player.GetComponent<PlayerStats>();
-            if (playerStats != null)
-            {
-                playerStats.AddExp(exp);
-                playerStats.AddGold(gold);
-            }
+            playerStats.AddExp(exp);
+            playerStats.AddGold(gold);
         }
 
         InGameManager.instance.EnemyDefeated(gold, exp); // Notify GameManager
@@ -228,7 +227,10 @@ public class EnemiesController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (collision.gameObject.CompareTag("Attack"))
         {
-            currentHealth = currentHealth - 100;
+            int dammageTaked = PlayerStats.Instance.damage - defenseEnemies;
+            Debug.Log("Calculate in EnemiesController: " + PlayerStats.Instance.damage);
+            currentHealth = currentHealth - dammageTaked;
+            Debug.Log("Take " + dammageTaked + " from Player: " + PlayerData.instance.username);
             photonView.RPC("RPC_UpdateHealth", RpcTarget.OthersBuffered, currentHealth);
             if (currentHealth > 0)
             {

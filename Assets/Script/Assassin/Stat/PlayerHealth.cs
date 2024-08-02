@@ -5,6 +5,9 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
 using Photon.Pun.Demo.PunBasics;
+using Firebase.Database;
+using Firebase.Extensions;
+using System;
 
 public class PlayerHealth : MonoBehaviourPunCallbacks
 {
@@ -21,6 +24,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
     [SerializeField] private AudioSource deathSound;
     [SerializeField] private AudioSource hurtSound;
+    private DatabaseReference reference;
 
     // Start is called before the first frame update
     private void Awake()
@@ -31,7 +35,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     }
     void Start()
     {
-        UpdateHealthUI();
+        LoadPlayerData();
     }
     private void Update()
     {
@@ -146,5 +150,37 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     private void Deactivate()
     {
         gameObject.SetActive(false);
+    }
+
+    public void LoadPlayerData()
+    {
+        reference = FirebaseDatabase.DefaultInstance.GetReference("PlayerCurrentStat").Child(PlayerData.instance.username);
+        reference.GetValueAsync().ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Unable to retrieve player data from Firebase: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshott = task.Result;
+                if (snapshott.Exists)
+                {
+                    try
+                    {
+                        health = int.Parse(snapshott.Child("currentBlood").Value.ToString());
+                        maxHealth = int.Parse(snapshott.Child("currentBlood").Value.ToString());
+                        UpdateHealthUI();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError("Error processing player data: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Player data does not exist in Firebase.");
+                }
+            }
+        });
     }
 }
