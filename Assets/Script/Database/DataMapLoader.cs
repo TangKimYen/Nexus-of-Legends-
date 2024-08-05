@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using Firebase.Database;
 using System.Collections;
 using TMPro;
+using UnityEngine.Networking;
 
 public class DataMapLoader : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class DataMapLoader : MonoBehaviour
     public TMP_Text DescriptionText;
     public TMP_Text DungeonText;
     public TMP_Text LevelRequireText;
+    public Image MapImage; // Image component for the map image
     public GameObject ViewMapInfo; // Popup UI
 
     // Firebase Database Reference
@@ -46,7 +48,7 @@ public class DataMapLoader : MonoBehaviour
 
         if (jsonData != null)
         {
-            InformationMap informationMap = JsonUtility.FromJson<InformationMap>(jsonData);
+            InformationMapData informationMap = JsonUtility.FromJson<InformationMapData>(jsonData);
             UpdateUI(informationMap);
         }
         else
@@ -56,7 +58,7 @@ public class DataMapLoader : MonoBehaviour
     }
 
     // Method to update the UI with the loaded map data
-    void UpdateUI(InformationMap map)
+    void UpdateUI(InformationMapData map)
     {
         if (map != null)
         {
@@ -64,7 +66,29 @@ public class DataMapLoader : MonoBehaviour
             DescriptionText.text = map.description;
             DungeonText.text = "" + map.dungeon;
             LevelRequireText.text = "" + map.levelrequire;
+
+            // Load and display the map image
+            StartCoroutine(LoadMapImage(map.imageUrl)); // Assuming imageUrl is a field in InformationMapData
+
             ViewMapInfo.SetActive(true); // Show the popup
+        }
+    }
+
+    // Coroutine to load and set the map image
+    IEnumerator LoadMapImage(string imageUrl)
+    {
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(imageUrl))
+        {
+            yield return uwr.SendWebRequest();
+            if (uwr.result == UnityWebRequest.Result.ConnectionError || uwr.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError(uwr.error);
+            }
+            else
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
+                MapImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            }
         }
     }
 
@@ -75,6 +99,7 @@ public class DataMapLoader : MonoBehaviour
     }
 }
 
+
 // Define the InformationMap class (if not already defined elsewhere)
 [System.Serializable]
 public class InformationMapData
@@ -83,4 +108,6 @@ public class InformationMapData
     public string description;
     public string dungeon;
     public string levelrequire;
+    public string imageUrl; // URL of the map image
 }
+
