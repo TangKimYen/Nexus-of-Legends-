@@ -162,9 +162,25 @@ public class RegisterAction : MonoBehaviour
         }
 
         // Kiểm tra độ dài của username
-        if (username.Length > 16)
+        if (username.Length < 6 || username.Length > 12)
         {
-            errorMessage = "Username must be 16 characters or less.";
+            errorMessage = "Username must be between 6 and 12 characters.";
+            return false;
+        }
+
+        // Kiểm tra định dạng của username
+        string usernamePattern = @"^[A-Z][a-zA-Z0-9]*$";
+        if (!Regex.IsMatch(username, usernamePattern))
+        {
+            errorMessage = "Username must start with an uppercase letter, contain only letters and numbers, and have no spaces.";
+            return false;
+        }
+
+        // Kiểm tra định dạng của mật khẩu
+        string passwordPattern = @"^\d{6}$";
+        if (!Regex.IsMatch(password, passwordPattern))
+        {
+            errorMessage = "Password must contain exactly 6 numbers.";
             return false;
         }
 
