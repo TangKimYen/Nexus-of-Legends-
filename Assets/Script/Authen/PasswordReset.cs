@@ -4,6 +4,7 @@ using UnityEngine;
 using Firebase.Auth;
 using UnityEngine.SceneManagement;
 using Firebase;
+using System.Text.RegularExpressions;
 
 public class PasswordResetAction : MonoBehaviour
 {
@@ -49,6 +50,12 @@ public class PasswordResetAction : MonoBehaviour
     {
         // Kiểm tra xem các trường có bị trống không
         if (string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+        {
+            return false;
+        }
+        // Kiểm tra định dạng của mật khẩu mới
+        string passwordPattern = @"^\d{6}$";
+        if (!Regex.IsMatch(newPassword, passwordPattern))
         {
             return false;
         }
