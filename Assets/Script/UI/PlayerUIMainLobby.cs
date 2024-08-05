@@ -16,6 +16,8 @@ public class PlayerUIMainLobby : MonoBehaviour
     public Image avatarImage;
     public Image expBar;
     public TMP_Text expText;
+    public int health;
+    public TMP_Text healthText;
 
     public Sprite c01AssassinAvatar;
     public Sprite c02ArcherAvatar;
@@ -32,11 +34,9 @@ public class PlayerUIMainLobby : MonoBehaviour
     public float expToNextLevel;
 
     public static PlayerUI Instance { get; private set; }
+    public static PlayerUIMainLobby MainLobbyUIInstance;
     private DatabaseReference reference;
-
-    void Awake()
-    {
-    }
+    private DatabaseReference referenceHealth;
 
     void Start()
     {
@@ -44,7 +44,12 @@ public class PlayerUIMainLobby : MonoBehaviour
         LoadPlayerData();
     }
 
-    void LoadPlayerData()
+    private void Awake()
+    {
+        MainLobbyUIInstance = this;
+    }
+
+    public void LoadPlayerData()
     {
         reference = FirebaseDatabase.DefaultInstance.GetReference("players").Child(PlayerData.instance.username);
         reference.GetValueAsync().ContinueWithOnMainThread(task => {
@@ -90,6 +95,33 @@ public class PlayerUIMainLobby : MonoBehaviour
                                 avatarImage.sprite = c02ArcherAvatar; // Hoặc đặt avatar mặc định
                                 break;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError("Error processing player data: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Player data does not exist in Firebase.");
+                }
+            }
+        });
+        referenceHealth = FirebaseDatabase.DefaultInstance.GetReference("PlayerCurrentStat").Child(PlayerData.instance.username);
+        referenceHealth.GetValueAsync().ContinueWithOnMainThread(taskk => {
+            if (taskk.IsFaulted)
+            {
+                Debug.LogError("Unable to retrieve player data from Firebase: " + taskk.Exception);
+            }
+            else if (taskk.IsCompleted)
+            {
+                DataSnapshot snapshott = taskk.Result;
+                if (snapshott.Exists)
+                {
+                    try
+                    {
+                        health = int.Parse(snapshott.Child("currentBlood").Value.ToString());
+                        healthText.text = $"{health}/{health}";
                     }
                     catch (Exception ex)
                     {

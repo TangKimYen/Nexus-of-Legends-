@@ -41,6 +41,7 @@ public class SellItemPopup : MonoBehaviour
         if (inventory != null && !string.IsNullOrEmpty(currentItemId))
         {
             inventory.SellItem(currentItemId, currentItemPrice);
+            PlayerUIMainLobby.MainLobbyUIInstance.LoadPlayerData();
         }
         ClosePopup();
     }
