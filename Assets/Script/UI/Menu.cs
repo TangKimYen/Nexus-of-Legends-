@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,11 @@ public class Menu : MonoBehaviour
     public void PartyButton()
     {
         SceneManager.LoadScene("PartyLobby");
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.Log("Connecting to server.");
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 
     public void ShopButton()

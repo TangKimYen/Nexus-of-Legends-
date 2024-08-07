@@ -13,12 +13,21 @@ public class PlayerStats : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject[] LevelUpEffect;
     public PlayerCurrentStats playerCurrentStat;
     private DatabaseReference reference;
+    private DatabaseReference currentStatReference;
     private float strength;
     private float intellect;
     public int damage;
     [SerializeField] private AudioSource levelUpSound;
 
     public static PlayerStats Instance;
+
+    public int level;
+    public float currentExp;
+    public float expToNextLevel;
+    public float gold;
+    public int baseExp = 100;
+    public float growthFactor = 1.5f;
+
     private void Awake()
 {
     if (Instance == null)
@@ -28,63 +37,42 @@ public class PlayerStats : MonoBehaviourPunCallbacks
     }
     else if (Instance != this)
     {
-        Destroy(gameObject);
+        Instance = this;
     }
 }
     void Start()
     {
         playerUI = GetComponent<PlayerUI>();
-        if (playerUI == null)
-        {
-            Debug.LogError("PlayerUI component is not found on this GameObject.");
-            return;
-        }
-        reference = FirebaseDatabase.DefaultInstance.RootReference;
+        reference = FirebaseDatabase.DefaultInstance.GetReference("players").Child(PlayerData.instance.username);
+        currentStatReference = FirebaseDatabase.DefaultInstance.GetReference("PlayerCurrentStat").Child(PlayerData.instance.username);
         LoadData();
     }
 
     public void AddExp(int amount)
     {
-        if (PlayerUI.Instance == null)
-        {
-            Debug.LogError("PlayerUI.Instance is null. Ensure that PlayerUI is initialized.");
-            return;
-        }
-        PlayerUI.Instance.currentExp += amount;
-        if (PlayerUI.Instance.currentExp >= PlayerUI.Instance.expToNextLevel)
+        currentExp += amount;
+        if (currentExp >= expToNextLevel)
         {
             LevelUp();
         }
-        PlayerUI.Instance.SavePlayerData();
-        playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel, PlayerUI.Instance.level);
+        SavePlayerData();
+        UpdateExpUI();
     }
 
     public void AddGold(int amount)
     {
-        if (PlayerUI.Instance == null)
-        {
-            Debug.LogError("PlayerUI.Instance is null. Ensure that PlayerUI is initialized.");
-            return;
-        }
-
-        PlayerUI.Instance.gold += amount;
-        playerUI.UpdateGoldUI();
-        PlayerUI.Instance.SavePlayerData();
+        gold += amount;
+        SavePlayerData();
+        UpdateGoldUI();
     }
 
     void LevelUp()
     {
-        if (PlayerUI.Instance == null)
-        {
-            Debug.LogError("PlayerUI.Instance is null. Ensure that PlayerUI is initialized.");
-            return;
-        }
-
-        PlayerUI.Instance.currentExp -= PlayerUI.Instance.expToNextLevel;
-        PlayerUI.Instance.level++;
-        PlayerUI.Instance.expToNextLevel = PlayerUI.Instance.CalculateExpToNextLevel(PlayerUI.Instance.level);
-        PlayerUI.Instance.SavePlayerData();
-        playerUI.UpdateExpUI(PlayerUI.Instance.currentExp, PlayerUI.Instance.expToNextLevel, PlayerUI.Instance.level);
+        currentExp -= expToNextLevel;
+        level++;
+        expToNextLevel = CalculateExpToNextLevel(level);
+        SavePlayerData();
+        UpdateExpUI();
 
         levelUpSound.Play();
         LevelUpEffects();
@@ -132,24 +120,71 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         }
 
         Debug.Log("Loading data for: " + PlayerData.instance.username);
-        var serverCurrentData = reference.Child("PlayerCurrentStat").Child(PlayerData.instance.username).GetValueAsync();
-        yield return new WaitUntil(predicate: () => serverCurrentData.IsCompleted);
 
-        Debug.Log("Quá trình tải stat hiện tại đã hoàn tất!");
+        // Load level, exp, and gold from the "players" node
+        var serverPlayerData = reference.GetValueAsync();
+        yield return new WaitUntil(predicate: () => serverPlayerData.IsCompleted);
+
+        DataSnapshot playerSnapshot = serverPlayerData.Result;
+        if (playerSnapshot.Exists)
+        {
+            level = int.Parse(playerSnapshot.Child("level").Value.ToString());
+            currentExp = float.Parse(playerSnapshot.Child("exp").Value.ToString());
+            gold = float.Parse(playerSnapshot.Child("gold").Value.ToString());
+            expToNextLevel = CalculateExpToNextLevel(level);
+        }
+        else
+        {
+            Debug.LogWarning("Player data does not exist in Firebase.");
+        }
+
+        // Load strength and intellect from the "PlayerCurrentStat" node
+        var serverCurrentData = currentStatReference.GetValueAsync();
+        yield return new WaitUntil(predicate: () => serverCurrentData.IsCompleted);
 
         DataSnapshot currentSnapshot = serverCurrentData.Result;
         string jsonCurrentData = currentSnapshot.GetRawJsonValue();
 
         if (jsonCurrentData != null)
         {
-            Debug.Log("Dữ liệu stat hiện tại được tìm thấy.");
             playerCurrentStat = JsonUtility.FromJson<PlayerCurrentStats>(jsonCurrentData);
             strength = playerCurrentStat.currentStrength;
             intellect = playerCurrentStat.currentIntellect;
         }
         else
         {
-            Debug.Log("Dữ liệu stat hiện tại không được tìm thấy.");
+            Debug.LogWarning("Player current stat data does not exist in Firebase.");
+        }
+
+        UpdateExpUI();
+        UpdateGoldUI();
+    }
+
+    public void SavePlayerData()
+    {
+        reference.Child("level").SetValueAsync(level);
+        reference.Child("exp").SetValueAsync(currentExp);
+        reference.Child("gold").SetValueAsync(gold);
+    }
+
+    public float CalculateExpToNextLevel(int level)
+    {
+        return Mathf.FloorToInt(baseExp * Mathf.Pow(level, growthFactor));
+    }
+
+    public void UpdateExpUI()
+    {
+        if (playerUI != null)
+        {
+            playerUI.UpdateExpUI(currentExp, expToNextLevel, level);
+        }
+    }
+
+    public void UpdateGoldUI()
+    {
+        if (playerUI != null)
+        {
+            playerUI.UpdateGoldUI(gold);
         }
     }
 
@@ -157,12 +192,16 @@ public class PlayerStats : MonoBehaviourPunCallbacks
     {
         if (playerCurrentStat == null)
         {
-            Debug.LogError("PlayerCurrentStats chưa được tải.");
             return 0;
         }
 
         damage = Mathf.FloorToInt(strength + intellect * 2);
         Debug.Log(damage);
         return damage;
+    }
+
+    public float GetIntellect()
+    {
+        return intellect;
     }
 }

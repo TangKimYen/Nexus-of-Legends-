@@ -1,11 +1,12 @@
 ﻿using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private Image icon;
-    [SerializeField] private Text coin;
+    [SerializeField] private TMP_Text coin;
     [SerializeField] private PopupConfirm popupManager;
     [SerializeField] private ItemTooltip tooltip;
 

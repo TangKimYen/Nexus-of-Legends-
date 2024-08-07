@@ -16,6 +16,7 @@ public class AssassinMovements : MonoBehaviour
     private float dirX = 0f;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
+    public Canvas PlayerStatus;
 
     private enum MovementState { idle, running, jumping, falling }
 
@@ -56,11 +57,13 @@ public class AssassinMovements : MonoBehaviour
         {
             state = MovementState.running;
             transform.localScale = Vector3.one;
+            PlayerStatus.transform.localScale = new Vector3(1, 1, 1);
         }
         else if (dirX < 0f)
         {
             state = MovementState.running;
             transform.localScale = new Vector3(-1, 1, 1);
+            PlayerStatus.transform.localScale = new Vector3(-1, 1, 1);
         }
         else
         {
