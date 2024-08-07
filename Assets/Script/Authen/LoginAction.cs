@@ -227,12 +227,15 @@ public class LoginAction : MonoBehaviour
 
     public void OnCloseLoginPopup()
     {
-        // Reset thông báo đăng nhập thành công
+        // Reset thông báo đăng nhập thành công hoặc thất bại
         if (messageText != null)
         {
             messageText.text = "";
             messageText.gameObject.SetActive(false);
         }
+
+        // Reset các trường nhập liệu
+        ResetInputFields();
 
         // Ẩn popup đăng nhập khi người dùng nhấn nút close
         if (loginPopup != null)
