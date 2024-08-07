@@ -116,7 +116,7 @@ public class LoginAction : MonoBehaviour
                 FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
                 AuthError errorCode = (AuthError)firebaseException.ErrorCode;
                 messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
-                messageText.text = "Login failed: " + errorCode.ToString();
+                messageText.text = "Login failed: Invalid username."/* + errorCode.ToString()*/;
                 messageText.gameObject.SetActive(true);
                 loadingScreen.SetActive(false);
             }
