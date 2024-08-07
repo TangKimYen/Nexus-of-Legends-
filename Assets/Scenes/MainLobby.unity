@@ -335,6 +335,7 @@ GameObject:
   - component: {fileID: 8914996}
   - component: {fileID: 8914998}
   - component: {fileID: 8914997}
+  - component: {fileID: 8914999}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -399,6 +400,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8914995}
   m_CullTransparentMesh: 1
+--- !u!114 &8914999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb1c5fa12e079234b8a76162dabd44ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgrounds:
+  - {fileID: 21300000, guid: ee288e793abddb64b8dff4200c354f83, type: 3}
+  - {fileID: 21300000, guid: 6e24bbeaa2bacb54d8f19771783015cc, type: 3}
+  - {fileID: 21300000, guid: 0bc3bd474eded3d4fb318a1ff9b8c7e7, type: 3}
+  - {fileID: 21300000, guid: a0f4be18fdac69040bfa6328af13f02f, type: 3}
+  - {fileID: 21300000, guid: 79ad29ea04e53f348ab38eb98b32e385, type: 3}
+  - {fileID: 21300000, guid: 79d5ed7231752e441ab4ed0af5565ff8, type: 3}
+  targetImage: {fileID: 8914997}
 --- !u!1 &24992144
 GameObject:
   m_ObjectHideFlags: 0
@@ -1590,7 +1611,6 @@ RectTransform:
   - {fileID: 729331476}
   - {fileID: 371032133}
   - {fileID: 1349925541}
-  - {fileID: 1745519302}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1814,7 +1834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6878320048926655658, guid: 60a3bb88a65e98a4cad6ba70985ffcde, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 68117
+      value: 73828.06
       objectReference: {fileID: 0}
     - target: {fileID: 7154961910123706903, guid: 60a3bb88a65e98a4cad6ba70985ffcde, type: 3}
       propertyPath: m_Name
@@ -14800,7 +14820,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 782832933}
   - {fileID: 2072144784}
   - {fileID: 791917623}
   m_Father: {fileID: 1296487191}
@@ -27271,9 +27290,8 @@ RectTransform:
   - {fileID: 2019947476}
   - {fileID: 708266252}
   - {fileID: 138058882}
-  - {fileID: 407083818}
   - {fileID: 1671564581}
-  m_Father: {fileID: 1745519302}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -45147,7 +45165,6 @@ RectTransform:
   m_Children:
   - {fileID: 511952147}
   - {fileID: 1991579225}
-  - {fileID: 1934267902}
   m_Father: {fileID: 1296487191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -48618,3 +48635,4 @@ SceneRoots:
   - {fileID: 789620272}
   - {fileID: 1811509437}
   - {fileID: 724365150}
+  - {fileID: 1296487191}

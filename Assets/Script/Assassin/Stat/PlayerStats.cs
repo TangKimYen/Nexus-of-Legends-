@@ -14,6 +14,8 @@ public class PlayerStats : MonoBehaviourPunCallbacks
     public PlayerCurrentStats playerCurrentStat;
     private DatabaseReference reference;
     private DatabaseReference currentStatReference;
+    private DatabaseReference baseStatReference;
+    public PlayerBaseStat playerBaseStat;
     private float strength;
     private float intellect;
     public int damage;
@@ -45,6 +47,7 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         playerUI = GetComponent<PlayerUI>();
         reference = FirebaseDatabase.DefaultInstance.GetReference("players").Child(PlayerData.instance.username);
         currentStatReference = FirebaseDatabase.DefaultInstance.GetReference("PlayerCurrentStat").Child(PlayerData.instance.username);
+        baseStatReference = FirebaseDatabase.DefaultInstance.GetReference("PlayerBaseStat").Child(PlayerData.instance.username);
         LoadData();
     }
 
@@ -77,6 +80,7 @@ public class PlayerStats : MonoBehaviourPunCallbacks
         levelUpSound.Play();
         LevelUpEffects();
         photonView.RPC("LevelUpEffectRPC", RpcTarget.All, spamPoint.position, transform.localScale.x);
+        IncreaseBaseStats();
     }
 
     public void LevelUpEffects()
@@ -156,6 +160,20 @@ public class PlayerStats : MonoBehaviourPunCallbacks
             Debug.LogWarning("Player current stat data does not exist in Firebase.");
         }
 
+        // Load base stats from the "PlayerBaseStat" node
+        var serverBaseStatData = baseStatReference.GetValueAsync();
+        yield return new WaitUntil(predicate: () => serverBaseStatData.IsCompleted);
+
+        DataSnapshot baseStatSnapshot = serverBaseStatData.Result;
+        if (baseStatSnapshot.Exists)
+        {
+            playerBaseStat = JsonUtility.FromJson<PlayerBaseStat>(baseStatSnapshot.GetRawJsonValue());
+        }
+        else
+        {
+            Debug.LogWarning("Player base stats do not exist in Firebase.");
+        }
+
         UpdateExpUI();
         UpdateGoldUI();
     }
@@ -203,5 +221,23 @@ public class PlayerStats : MonoBehaviourPunCallbacks
     public float GetIntellect()
     {
         return intellect;
+    }
+
+    private void IncreaseBaseStats()
+    {
+        playerBaseStat.baseStrength += 5; 
+        playerBaseStat.baseIntellect += 3;
+        playerBaseStat.baseDefense += 0.5f; 
+        playerBaseStat.baseBlood += 20;
+        playerBaseStat.baseMovement += 0.5f;
+        playerBaseStat.baseAttackSpeed += 0.2f;
+
+        SaveBaseStats();
+    }
+
+    public void SaveBaseStats()
+    {
+        string jsonBaseStats = JsonUtility.ToJson(playerBaseStat);
+        baseStatReference.SetRawJsonValueAsync(jsonBaseStats);
     }
 }
