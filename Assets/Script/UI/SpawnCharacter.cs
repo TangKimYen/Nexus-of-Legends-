@@ -5,26 +5,32 @@ using Photon.Pun;
 
 public class SpawnCharacter : MonoBehaviourPunCallbacks
 {
-    public GameObject[] characterPrefabs; // Array to hold all player prefabs
-    public Transform spawnPoint; // Spawn point for the characters
+     public GameObject[] characterPrefabs; // Array to hold all player prefabs
+    public Transform[] spawnPoints; // Array of spawn points for the characters
 
     // Start is called before the first frame update
     void Start()
     {
-        // Get the characterId of the player
-        string characterId = PlayerData.instance.characterId;
-
-        // Map the characterId to the index in the prefabs array
-        int characterIndex = GetCharacterIndex(characterId);
-
-        if (characterIndex >= 0 && characterIndex < characterPrefabs.Length)
+        if (PhotonNetwork.IsConnected)
         {
-            // Instantiate the character based on the index
-            GameObject player = PhotonNetwork.Instantiate(characterPrefabs[characterIndex].name, spawnPoint.position, Quaternion.identity, 0);
-        }
-        else
-        {
-            Debug.LogError("Invalid characterId: " + characterId);
+            // Get the characterId of the player
+            string characterId = PlayerData.instance.characterId;
+
+            // Map the characterId to the index in the prefabs array
+            int characterIndex = GetCharacterIndex(characterId);
+
+            if (characterIndex >= 0 && characterIndex < characterPrefabs.Length)
+            {
+                // Get a random spawn point
+                Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+
+                // Instantiate the character based on the index
+                GameObject player = PhotonNetwork.Instantiate(characterPrefabs[characterIndex].name, spawnPoint.position, Quaternion.identity, 0);
+            }
+            else
+            {
+                Debug.LogError("Invalid characterId: " + characterId);
+            }
         }
     }
 

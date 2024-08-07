@@ -868,6 +868,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2078257471355822243}
   - component: {fileID: 667536905715456506}
+  - component: {fileID: 6609689827203950048}
+  - component: {fileID: 7636949383200181376}
   m_Layer: 5
   m_Name: SkillsHolder
   m_TagString: Untagged
@@ -922,3 +924,37 @@ MonoBehaviour:
     cooldownText: {fileID: 7047781143766760885}
     cooldownTime: 10
     cooldownRemaining: 0
+--- !u!114 &6609689827203950048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8135746028206090907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7636949383200181376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8135746028206090907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ce5592f4b280146a2ffe4f40189be1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

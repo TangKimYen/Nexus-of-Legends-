@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class HealController : MonoBehaviour
 {
-    [SerializeField] private int healAmount;
+    [SerializeField] private int baseHealAmount;
+    private PlayerStats playerStats;
 
     public static HealController Instance { get; private set; }
 
@@ -21,13 +22,30 @@ public class HealController : MonoBehaviour
         }
     }
 
-    public int GetHealAmount()
+    private void Start()
     {
-        return healAmount;
+        playerStats = PlayerStats.Instance;
+        if (playerStats == null)
+        {
+            Debug.LogError("PlayerStats instance is not found. Ensure that PlayerStats is initialized.");
+        }
     }
 
-    public void SetHealAmount(int amount)
+    public int GetHealAmount()
     {
-        healAmount = amount;
+        if (playerStats == null)
+        {
+            Debug.LogError("PlayerStats instance is not found. Ensure that PlayerStats is initialized.");
+            return baseHealAmount; // Return base heal amount if playerStats is not available
+        }
+
+        return Mathf.FloorToInt(baseHealAmount + playerStats.GetIntellect() * 1.5f); // Example calculation
     }
+
+    public void SetBaseHealAmount(int amount)
+    {
+        baseHealAmount = amount;
+    }
+
+
 }

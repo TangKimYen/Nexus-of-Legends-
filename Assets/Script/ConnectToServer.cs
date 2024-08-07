@@ -503,8 +503,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public void ReturnLobby()
     {
         RemovePlayerFromFirebase(PhotonNetwork.LocalPlayer);
+        PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
-        PhotonNetwork.LoadLevel("MainLobby");
+        SceneManager.LoadScene("MainLobby");
     }
 
     public void JoinRoom(RoomInfo info)

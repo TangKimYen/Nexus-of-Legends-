@@ -342,6 +342,8 @@ public class RegisterAction : MonoBehaviour
                     {
                         Debug.LogError("PlayerData.instance is null!");
                     }
+                    AddItemToInventory(username, "ARMOR_1");
+                    AddItemToInventory(username, "BOOTS_1");
 
                     // Xóa thông tin trong các trường nhập liệu
                     ResetInputFields();
@@ -365,6 +367,28 @@ public class RegisterAction : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void AddItemToInventory(string username, string itemId)
+    {
+        ItemData newItem = new ItemData { itemId = itemId, isActive = true };
+
+        DatabaseReference reference = FirebaseDatabase.DefaultInstance
+            .GetReference("Inventory")
+            .Child(username)
+            .Child(itemId);
+
+        string json = JsonUtility.ToJson(newItem);
+        reference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task => {
+            if (task.IsCompleted)
+            {
+                Debug.Log($"Item {itemId} added to inventory successfully.");
+            }
+            else
+            {
+                Debug.LogError($"Failed to add item {itemId} to inventory: " + task.Exception);
+            }
+        });
     }
 
     private void ResetInputFields()
@@ -645,7 +669,7 @@ public class RegisterAction : MonoBehaviour
             var profileTask = user.UpdateUserProfileAsync(profile);
             yield return new WaitUntil(() => profileTask.IsCompleted);
 
-             string characterId = ""; // Để trống ban đầu
+            string characterId = ""; // Để trống ban đầu
             string characterName = "";
             float exp = 0;
             float gold = 1000;
@@ -709,6 +733,9 @@ public class RegisterAction : MonoBehaviour
                         Debug.LogError("PlayerData.instance is null!");
                     }
 
+                    AddItemToInventory(username, "ARMOR_1");
+                    AddItemToInventory(username, "BOOTS_1");
+
                     // Xóa thông tin trong các trường nhập liệu
                     ResetInputFields();
 
@@ -731,6 +758,28 @@ public class RegisterAction : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void AddItemToInventory(string username, string itemId)
+    {
+        ItemData newItem = new ItemData { itemId = itemId, isActive = true };
+
+        DatabaseReference reference = FirebaseDatabase.DefaultInstance
+            .GetReference("Inventory")
+            .Child(username)
+            .Child(itemId);
+
+        string json = JsonUtility.ToJson(newItem);
+        reference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task => {
+            if (task.IsCompleted)
+            {
+                Debug.Log($"Item {itemId} added to inventory successfully.");
+            }
+            else
+            {
+                Debug.LogError($"Failed to add item {itemId} to inventory: " + task.Exception);
+            }
+        });
     }
 
     private void ResetInputFields()

@@ -27,7 +27,7 @@ MonoBehaviour:
     EnableProtocolFallback: 1
     AuthMode: 0
     EnableLobbyStatistics: 0
-    NetworkLogging: 1
+    NetworkLogging: 0
   DevRegion: asia
   PunLogging: 0
   EnableSupportLogger: 0
@@ -60,6 +60,8 @@ MonoBehaviour:
   - RPC_RewardExp
   - LevelUpEffectRPC
   - RPC_RewardExpAndGold
+  - UpdateHealthRPC
+  - UpdatePlayerInfoRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

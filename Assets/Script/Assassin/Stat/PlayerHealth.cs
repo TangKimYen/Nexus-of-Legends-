@@ -35,7 +35,15 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     }
     void Start()
     {
-        LoadPlayerData();
+        if (photonView.IsMine)
+        {
+            LoadPlayerData();
+        }
+        else
+        {
+            // Load data from Photon custom properties
+            UpdateHealthUI();
+        }
     }
     private void Update()
     {
@@ -66,6 +74,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
             if (health <= 0)
             {
                 photonView.RPC("DieRPC", RpcTarget.All);
+                InGameManager.instance.PlayerDied();
             }
             else
             {
@@ -108,7 +117,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         deathSound.Play();
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
-        InGameManager.instance.PlayerDied();
     }
 
     private void UpdateHealthUI()
@@ -169,6 +177,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
                     {
                         health = int.Parse(snapshott.Child("currentBlood").Value.ToString());
                         maxHealth = int.Parse(snapshott.Child("currentBlood").Value.ToString());
+                        photonView.RPC("UpdateHealthRPC", RpcTarget.AllBuffered, health, maxHealth);
                         UpdateHealthUI();
                     }
                     catch (Exception ex)
@@ -182,5 +191,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
                 }
             }
         });
+    }
+
+    [PunRPC]
+    private void UpdateHealthRPC(int newHealth, int newMaxHealth)
+    {
+        health = newHealth;
+        maxHealth = newMaxHealth;
+        UpdateHealthUI();
     }
 }
