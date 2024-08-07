@@ -14,6 +14,9 @@ public class PlayerUIMainLobby : MonoBehaviour
     public TMP_Text gemText;
     public TMP_Text goldText;
     public Image avatarImage;
+    public Image skill1;
+    public Image skill2;
+    public Image skill3;
     public Image expBar;
     public TMP_Text expText;
     public int health;
@@ -23,6 +26,10 @@ public class PlayerUIMainLobby : MonoBehaviour
     public Sprite c02ArcherAvatar;
     public Sprite c03WarriorAvatar;
     public Sprite c04MagicanAvatar;
+    public Sprite[] skillAssassin;
+    public Sprite[] skillArcher;
+    public Sprite[] skillWarrior;
+    public Sprite[] skillMagican;
 
     public int baseExp = 100;
     public float growthFactor = 1.5f;
@@ -81,18 +88,33 @@ public class PlayerUIMainLobby : MonoBehaviour
                         {
                             case "c01":
                                 avatarImage.sprite = c01AssassinAvatar;
+                                skill1.sprite = skillAssassin[0];
+                                skill2.sprite = skillAssassin[1];
+                                skill3.sprite = skillAssassin[2];
                                 break;
                             case "c02":
                                 avatarImage.sprite = c02ArcherAvatar;
+                                skill1.sprite = skillArcher[0];
+                                skill2.sprite = skillArcher[1];
+                                skill3.sprite = skillArcher[2];
                                 break;
                             case "c03":
                                 avatarImage.sprite = c03WarriorAvatar;
+                                skill1.sprite = skillWarrior[0];
+                                skill2.sprite = skillWarrior[1];
+                                skill3.sprite = skillWarrior[2];
                                 break;
                             case "c04":
                                 avatarImage.sprite = c04MagicanAvatar;
+                                skill1.sprite = skillMagican[0];
+                                skill2.sprite = skillMagican[1];
+                                skill3.sprite = skillMagican[2];
                                 break;
                             default:
                                 avatarImage.sprite = c02ArcherAvatar; // Hoặc đặt avatar mặc định
+                                skill1.sprite = skillArcher[0];
+                                skill2.sprite = skillArcher[1];
+                                skill3.sprite = skillArcher[2];
                                 break;
                         }
                     }

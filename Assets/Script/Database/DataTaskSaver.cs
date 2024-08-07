@@ -7,6 +7,7 @@ using System;
 using TMPro;
 
 
+
 [Serializable]
 public class TaskBaseStats
 {
@@ -16,6 +17,7 @@ public class TaskBaseStats
     public int taskGold;
     public int taskExp;
     public bool taskStatus;
+    
 }
 
 public class DataTaskSaver : MonoBehaviour
@@ -29,12 +31,50 @@ public class DataTaskSaver : MonoBehaviour
      public TaskBaseStats taskBaseStats;
     public string taskId; // Add this line to specify which task to load
     DatabaseReference dbRef;
+    public Button rewardButton; // Add this line
 
     void Start()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        rewardButton.gameObject.SetActive(false); // Hide the reward button initially
         LoadAllTaskData();
     }
+
+    void CheckTaskCompletion()
+    {
+        if (taskBaseStats.taskStatus)
+        {
+            rewardButton.gameObject.SetActive(true); // Show the reward button if the task is completed
+        }
+        else
+        {
+            rewardButton.gameObject.SetActive(false); // Hide the reward button if the task is not completed
+        }
+    }
+
+    public void CompleteTask(string taskId)
+    {
+        dbRef.Child("ManageTasks").Child(taskId).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                string jsonData = snapshot.GetRawJsonValue();
+                if (jsonData != null)
+                {
+                    taskBaseStats = JsonUtility.FromJson<TaskBaseStats>(jsonData);
+                    taskBaseStats.taskStatus = true;
+                    SaveTaskData(taskId);
+                    CheckTaskCompletion();
+                }
+            }
+            else if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to retrieve task data: " + task.Exception);
+            }
+        });
+    }
+
 
     public void SaveTaskData(string taskNode)
     {
@@ -64,7 +104,7 @@ public class DataTaskSaver : MonoBehaviour
             TaskDesContent == null || TaskDesContent.Length < 8 ||
             TaskRequireContent == null || TaskRequireContent.Length < 8 ||
             TaskGoldContent == null || TaskGoldContent.Length < 8 ||
-            TaskExpContent == null || TaskExpContent.Length <8)
+            TaskExpContent == null || TaskExpContent.Length < 8)
         {
             Debug.LogError("One or more UI element arrays are not assigned or do not have 8 elements.");
             yield break;
@@ -99,7 +139,7 @@ public class DataTaskSaver : MonoBehaviour
                 TaskGoldContent[i - 1].text = taskBaseStats.taskGold.ToString();
                 TaskExpContent[i - 1].text = taskBaseStats.taskExp.ToString();
 
-               
+                CheckTaskCompletion(); // Check if the task is completed
             }
             else
             {
@@ -115,9 +155,9 @@ public class DataTaskSaver : MonoBehaviour
                 Debug.LogError("TaskNameContent UI element is not assigned or index out of range.");
             }
         }
-
-
     }
 
-   
+
+
+
 }

@@ -37,18 +37,14 @@ public class PlayerUI : MonoBehaviourPunCallbacks
     public float currentExp;
     public float expToNextLevel;
 
+    public Canvas AvatarCanvas;
+
     public static PlayerUI Instance { get; private set; }
     private DatabaseReference reference;
 
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
-
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -64,7 +60,6 @@ public class PlayerUI : MonoBehaviourPunCallbacks
         }
         else
         {
-            nameText.text = PhotonNetwork.NickName;
             arrowImage.enabled = false;
         }
     }
@@ -96,8 +91,9 @@ public class PlayerUI : MonoBehaviourPunCallbacks
                         playerLevelText.text = "Level: " + level.ToString();
                         goldText.text = gold.ToString();
                         gemText.text = gem.ToString();
+                        photonView.RPC("UpdatePlayerInfoRPC", RpcTarget.AllBuffered, PlayerData.instance.username, level, gold, gem, currentExp, expToNextLevel, characterId);
                         UpdateExpUI(currentExp, expToNextLevel, level);
-                        UpdateGoldUI();
+                        UpdateGoldUI(gold);
                         switch (characterId)
                         {
                             case "c01":
@@ -130,6 +126,19 @@ public class PlayerUI : MonoBehaviourPunCallbacks
         });
     }
 
+    [PunRPC]
+    private void UpdatePlayerInfoRPC(string name, int newLevel, float newGold, float newGem, float newCurrentExp, float newExpToNextLevel, string newCharacterId)
+    {
+        nameText.text = name;
+        playerLevelText.text = "Level: " + newLevel.ToString();
+        goldText.text = newGold.ToString();
+        gemText.text = newGem.ToString();
+        expBar.fillAmount = newCurrentExp / newExpToNextLevel;
+        expText.text = $"{newCurrentExp}/{newExpToNextLevel}";
+        characterId = newCharacterId;
+        UpdateAvatar();
+    }
+
     public float CalculateExpToNextLevel(int level)
     {
         return Mathf.FloorToInt(baseExp * Mathf.Pow(level, growthFactor));
@@ -142,7 +151,7 @@ public class PlayerUI : MonoBehaviourPunCallbacks
         playerLevelText.text = "Level: " + level.ToString();
     }
 
-    public void UpdateGoldUI()
+    public void UpdateGoldUI(float gold)
     {
         if (goldText != null)
         {
@@ -155,5 +164,27 @@ public class PlayerUI : MonoBehaviourPunCallbacks
         reference.Child("level").SetValueAsync(level);
         reference.Child("exp").SetValueAsync(currentExp);
         reference.Child("gold").SetValueAsync(gold);
+    }
+
+    public void UpdateAvatar()
+    {
+        switch (characterId)
+        {
+            case "c01":
+                avatarImage.sprite = c01AssassinAvatar;
+                break;
+            case "c02":
+                avatarImage.sprite = c02ArcherAvatar;
+                break;
+            case "c03":
+                avatarImage.sprite = c03WarriorAvatar;
+                break;
+            case "c04":
+                avatarImage.sprite = c04MagicanAvatar;
+                break;
+            default:
+                avatarImage.sprite = c02ArcherAvatar;
+                break;
+        }
     }
 }
