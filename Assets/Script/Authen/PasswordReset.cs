@@ -25,13 +25,42 @@ public class PasswordResetAction : MonoBehaviour
         ColorUtility.TryParseHtmlString("#007213", out successColor); // Màu xanh lục
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            OnResetPasswordButtonClicked();
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SelectNextInputField();
+        }
+    }
+
+    private void SelectNextInputField()
+    {
+        if (oldPasswordInput.isFocused)
+        {
+            newPasswordInput.Select();
+        }
+        else if (newPasswordInput.isFocused)
+        {
+            confirmPasswordInput.Select();
+        }
+        else if (confirmPasswordInput.isFocused)
+        {
+            oldPasswordInput.Select();
+        }
+    }
+
     public void OnResetPasswordButtonClicked()
     {
         string oldPassword = oldPasswordInput.text;
         string newPassword = newPasswordInput.text;
         string confirmPassword = confirmPasswordInput.text;
 
-        if (ValidatePasswords(oldPassword, newPassword, confirmPassword))
+        string validationMessage = ValidatePasswords(oldPassword, newPassword, confirmPassword);
+        if (validationMessage == null)
         {
             StartCoroutine(ResetPassword(oldPassword, newPassword));
         }
@@ -40,33 +69,38 @@ public class PasswordResetAction : MonoBehaviour
             if (messageText != null)
             {
                 messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
-                messageText.text = "Invalid password information.";
+                messageText.text = validationMessage;
                 messageText.gameObject.SetActive(true); // Hiển thị thông báo
             }
         }
     }
 
-    private bool ValidatePasswords(string oldPassword, string newPassword, string confirmPassword)
+    private string ValidatePasswords(string oldPassword, string newPassword, string confirmPassword)
     {
         // Kiểm tra xem các trường có bị trống không
         if (string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
         {
-            return false;
+            return "Fields cannot be empty.";
         }
-        // Kiểm tra định dạng của mật khẩu mới
-        string passwordPattern = @"^\d{6}$";
+        // Kiểm tra xem mật khẩu mới có trùng với mật khẩu cũ không
+        if (newPassword == oldPassword)
+        {
+            return "New password cannot be the same as the old password.";
+        }
+        // Kiểm tra định dạng của mật khẩu mới: chỉ chứa số và có độ dài tối thiểu 6 ký tự
+        string passwordPattern = @"^\d{6,}$";
         if (!Regex.IsMatch(newPassword, passwordPattern))
         {
-            return false;
+            return "New password must be at least 6 digits long.";
         }
 
         // Kiểm tra xem mật khẩu mới và xác nhận mật khẩu có khớp không
         if (newPassword != confirmPassword)
         {
-            return false;
+            return "Password confirmation does not match.";
         }
 
-        return true;
+        return null;
     }
 
     private IEnumerator ResetPassword(string oldPassword, string newPassword)
@@ -95,7 +129,7 @@ public class PasswordResetAction : MonoBehaviour
             else
             {
                 messageText.color = errorColor;  // Thiết lập màu đỏ cho thông báo lỗi
-                messageText.text = "Reauthentication failed: " + errorCode.ToString();
+                messageText.text = "The current password is incorrect.";// + errorCode.ToString();
             }
 
             messageText.gameObject.SetActive(true);
@@ -143,10 +177,20 @@ public class PasswordResetAction : MonoBehaviour
             messageText.gameObject.SetActive(false);
         }
 
+        // Reset các trường nhập liệu
+        ResetInputFields();
+
         // Ẩn popup đặt lại mật khẩu khi người dùng nhấn nút close
         if (resetPasswordPopup != null)
         {
             resetPasswordPopup.SetActive(false);
         }
+    }
+
+    private void ResetInputFields()
+    {
+        oldPasswordInput.text = "";
+        newPasswordInput.text = "";
+        confirmPasswordInput.text = "";
     }
 }
