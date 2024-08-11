@@ -3,34 +3,47 @@ using UnityEngine.UI;
 
 public class MusicSetting : MonoBehaviour
 {
-    // Nút cho nhạc nền
     public Button musicButtonOn;
     public Button musicButtonOff;
-
-    // Nút cho âm thanh của nhân vật
     public Button characterSoundButtonOn;
     public Button characterSoundButtonOff;
 
-    // AudioSource cho nhạc nền
     private RandomMusicPlayer randomMusicPlayer;
 
-    // AudioSource cho âm thanh của nhân vật
-    private AudioSource characterAudioSource;
-
-    // Các AudioClip liên quan đến nhân vật
+    // Mảng chứa tất cả các AudioSource của nhân vật
     public AudioSource[] characterAudioSources;
+    private PlayerAttack playerAttack;
+    private AssassinMovements assassinMovements;
+    private PlayerHealth playerHealth;
 
     private void Start()
     {
-        // Tìm đối tượng có script RandomMusicPlayer
         randomMusicPlayer = FindObjectOfType<RandomMusicPlayer>();
 
+        playerAttack = FindObjectOfType<PlayerAttack>();
+        assassinMovements = FindObjectOfType<AssassinMovements>();
+        playerHealth = FindObjectOfType<PlayerHealth>();
+
+        if (playerAttack != null && assassinMovements != null && playerHealth != null)
+        {
+            // Gán tất cả các AudioSource từ PlayerAttack, AssassinMovements và PlayerHealth vào mảng characterAudioSources
+            characterAudioSources = new AudioSource[]
+            {
+                playerAttack.attackSound,
+                playerAttack.skill1Sound,
+                playerAttack.skill2Sound,
+                playerAttack.skill3Sound,
+                assassinMovements.jumpSoundEffect,
+                playerHealth.hurtSound,
+                playerHealth.deathSound
+            };
+        }
         if (randomMusicPlayer == null)
         {
             Debug.LogError("Không tìm thấy RandomMusicPlayer trong scene!");
         }
 
-        // Gán các sự kiện cho các nút nhạc nền
+        // Gán sự kiện cho các nút nhạc nền
         if (musicButtonOn != null && musicButtonOff != null)
         {
             musicButtonOn.onClick.AddListener(TurnOnMusic);
@@ -41,7 +54,7 @@ public class MusicSetting : MonoBehaviour
             Debug.LogError("Music buttons không được gán đúng!");
         }
 
-        // Gán các sự kiện cho các nút âm thanh của nhân vật
+        // Gán sự kiện cho các nút âm thanh của nhân vật
         if (characterSoundButtonOn != null && characterSoundButtonOff != null)
         {
             characterSoundButtonOn.onClick.AddListener(TurnOnCharacterSounds);
@@ -71,19 +84,19 @@ public class MusicSetting : MonoBehaviour
         }
     }
 
-    // Bật âm thanh của nhân vật
+    // Bật tất cả âm thanh của nhân vật
     public void TurnOnCharacterSounds()
     {
         MuteCharacterSounds(false);
     }
 
-    // Tắt âm thanh của nhân vật
+    // Tắt tất cả âm thanh của nhân vật
     public void TurnOffCharacterSounds()
     {
         MuteCharacterSounds(true);
     }
 
-    // Tắt hoặc bật âm thanh của nhân vật
+    // Hàm bật/tắt âm thanh của nhân vật
     private void MuteCharacterSounds(bool isMuted)
     {
         foreach (AudioSource source in characterAudioSources)

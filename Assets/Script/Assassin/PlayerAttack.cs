@@ -27,10 +27,10 @@ public class PlayerAttack : MonoBehaviour
     private float cooldownSkill1 = Mathf.Infinity;
     private float cooldownSkill2 = Mathf.Infinity;
     private float cooldownSkill3 = Mathf.Infinity;
-    [SerializeField] private AudioSource attackSound;
-    [SerializeField] private AudioSource skill1Sound;
-    [SerializeField] private AudioSource skill2Sound;
-    [SerializeField] private AudioSource skill3Sound;
+    [SerializeField] public AudioSource attackSound;
+    [SerializeField] public AudioSource skill1Sound;
+    [SerializeField] public AudioSource skill2Sound;
+    [SerializeField] public AudioSource skill3Sound;
 
     private void Awake()
     {

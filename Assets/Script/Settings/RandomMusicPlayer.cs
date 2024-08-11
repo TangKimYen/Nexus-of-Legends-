@@ -40,7 +40,7 @@ public class RandomMusicPlayer : MonoBehaviour
                 availableClips = new List<AudioClip>(musicClips);
             }
 
-            // Đặt một hàm để gọi `PlayNextMusic` khi bài nhạc kết thúc
+            // Đặt một hàm để gọi PlayNextMusic khi bài nhạc kết thúc
             StartCoroutine(WaitForMusicToEnd());
         }
     }

@@ -23,6 +23,11 @@ public class PlayerData : MonoBehaviour
     public bool isLoggedIn;
     private DatabaseReference dbRef;
     private FirebaseAuth auth;
+    // Thêm các thuộc tính để lưu trạng thái âm thanh
+    public bool isMusicOn = true; // Mặc định là bật
+    public bool isCharacterSoundOn = true; // Mặc định là bật
+    public AudioSource[] characterAudioSources; // Thêm thuộc tính này
+
 
     void Awake()
     {
@@ -43,9 +48,13 @@ public class PlayerData : MonoBehaviour
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
         auth = FirebaseAuth.DefaultInstance;
+        // Tải trạng thái âm thanh khi bắt đầu
+        LoadSoundSettings();
+        characterAudioSources = FindObjectsOfType<AudioSource>();
     }
 
     public PlayerData() { }
+
 
     public void DeleteAccount()
     {
@@ -113,6 +122,32 @@ public class PlayerData : MonoBehaviour
                 else
                 {
                     Debug.LogError("Error deleting account from Realtime Database: " + task.Exception);
+                }
+            });
+        }
+    }
+    // Phương thức lưu trạng thái âm thanh vào Firebase
+    public void SaveSoundSettings()
+    {
+        if (!string.IsNullOrEmpty(username))
+        {
+            dbRef.Child("players").Child(username).Child("SoundSettings").Child("MusicOn").SetValueAsync(isMusicOn);
+            dbRef.Child("players").Child(username).Child("SoundSettings").Child("CharacterSoundOn").SetValueAsync(isCharacterSoundOn);
+        }
+    }
+
+    // Phương thức tải trạng thái âm thanh từ Firebase
+    public void LoadSoundSettings()
+    {
+        if (!string.IsNullOrEmpty(username))
+        {
+            dbRef.Child("players").Child(username).Child("SoundSettings").GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCompleted && task.Result.Exists)
+                {
+                    DataSnapshot snapshot = task.Result;
+                    isMusicOn = snapshot.Child("MusicOn").Value != null && bool.Parse(snapshot.Child("MusicOn").Value.ToString());
+                    isCharacterSoundOn = snapshot.Child("CharacterSoundOn").Value != null && bool.Parse(snapshot.Child("CharacterSoundOn").Value.ToString());
                 }
             });
         }
