@@ -20,7 +20,7 @@ public class AssassinMovements : MonoBehaviour
 
     private enum MovementState { idle, running, jumping, falling }
 
-    [SerializeField] private AudioSource jumpSoundEffect;
+    [SerializeField] public AudioSource jumpSoundEffect;
 
     // Start is called before the first frame update
     private void Start()

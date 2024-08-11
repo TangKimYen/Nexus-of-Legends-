@@ -22,8 +22,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     [SerializeField] private Transform healPoint;
     [SerializeField] private GameObject[] HealEffect;
 
-    [SerializeField] private AudioSource deathSound;
-    [SerializeField] private AudioSource hurtSound;
+    [SerializeField] public AudioSource deathSound;
+    [SerializeField] public AudioSource hurtSound;
     private DatabaseReference reference;
 
     // Start is called before the first frame update
