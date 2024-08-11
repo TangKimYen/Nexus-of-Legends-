@@ -53,4 +53,11 @@ public class RandomMusicPlayer : MonoBehaviour
         // Phát bài nhạc tiếp theo
         PlayNextMusic();
     }
+    public void MuteAudio(bool isMuted)
+    {
+        if (audioSource != null)
+        {
+            audioSource.mute = isMuted;
+        }
+    }
 }
