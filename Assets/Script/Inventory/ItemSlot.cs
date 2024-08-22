@@ -33,18 +33,6 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
-    private void Awake()
-    {
-        if (popupManager == null)
-        {
-            popupManager = FindObjectOfType<SellItemPopup>();
-            if (popupManager == null)
-            {
-                Debug.LogError("PopupManager không tìm thấy trong cảnh.");
-            }
-        }
-    }
-
     protected virtual void OnValidate()
     {
         if (image == null)
