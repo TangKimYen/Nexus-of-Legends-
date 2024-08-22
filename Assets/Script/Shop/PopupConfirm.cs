@@ -9,26 +9,28 @@ public class PopupConfirm : MonoBehaviour
     [SerializeField] private GameObject popupPanel;
     [SerializeField] private Text itemNameText;
     [SerializeField] private Button confirmButton;
-    [SerializeField] private GameObject insufficientGoldPopup; // Popup thông báo không đủ vàng
-    [SerializeField] private Text insufficientGoldText; // Thêm Text để hiển thị thông báo không đủ vàng
+    [SerializeField] private GameObject insufficientGoldPopup; // Popup thông báo không đủ vàng hoặc gem
+    [SerializeField] private Text insufficientGoldText; // Thêm Text để hiển thị thông báo không đủ vàng hoặc gem
 
     private string currentItemId;
     private float itemPrice;
+    private bool isGemPurchase; // Biến để lưu trạng thái mua bằng gem
 
     private void Start()
     {
         popupPanel.SetActive(false); // Ẩn pop-up khi bắt đầu
         confirmButton.onClick.AddListener(OnConfirmClick); // Đăng ký sự kiện cho nút xác nhận
-        insufficientGoldPopup.SetActive(false); // Ẩn pop-up thông báo không đủ vàng khi bắt đầu
+        insufficientGoldPopup.SetActive(false); // Ẩn pop-up thông báo không đủ vàng/gem khi bắt đầu
     }
 
     // Hiển thị pop-up với tên item
-    public void ShowPopup(string itemName, string itemId, float price)
+    public void ShowPopup(string itemName, string itemId, float price, bool isGem)
     {
         Debug.Log($"ShowPopup called with itemName: {itemName}, itemId: {itemId}");
         itemNameText.text = $"Are you sure you want to buy {itemName}?";
         currentItemId = itemId;
         itemPrice = price;
+        isGemPurchase = isGem; // Lưu lại trạng thái mua bằng gem hay không
         popupPanel.SetActive(true);
         Debug.Log("Popup panel should now be active.");
     }
@@ -36,7 +38,7 @@ public class PopupConfirm : MonoBehaviour
     // Xử lý logic khi nhấn nút confirm
     private void OnConfirmClick()
     {
-        CheckPlayerGoldAndProceed();
+        CheckPlayerCurrencyAndProceed();
     }
 
     // Đóng pop-up khi nhấn nút
@@ -46,29 +48,31 @@ public class PopupConfirm : MonoBehaviour
         popupPanel.SetActive(false);
     }
 
-    private void CheckPlayerGoldAndProceed()
+    private void CheckPlayerCurrencyAndProceed()
     {
         DatabaseReference reference = FirebaseDatabase.DefaultInstance
             .GetReference("players")
             .Child(PlayerData.instance.username);
 
-        reference.Child("gold").GetValueAsync().ContinueWithOnMainThread(task => {
+        string currencyType = isGemPurchase ? "gem" : "gold"; // Kiểm tra loại tiền tệ (gem hoặc vàng)
+
+        reference.Child(currencyType).GetValueAsync().ContinueWithOnMainThread(task => {
             if (task.IsCompleted)
             {
                 DataSnapshot snapshot = task.Result;
                 if (snapshot.Exists)
                 {
-                    float playerGold = float.Parse(snapshot.Value.ToString());
+                    float playerCurrency = float.Parse(snapshot.Value.ToString());
 
-                    if (playerGold >= itemPrice)
+                    if (playerCurrency >= itemPrice)
                     {
-                        DeductPlayerGold(playerGold - itemPrice);
+                        DeductPlayerCurrency(playerCurrency - itemPrice, currencyType);
                         AddItemToInventory(currentItemId);
                         ClosePopup();
                     }
                     else
                     {
-                        ShowInsufficientGoldPopup();
+                        ShowInsufficientGoldPopup($"You do not have enough {currencyType} to buy this item.");
                     }
                 }
                 else
@@ -79,27 +83,34 @@ public class PopupConfirm : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Failed to retrieve player gold: " + task.Exception);
-                ShowInsufficientGoldPopup("Failed to retrieve player gold.");
+                Debug.LogError("Failed to retrieve player currency: " + task.Exception);
+                ShowInsufficientGoldPopup("Failed to retrieve player currency.");
             }
         });
     }
 
-    private void DeductPlayerGold(float newGoldAmount)
+    private void DeductPlayerCurrency(float newCurrencyAmount, string currencyType)
     {
         DatabaseReference reference = FirebaseDatabase.DefaultInstance
             .GetReference("players")
             .Child(PlayerData.instance.username)
-            .Child("gold");
+            .Child(currencyType);
 
-        reference.SetValueAsync(newGoldAmount).ContinueWithOnMainThread(task => {
-            
+        reference.SetValueAsync(newCurrencyAmount).ContinueWithOnMainThread(task => {
+            if (task.IsCompleted)
+            {
+                Debug.Log($"{currencyType} deducted successfully.");
+            }
+            else
+            {
+                Debug.LogError($"Failed to deduct {currencyType}: " + task.Exception);
+            }
         });
     }
 
-    private void ShowInsufficientGoldPopup(string message = "You do not have enough gold to buy this item")
+    private void ShowInsufficientGoldPopup(string message = "You do not have enough currency to buy this item")
     {
-        Debug.Log("Showing insufficient gold popup: " + message);
+        Debug.Log("Showing insufficient currency popup: " + message);
         insufficientGoldText.text = message; // Cập nhật văn bản của popup
         insufficientGoldPopup.SetActive(true);
     }
