@@ -45,6 +45,12 @@ public class LogoutInMainLobby : MonoBehaviour
             PlayerPrefs.DeleteKey("level");
             PlayerPrefs.Save();
 
+            // Reset PlayerData instance
+            if (PlayerData.instance != null)
+            {
+                PlayerData.instance.LogoutAndReturnToTitleScreen();
+            }
+
             // Hiển thị thông báo đăng xuất thành công (nếu cần)
             if (messageText != null)
             {

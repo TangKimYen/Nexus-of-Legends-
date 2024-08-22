@@ -63,7 +63,12 @@ public class LogoutAction : MonoBehaviour
             PlayerPrefs.DeleteKey("gem");
             PlayerPrefs.DeleteKey("level");
             PlayerPrefs.Save();
-
+            
+            // Reset PlayerData instance
+            if (PlayerData.instance != null)
+            {
+                PlayerData.instance.LogoutAndReturnToTitleScreen();
+            }
             // Hiển thị thông báo đăng xuất thành công
             if (messageText != null)
             {
