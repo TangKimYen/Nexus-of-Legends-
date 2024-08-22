@@ -7,6 +7,9 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text coin;
+    [SerializeField] private Image currencyIcon; // Thêm Image cho icon kế bên giá
+    [SerializeField] private Sprite gemIcon;    // Icon cho gem
+    [SerializeField] private Sprite goldIcon;   // Icon cho gold
     [SerializeField] private PopupConfirm popupManager;
     [SerializeField] private ItemTooltip tooltip;
 
@@ -43,6 +46,17 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             coin.text = newItem.itemCoin.ToString();
             icon.enabled = true;
             coin.enabled = true;
+
+            // Hiển thị icon gem hoặc gold dựa vào thuộc tính isGem
+            if (newItem.isGem)
+            {
+                currencyIcon.sprite = gemIcon;
+            }
+            else
+            {
+                currencyIcon.sprite = goldIcon;
+            }
+            currencyIcon.enabled = true;
         }
         else
         {
@@ -57,6 +71,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         coin.text = string.Empty;
         icon.enabled = false;
         coin.enabled = false;
+        currencyIcon.enabled = false; // Ẩn icon nếu slot trống
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -67,7 +82,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (popupManager != null)
             {
                 Debug.Log($"Showing popup for item: {Item.itemName}, itemId: {Item.itemId}");
-                popupManager.ShowPopup(Item.itemName, Item.itemId, Item.itemCoin);
+                popupManager.ShowPopup(Item.itemName, Item.itemId, Item.itemCoin, Item.isGem);
             }
             else
             {
