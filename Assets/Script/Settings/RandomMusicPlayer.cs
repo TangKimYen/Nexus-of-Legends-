@@ -40,7 +40,7 @@ public class RandomMusicPlayer : MonoBehaviour
                 availableClips = new List<AudioClip>(musicClips);
             }
 
-            // Đặt một hàm để gọi `PlayNextMusic` khi bài nhạc kết thúc
+            // Đặt một hàm để gọi PlayNextMusic khi bài nhạc kết thúc
             StartCoroutine(WaitForMusicToEnd());
         }
     }
@@ -52,5 +52,12 @@ public class RandomMusicPlayer : MonoBehaviour
 
         // Phát bài nhạc tiếp theo
         PlayNextMusic();
+    }
+    public void MuteAudio(bool isMuted)
+    {
+        if (audioSource != null)
+        {
+            audioSource.mute = isMuted;
+        }
     }
 }

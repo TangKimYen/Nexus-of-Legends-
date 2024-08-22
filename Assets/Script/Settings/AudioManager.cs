@@ -1,35 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public static AudioManager instance;
-    public AudioSource backgroundMusic;
-    private bool isMuted = false;
+    public static AudioManager Instance { get; private set; }
 
-    void Awake()
+    public bool isMusicMuted = false;
+    public bool isCharacterSoundMuted = false;
+
+    private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
-    }
-
-    public void ToggleMute()
-    {
-        isMuted = !isMuted;
-        backgroundMusic.mute = isMuted;
-    }
-
-    public bool IsMuted()
-    {
-        return isMuted;
     }
 }

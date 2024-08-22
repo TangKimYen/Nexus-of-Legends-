@@ -21,6 +21,8 @@ public class PlayerData : MonoBehaviour
     public string loginTime;
     public string logoutTime;
     public bool isLoggedIn;
+    public bool wasLoggedOutByOtherLogin = false; // Biến cờ để kiểm tra trạng thái đăng xuất
+    public bool isLogoutRequested = false; // Thêm cờ để phân biệt khi người dùng nhấn nút Logout
     private DatabaseReference dbRef;
     private FirebaseAuth auth;
 
@@ -140,10 +142,26 @@ public class PlayerData : MonoBehaviour
         loginTime = "";
         logoutTime = "";
         isLoggedIn = false;
+        isLogoutRequested = true; // Đánh dấu rằng logout đã được yêu cầu
     }
 
     public void LogoutAndReturnToTitleScreen()
     {
         Logout();
+    }
+    public void CheckLogoutReason()
+    {
+        if (isLogoutRequested)
+        {
+            // Reset cờ sau khi đã xử lý
+            isLogoutRequested = false;
+            // Thực hiện các hành động cần thiết sau khi logout yêu cầu
+        }
+        else if (wasLoggedOutByOtherLogin)
+        {
+            // Reset cờ sau khi đã xử lý
+            wasLoggedOutByOtherLogin = false;
+            // Thực hiện các hành động cần thiết sau khi logout do đăng nhập từ nơi khác
+        }
     }
 }
