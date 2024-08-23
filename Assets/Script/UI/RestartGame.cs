@@ -10,6 +10,7 @@ public class RestartGame : MonoBehaviourPunCallbacks
     public Button restartButton; 
     public GameObject votePanel;
     public GameObject votingPanel;
+    public GameObject settingPanel;
     public Button voteYesButton; 
     public Button voteNoButton;
     public TMP_Text voteYesText;
@@ -21,29 +22,43 @@ public class RestartGame : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        restartButton.onClick.AddListener(InitiateRestartVote);
+        restartButton.onClick.AddListener(InitiateRestart);
         voteYesButton.onClick.AddListener(VoteYes);
         voteNoButton.onClick.AddListener(VoteNo);
         votePanel.SetActive(false);
     }
 
+    public void InitiateRestart()
+    {
+        photonView.RPC("InitiateRestartVote", RpcTarget.All);
+    }
+
+    [PunRPC]
     public void InitiateRestartVote()
     {
-        if (isVoting) return;
-
         photonView.RPC("StartVote", RpcTarget.All);
     }
 
     [PunRPC]
     public void StartVote()
     {
+        if (isVoting) return;
+        Debug.Log("StartVote is called.");
         isVoting = true;
+        settingPanel.transform.localScale = Vector3.zero;
         votePanel.SetActive(true);
+        Debug.Log("votePanel set to active");
         votesYes = 0;
         votesNo = 0;
         votingPanel.SetActive(true);
-        voteYesText.text = "Accept: 0/" + PhotonNetwork.PlayerList.Length;
-        voteNoText.text = "Cancel: 0/" + PhotonNetwork.PlayerList.Length;
+        Debug.Log("votingPanel set to active");
+        UpdateVoteTexts();  // Update vote text right after setting up the panel.
+    }
+
+    private void UpdateVoteTexts()
+    {
+        voteYesText.text = "Accept: " + votesYes + "/" + PhotonNetwork.PlayerList.Length;
+        voteNoText.text = "Cancel: " + votesNo + "/" + PhotonNetwork.PlayerList.Length;
     }
 
     public void VoteYes()
@@ -71,8 +86,7 @@ public class RestartGame : MonoBehaviourPunCallbacks
             votesNo++;
         }
 
-        voteYesText.text = "Accept: " + votesYes + "/" + PhotonNetwork.PlayerList.Length;
-        voteNoText.text = "Cancel: " + votesNo + "/" + PhotonNetwork.PlayerList.Length;
+        UpdateVoteTexts();
         if (votesYes + votesNo == PhotonNetwork.PlayerList.Length)
         {
             photonView.RPC("CheckVoteResult", RpcTarget.All);
@@ -97,13 +111,8 @@ public class RestartGame : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RestartMapGame()
     {
-        if(PhotonNetwork.CurrentRoom.Name == "Floor 6")
-        {
-            PhotonNetwork.LoadLevel("Map6");
-        }
-        else
-        {
-            PhotonNetwork.LoadLevel("Map9");
-        }
+        string currentRoomName = PhotonNetwork.CurrentRoom.Name;
+        string levelToLoad = currentRoomName.Replace("Floor ", "Map");
+        PhotonNetwork.LoadLevel(levelToLoad);
     }
 }
